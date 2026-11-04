@@ -1,9 +1,132 @@
+@import url("./buffit-profile-foundations.css");
+
 @font-face {
   font-family: "Unbounded";
   src: url("../fonts/Unbounded-VariableFont_wght.woff2")
     format("woff2-variations");
   font-weight: 300 600;
   font-display: swap;
+}
+
+/* Legacy public-page aliases resolve into the shared design profile. */
+:root[data-buffit-design-style],
+:root:not([data-buffit-design-style]) {
+  --font-display: var(--buffit-design-font-sans);
+  --font-body: var(--buffit-design-font-sans);
+  --text-gradient-warm: linear-gradient(
+    118deg,
+    var(--buffit-design-ink, var(--buffit-design-ink-light)) 0%,
+    var(--buffit-design-accent) 100%
+  );
+  --text-gradient-hero: linear-gradient(
+    118deg,
+    var(--buffit-design-ink, var(--buffit-design-ink-light)) 0%,
+    var(--buffit-design-accent) 100%
+  );
+  --color-ink-980: var(--buffit-design-ink, var(--buffit-design-ink-light));
+  --color-ink-900: var(--buffit-design-ink, var(--buffit-design-ink-light));
+  --color-ink-760: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --color-ink-620: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --color-cream-80: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --color-cream-120: var(--buffit-design-page, var(--buffit-design-paper-light));
+  --color-cream-180: var(--buffit-design-raised-fill, var(--buffit-design-raised-face-light));
+  --color-cream-260: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --color-copper-520: var(--buffit-design-accent);
+  --color-action-520: var(--buffit-design-accent);
+  --color-action-620: var(--buffit-design-accent);
+  --surface-page: var(--buffit-design-page, var(--buffit-design-paper-light));
+  --surface-page-soft: var(--buffit-design-page, var(--buffit-design-paper-light));
+  --surface-panel: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --surface-panel-muted: var(--buffit-surface-panel-muted, var(--buffit-design-panel-light));
+  --surface-panel-strong: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --surface-ink: var(--buffit-design-raised-fill, var(--buffit-design-raised-face-light));
+  --surface-hero-product: var(--buffit-design-raised-fill, var(--buffit-design-raised-face-light));
+  --surface-inverse-soft: var(--buffit-surface-panel-muted, var(--buffit-design-panel-light));
+  --surface-soft: color-mix(in srgb, var(--buffit-design-ink, var(--buffit-design-ink-light)) 6%, transparent);
+  --surface-soft-strong: color-mix(in srgb, var(--buffit-design-ink, var(--buffit-design-ink-light)) 11%, transparent);
+  --surface-nav: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 88%, transparent);
+  --surface-glass: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 72%, transparent);
+  --surface-glass-strong: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 86%, transparent);
+  --surface-nav-glass: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 70%, transparent);
+  --surface-nav-dark: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 78%, transparent);
+  --text-primary: var(--buffit-design-ink, var(--buffit-design-ink-light));
+  --text-secondary: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --text-muted: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --text-inverse: var(--buffit-design-ink, var(--buffit-design-ink-light));
+  --text-inverse-muted: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --text-inverse-soft: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --accent-primary: var(--buffit-design-accent);
+  --accent-primary-strong: var(--buffit-design-accent);
+  --accent-warm: var(--buffit-design-accent);
+  --accent-action: var(--buffit-design-accent);
+  --accent-action-strong: var(--buffit-design-accent);
+  --border-subtle: 1px solid var(--buffit-design-outline, var(--buffit-design-outline-light));
+  --border-strong: 1px solid var(--buffit-design-control-edge, var(--buffit-design-outline-light));
+  --border-inverse: 1px solid var(--buffit-design-outline, var(--buffit-design-outline-light));
+  --border-glass: 1px solid var(--buffit-design-outline, var(--buffit-design-outline-light));
+  --border-nav-inverse: 1px solid var(--buffit-design-outline, var(--buffit-design-outline-light));
+  --shadow-soft: none;
+  --shadow-card: none;
+  --shadow-glass: none;
+  --shadow-nav-solid: none;
+  --shadow-text-hero: none;
+  --surface-warm: var(--buffit-surface-panel-muted, var(--buffit-design-panel-light));
+  --surface-warm-strong: var(--buffit-surface-panel-muted, var(--buffit-design-panel-light));
+  --surface-sage: var(--buffit-surface-panel-muted, var(--buffit-design-panel-light));
+  --surface-sky: var(--buffit-surface-panel-muted, var(--buffit-design-panel-light));
+  --surface-berry: var(--buffit-surface-panel-muted, var(--buffit-design-panel-light));
+  --accent-sage: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --accent-sky: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --accent-berry: var(--buffit-design-muted, var(--buffit-design-ink-light));
+  --media-wash-light: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 88%, transparent);
+  --media-wash-soft: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 48%, transparent);
+  --media-wash-hero: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 10%, transparent);
+  --media-overlay-soft: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 24%, transparent);
+  --media-overlay-strong: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 66%, transparent);
+  --media-overlay-deep: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 90%, transparent);
+  --media-overlay-hero: color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 12%, transparent);
+  --route-map-surface: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --route-map-copy-wash: color-mix(in srgb, var(--buffit-design-panel, var(--buffit-design-panel-light)) 88%, transparent);
+  --route-map-contour: color-mix(in srgb, var(--buffit-design-outline, var(--buffit-design-outline-light)) 22%, transparent);
+  --route-map-path: var(--buffit-design-accent);
+  --route-map-path-shadow: transparent;
+  --hero-border: 1px solid var(--buffit-design-outline, var(--buffit-design-outline-light));
+  --hero-shadow: none;
+  --hero-overlay: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 94%, transparent) 0%,
+    color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 80%, transparent) 38%,
+    color-mix(in srgb, var(--buffit-design-page, var(--buffit-design-paper-light)) 34%, transparent) 64%,
+    transparent 100%
+  );
+  --hero-tint: none;
+  --nav-dropdown-surface-glow: none;
+  --nav-dropdown-lead-surface: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --nav-dropdown-lead-overlay: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--buffit-design-panel, var(--buffit-design-panel-light)) 18%, transparent) 0%,
+    color-mix(in srgb, var(--buffit-design-panel, var(--buffit-design-panel-light)) 82%, transparent) 100%
+  );
+  --nav-card-surface: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --nav-chip-surface: color-mix(in srgb, var(--buffit-design-panel, var(--buffit-design-panel-light)) 72%, transparent);
+  --nav-chip-lead-surface: color-mix(in srgb, var(--buffit-design-panel, var(--buffit-design-panel-light)) 88%, transparent);
+  --nav-chip-hover-surface: var(--buffit-design-panel, var(--buffit-design-panel-light));
+  --nav-chip-hover-border: var(--buffit-design-control-edge, var(--buffit-design-outline-light));
+  --nav-chip-hover-shadow: none;
+  --focus-ring: 0 0 0 var(--buffit-design-focus-size)
+    var(--buffit-design-control-edge, var(--buffit-design-outline-light));
+  --radius-xs: var(--buffit-design-control-radius, var(--buffit-design-logik-control-radius));
+  --radius-sm: var(--buffit-design-panel-radius, var(--buffit-design-logik-panel-radius));
+  --radius-md: var(--buffit-design-panel-radius, var(--buffit-design-logik-panel-radius));
+  --radius-lg: var(--buffit-design-panel-radius, var(--buffit-design-logik-panel-radius));
+  --radius-pill: var(--buffit-design-control-radius, var(--buffit-design-logik-control-radius));
+  --radius-hero: var(--buffit-design-panel-radius, var(--buffit-design-logik-panel-radius));
+}
+
+:root[data-buffit-design-style="logik"] {
+  --color-cream-260: var(--buffit-design-underplate);
+  --shadow-card: var(--buffit-design-underplate-offset)
+    var(--buffit-design-underplate-offset) 0 var(--buffit-design-underplate);
 }
 
 @font-face {
@@ -41,15 +164,15 @@
   );
   --text-gradient-hero: linear-gradient(
     118deg,
-    var(--color-cream-80) 0%,
-    var(--color-action-620) 58%,
-    var(--color-copper-520) 100%
+    var(--color-ink-980) 0%,
+    var(--color-copper-520) 64%,
+    var(--color-action-520) 100%
   );
 
-  --color-ink-980: oklch(15% 0.018 56);
-  --color-ink-900: oklch(22% 0.026 56);
-  --color-ink-760: oklch(39% 0.035 62);
-  --color-ink-620: oklch(52% 0.04 66);
+  --color-ink-980: oklch(27% 0.035 55);
+  --color-ink-900: oklch(34% 0.04 58);
+  --color-ink-760: oklch(45% 0.04 62);
+  --color-ink-620: oklch(57% 0.04 66);
   --color-cream-80: oklch(97.5% 0.025 78);
   --color-cream-120: oklch(92.5% 0.034 76);
   --color-cream-180: oklch(88% 0.044 74);
@@ -67,13 +190,8 @@
   --surface-panel: var(--color-cream-80);
   --surface-panel-muted: var(--color-cream-180);
   --surface-panel-strong: var(--color-cream-80);
-  --surface-ink: var(--color-ink-980);
-  --surface-hero-product: linear-gradient(
-    135deg,
-    var(--color-ink-980) 0%,
-    var(--color-moss-700) 48%,
-    var(--color-copper-520) 140%
-  );
+  --surface-ink: var(--color-cream-180);
+  --surface-hero-product: var(--color-cream-180);
   --surface-soft: color-mix(in oklch, var(--color-ink-900) 6%, transparent);
   --surface-soft-strong: color-mix(
     in oklch,
@@ -92,11 +210,7 @@
     var(--color-cream-80) 70%,
     transparent
   );
-  --surface-nav-dark: color-mix(
-    in oklch,
-    var(--color-ink-980) 20%,
-    transparent
-  );
+  --surface-nav-dark: color-mix(in oklch, var(--color-cream-80) 78%, transparent);
   --media-wash-light: color-mix(
     in oklch,
     var(--color-cream-80) 88%,
@@ -121,26 +235,26 @@
   --surface-sage: color-mix(in oklch, var(--color-sage-500) 15%, transparent);
   --surface-sky: color-mix(in oklch, var(--color-sky-420) 14%, transparent);
   --surface-berry: color-mix(in oklch, var(--color-berry-420) 14%, transparent);
+  --route-map-surface: color-mix(in oklch, var(--color-cream-80) 92%, var(--color-copper-520));
+  --route-map-copy-wash: color-mix(in oklch, var(--route-map-surface) 88%, transparent);
+  --route-map-contour: color-mix(in oklch, var(--color-copper-520) 22%, transparent);
+  --route-map-path: var(--color-copper-520);
+  --route-map-path-shadow: color-mix(in oklch, var(--color-ink-900) 16%, transparent);
+  --route-map-border: var(--border-subtle);
+  --route-map-contour-width: 0.16rem;
+  --route-map-path-width: 0.68rem;
+  --route-map-path-shadow-width: 1.08rem;
+  --route-map-stop-ring-width: 0.38rem;
+  --route-map-destination-ring-width: 0.26rem;
+  --route-map-mobile-shift: -24%;
   --surface-inverse-soft: color-mix(
     in oklch,
     var(--color-cream-80) 10%,
     transparent
   );
-  --media-overlay-soft: color-mix(
-    in oklch,
-    var(--color-ink-980) 17%,
-    transparent
-  );
-  --media-overlay-strong: color-mix(
-    in oklch,
-    var(--color-ink-980) 40%,
-    transparent
-  );
-  --media-overlay-deep: color-mix(
-    in oklch,
-    var(--color-ink-980) 72%,
-    transparent
-  );
+  --media-overlay-soft: color-mix(in oklch, var(--color-cream-80) 24%, transparent);
+  --media-overlay-strong: color-mix(in oklch, var(--color-cream-80) 66%, transparent);
+  --media-overlay-deep: color-mix(in oklch, var(--color-cream-80) 90%, transparent);
   --media-overlay-hero: color-mix(
     in oklch,
     var(--color-copper-520) 12%,
@@ -150,19 +264,11 @@
   --text-primary: var(--color-ink-980);
   --text-secondary: var(--color-ink-760);
   --text-muted: color-mix(in oklch, var(--color-ink-900) 58%, transparent);
-  --text-inverse: var(--color-cream-80);
-  --text-inverse-muted: color-mix(
-    in oklch,
-    var(--color-cream-80) 80%,
-    transparent
-  );
-  --text-inverse-soft: color-mix(
-    in oklch,
-    var(--color-cream-80) 72%,
-    transparent
-  );
-  --accent-primary: var(--color-ink-980);
-  --accent-primary-strong: var(--color-moss-700);
+  --text-inverse: var(--color-ink-980);
+  --text-inverse-muted: color-mix(in oklch, var(--color-ink-900) 80%, transparent);
+  --text-inverse-soft: color-mix(in oklch, var(--color-ink-900) 72%, transparent);
+  --accent-primary: var(--color-copper-520);
+  --accent-primary-strong: var(--color-action-620);
   --accent-warm: var(--color-copper-520);
   --accent-sage: var(--color-sage-500);
   --accent-sky: var(--color-sky-420);
@@ -215,6 +321,12 @@
   --viewport-min: 20rem;
   --viewport-full: 100svh;
   --layout-max: var(--content-2xl);
+  --page-frame-max: var(--hero-shell-max);
+  --page-grid-max: var(--layout-max);
+  --page-readable-max: var(--content-xl);
+  --page-grid-columns: 12;
+  --page-grid-gap: var(--space-base);
+  --page-gutter: var(--section-padding-x);
   --layout-frame-inset: 1.25rem;
   --content-mobile-max: var(--content-sm);
   --section-padding-y: var(--space-lg);
@@ -222,9 +334,11 @@
   --shell-padding-x: var(--section-padding-x);
   --hero-shell-width: 95vw;
   --hero-shell-max: 96rem;
-  --hero-min-height: calc(var(--viewport-full) - var(--space-base));
+  --viewport-hero: 70svh;
+  --hero-min-height: calc(var(--viewport-hero) - var(--space-base));
   --hero-shell-radius: var(--radius-md);
   --hero-padding: clamp(var(--space-lg), 6vw, calc(var(--space-lg) * 1.5));
+  --hero-padding-mobile: var(--space-1-5);
   --hero-image-position: center center;
   --hero-border: 1px solid
     color-mix(in oklch, var(--color-cream-80) 16%, transparent);
@@ -232,22 +346,22 @@
     color-mix(in oklch, var(--color-ink-900) 22%, transparent);
   --hero-overlay: linear-gradient(
     90deg,
-    color-mix(in oklch, var(--color-ink-980) 74%, transparent) 0%,
-    color-mix(in oklch, var(--color-ink-900) 48%, transparent) 34%,
-    color-mix(in oklch, var(--color-copper-520) 16%, transparent) 62%,
+    color-mix(in oklch, var(--color-cream-80) 94%, transparent) 0%,
+    color-mix(in oklch, var(--color-cream-80) 80%, transparent) 38%,
+    color-mix(in oklch, var(--color-cream-120) 34%, transparent) 64%,
     transparent 100%
   );
   --hero-tint: linear-gradient(
     180deg,
-    color-mix(in oklch, var(--color-action-620) 14%, transparent),
-    color-mix(in oklch, var(--color-ink-900) 10%, transparent)
+    color-mix(in oklch, var(--color-cream-80) 14%, transparent),
+    color-mix(in oklch, var(--color-copper-520) 8%, transparent)
   );
   --promo-height: 2.25rem;
   --nav-height: 4.5rem;
   --nav-height-pdp: 5.625rem;
   --nav-mobile-height: 9.75rem;
   --nav-panel-radius: var(--radius-hero);
-  --nav-menu-panel-height: clamp(28rem, 50svh, 31rem);
+  --nav-menu-panel-height: clamp(32rem, 60svh, 36rem);
   --nav-menu-feature-min: 9rem;
   --nav-menu-list-min: 4rem;
   --nav-mobile-panel-max-height: calc(100svh - var(--nav-height) - var(--space-base));
@@ -261,8 +375,8 @@
   );
   --nav-dropdown-lead-overlay: linear-gradient(
     180deg,
-    transparent 0%,
-    color-mix(in oklch, var(--color-ink-980) 20%, transparent) 100%
+    color-mix(in oklch, var(--color-cream-80) 18%, transparent) 0%,
+    color-mix(in oklch, var(--color-cream-80) 82%, transparent) 100%
   );
   --nav-dropdown-lead-surface: linear-gradient(
     135deg,
@@ -328,15 +442,73 @@
   --motion-nav-switch: 120ms;
   --motion-nav-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
-  --image-hero: url("../assets/buffit-hero-home-training.png");
+  --image-hero: var(--image-app);
   --image-brand-kit: none;
-  --image-fitness: url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=80");
-  --image-health: url("https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80");
-  --image-method: url("https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=2200&q=80");
-  --image-women: url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1400&q=80");
-  --image-men: url("https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1400&q=80");
-  --image-food: url("https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80");
-  --image-calls: url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80");
+  --image-women: image-set(
+    url("../assets/generated/web/b03-08-women-strength-ceramic-desktop-v3-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b03-08-women-strength-ceramic-desktop-v3-1600.webp") type("image/webp")
+  );
+  --image-women-mobile: image-set(
+    url("../assets/generated/web/b03-08-women-strength-ceramic-mobile-v3-800.avif") type("image/avif"),
+    url("../assets/generated/web/b03-08-women-strength-ceramic-mobile-v3-800.webp") type("image/webp")
+  );
+  --image-men: image-set(
+    url("../assets/generated/web/b03-07-men-capability-ceramic-desktop-v3-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b03-07-men-capability-ceramic-desktop-v3-1600.webp") type("image/webp")
+  );
+  --image-men-mobile: image-set(
+    url("../assets/generated/web/b03-07-men-capability-ceramic-mobile-v3-800.avif") type("image/avif"),
+    url("../assets/generated/web/b03-07-men-capability-ceramic-mobile-v3-800.webp") type("image/webp")
+  );
+  --image-health: image-set(
+    url("../assets/generated/web/b01-09-health-safe-return-ceramic-desktop-v3-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b01-09-health-safe-return-ceramic-desktop-v3-1600.webp") type("image/webp")
+  );
+  --image-health-mobile: image-set(
+    url("../assets/generated/web/b01-09-health-safe-return-ceramic-mobile-v3-800.avif") type("image/avif"),
+    url("../assets/generated/web/b01-09-health-safe-return-ceramic-mobile-v3-800.webp") type("image/webp")
+  );
+  --image-food: image-set(
+    url("../assets/generated/web/b01-10-food-rhythm-ceramic-desktop-v3-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b01-10-food-rhythm-ceramic-desktop-v3-1600.webp") type("image/webp")
+  );
+  --image-food-mobile: image-set(
+    url("../assets/generated/web/b01-10-food-rhythm-ceramic-mobile-v3-800.avif") type("image/avif"),
+    url("../assets/generated/web/b01-10-food-rhythm-ceramic-mobile-v3-800.webp") type("image/webp")
+  );
+  --image-guide: image-set(
+    url("../assets/generated/web/b01-08-guide-materials-ceramic-desktop-v2-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b01-08-guide-materials-ceramic-desktop-v2-1600.webp") type("image/webp")
+  );
+  --image-guide-mobile: image-set(
+    url("../assets/generated/web/b01-08-guide-materials-ceramic-mobile-v2-800.avif") type("image/avif"),
+    url("../assets/generated/web/b01-08-guide-materials-ceramic-mobile-v2-800.webp") type("image/webp")
+  );
+  --image-app: image-set(
+    url("../assets/generated/web/b01-07-app-in-use-ceramic-desktop-v3-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b01-07-app-in-use-ceramic-desktop-v3-1600.webp") type("image/webp")
+  );
+  --image-app-mobile: image-set(
+    url("../assets/generated/web/b01-07-app-in-use-ceramic-mobile-v3-800.avif") type("image/avif"),
+    url("../assets/generated/web/b01-07-app-in-use-ceramic-mobile-v3-800.webp") type("image/webp")
+  );
+  --image-calls: image-set(
+    url("../assets/generated/web/b01-06-calls-igor-ceramic-desktop-v6-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b01-06-calls-igor-ceramic-desktop-v6-1600.webp") type("image/webp")
+  );
+  --image-fitness: var(--image-women);
+  --image-method: var(--image-health);
+}
+
+@media (max-width: 45rem) {
+  :root {
+    --image-women: var(--image-women-mobile);
+    --image-men: var(--image-men-mobile);
+    --image-health: var(--image-health-mobile);
+    --image-food: var(--image-food-mobile);
+    --image-guide: var(--image-guide-mobile);
+    --image-app: var(--image-app-mobile);
+  }
 }
 
 @media (min-width: 53.75rem) {

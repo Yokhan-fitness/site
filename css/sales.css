@@ -20,6 +20,35 @@
   align-items: start;
 }
 
+.trainer-proof__media {
+  width: min(100%, var(--content-sm));
+  margin: 0 auto;
+}
+
+.trainer-proof__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.trainer-proof__media figcaption {
+  margin-top: var(--space-half);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.trainer-proof__copy {
+  display: grid;
+  gap: var(--space-1-5);
+}
+
+.trainer-proof__copy .section-heading {
+  margin-bottom: 0;
+}
+
 .route-card,
 .system-card,
 .spec-table,
@@ -97,6 +126,10 @@
 @media (min-width: 58.75rem) {
   .split-section {
     grid-template-columns: minmax(0, 0.9fr) minmax(var(--content-md), 1.1fr);
+  }
+
+  .trainer-proof__media {
+    margin: 0;
   }
 
   .route-grid,

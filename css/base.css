@@ -42,9 +42,40 @@ a {
 
 .container {
   width: 100%;
-  max-width: var(--layout-max);
+  max-width: var(--page-grid-max);
   margin: 0 auto;
-  padding: 0 var(--section-padding-x);
+  padding: 0 var(--page-gutter);
+}
+
+.page-frame {
+  width: min(calc(100% - var(--page-gutter) * 2), var(--page-frame-max));
+  margin-inline: auto;
+}
+
+.page-grid {
+  width: min(100%, var(--page-grid-max));
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+.page-column-grid {
+  display: grid;
+  gap: var(--page-grid-gap);
+  grid-template-columns: repeat(var(--page-grid-columns), minmax(0, 1fr));
+}
+
+.page-readable {
+  width: min(100%, var(--page-readable-max));
+}
+
+@media (max-width: 48.75rem) {
+  .page-frame,
+  .page-grid {
+    width: 100%;
+    padding-inline: var(--page-gutter);
+  }
+
+  .page-column-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 .section {
@@ -82,6 +113,10 @@ a {
   margin-bottom: var(--space-lg);
 }
 
+.section-heading > * {
+  min-width: 0;
+}
+
 .section-heading--center {
   margin-right: auto;
   margin-left: auto;
@@ -91,6 +126,12 @@ a {
 .section-title {
   color: currentColor;
   font-size: var(--text-2xl);
+}
+
+.section-title,
+.section-subtitle {
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .section-subtitle {

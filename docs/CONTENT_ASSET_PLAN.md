@@ -11,7 +11,7 @@ Goal: close the gap between the current program landing and a stronger Oura-like
 | P0 | Program cards | Final program package names | Confirm names: `Тело атлета`, `Здоровая спина`, `Топ ягодицы`, `Похудеть навсегда`, etc. | Names become campaign hooks, bot branches, and content buckets. |
 | P0 | Program cards | Program outcomes | For each program: main visible outcome, secondary health outcome, emotional/social payoff. | Cards should sell the future, not just list exercises. |
 | P0 | Bot path | Start parameter routing | Define behavior for `landing_programs`, `landing_men`, `landing_women`, `landing_final`. | Without routing we lose source/segment tracking. |
-| P0 | Offer | Pricing/package decision | 4/8/12 sessions per month, exact payment model, what support is included. | Oura makes purchase terms explicit. We need the same clarity before traffic. |
+| P0 | Offer | Pricing/package decision | 2+DZ and 3/week formats, launch prices 26k/34k, later 32k/42k, what support is included. | Oura makes purchase terms explicit. We need the same clarity before traffic. |
 
 ## Proof And Trust
 
@@ -51,3 +51,10 @@ Goal: close the gap between the current program landing and a stronger Oura-like
 | P0 | Bot | Program result copy | Bot messages for each selected program with next action. | Landing and bot must speak one language. |
 | P1 | CRM | Lead table fields | Source, segment, program interest, red flag, readiness, price fit, contact, next action. | Converts attention into follow-up system. |
 | P1 | Legal | Consent/privacy wording | Minimal wording for Telegram data, health limitations, testimonials. | Needed before paid/partner traffic. |
+
+## 2026-05-30 Proof Layer Update
+
+- Added `data/proof-map.json` as the machine-readable proof/asset backlog.
+- Added `docs/BUFFIT_PROOF_ASSET_PLAN_20260530.md` as the readable proof plan.
+- Public site proof blocks must stay honest until real cases/screenshots exist.
+- Next missing assets: APP week plan, bot result screenshot, calls summary, smartcart example, guide preview, health red-flag checklist, 3 permitted client cases.

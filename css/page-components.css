@@ -1,11 +1,5 @@
 .pdp-hero-page {
-  background:
-    radial-gradient(
-      circle at 82% 0%,
-      var(--surface-warm-strong),
-      transparent 36%
-    ),
-    linear-gradient(180deg, var(--surface-page), var(--surface-page-soft));
+  background: var(--surface-page);
 }
 
 .pdp-hero-page .hero {
@@ -55,15 +49,44 @@ body:not(.pdp-hero-page) .hero__stage {
   width: 100vw;
   max-width: none;
   min-height: var(--hero-min-height);
-  background:
-    radial-gradient(
-      circle at 82% 18%,
-      var(--surface-warm-strong),
-      transparent 34%
-    ),
-    radial-gradient(circle at 12% 88%, var(--surface-warm), transparent 30%),
-    var(--surface-hero-product);
+  background: var(--surface-hero-product);
   border-radius: 0 0 var(--radius-hero) var(--radius-hero);
+}
+
+.audience-hero-page {
+  --audience-hero-image: var(--image-app);
+  --audience-hero-position: center;
+}
+
+.audience-hero-page.audience-women {
+  --audience-hero-image: var(--image-women);
+}
+
+.audience-hero-page.audience-men {
+  --audience-hero-image: var(--image-men);
+}
+
+.audience-hero-page.audience-health {
+  --audience-hero-image: var(--image-health);
+}
+
+.audience-hero-page.audience-food {
+  --audience-hero-image: var(--image-food);
+}
+
+.audience-hero-page.audience-guide {
+  --audience-hero-image: var(--image-guide);
+}
+
+.audience-hero-page.audience-calls {
+  --audience-hero-image: var(--image-calls);
+}
+
+body.audience-hero-page:not(.pdp-hero-page) .hero__stage {
+  background:
+    linear-gradient(90deg, var(--media-overlay-deep) 0 44%, var(--media-overlay-strong) 66%, var(--media-overlay-soft) 100%),
+    linear-gradient(180deg, transparent 62%, var(--media-overlay-soft)),
+    var(--audience-hero-image) var(--audience-hero-position) / cover;
 }
 
 body:not(.pdp-hero-page) .hero {
@@ -94,6 +117,10 @@ body:not(.pdp-hero-page) .hero__panel {
   box-shadow: var(--shadow-glass);
   backdrop-filter: var(--blur-glass);
   -webkit-backdrop-filter: var(--blur-glass);
+}
+
+body.audience-hero-page:not(.pdp-hero-page) .hero__panel {
+  background: var(--surface-glass);
 }
 
 body:not(.pdp-hero-page) .hero__panel .stack-list,
@@ -235,6 +262,13 @@ body:not(.pdp-hero-page) .hero__panel .spec-table div {
 
 @media (max-width: 45rem) {
 
+  body.audience-hero-page:not(.pdp-hero-page) .hero__stage {
+    --audience-hero-position: 72% center;
+    background:
+      linear-gradient(180deg, var(--media-overlay-deep) 0 52%, var(--media-overlay-strong) 78%, var(--media-overlay-soft) 100%),
+      var(--audience-hero-image) var(--audience-hero-position) / cover;
+  }
+
 
 
 
@@ -249,14 +283,21 @@ body:not(.pdp-hero-page) .hero__panel .spec-table div {
 
   .pdp-hero-page .hero__stage,
   body:not(.pdp-hero-page) .hero__stage {
-    min-height: calc(var(--viewport-full) - var(--space-base));
+    width: calc(100vw - var(--space-base));
+    max-width: calc(100vw - var(--space-base));
+    min-height: var(--hero-min-height);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
 
   .pdp-hero-page .hero__inner {
-    min-height: calc(var(--viewport-full) - var(--space-base));
-    padding: calc(var(--nav-height) + var(--space-lg)) var(--space-1-5)
+    min-height: var(--hero-min-height);
+    padding: calc(var(--nav-height) + var(--space-1-5)) var(--space-1-5)
       var(--space-half);
+  }
+
+  .pdp-hero-page .hero__title {
+    font-size: var(--text-xl);
+    max-width: var(--content-mobile-max);
   }
 
 
@@ -274,13 +315,22 @@ body:not(.pdp-hero-page) .hero__panel .spec-table div {
   body:not(.pdp-hero-page) .hero__title {
     font-size: var(--text-xl);
     max-width: var(--content-xs);
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  body.audience-hero-page:not(.docs-page):not(.pdp-hero-page) .hero__title {
+    max-width: 100%;
+    overflow-wrap: normal;
   }
 
   body:not(.pdp-hero-page) .hero__subtitle {
     max-width: var(--content-xs);
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+  }
+
+  .section-title {
+    font-size: var(--text-xl);
   }
 }
 

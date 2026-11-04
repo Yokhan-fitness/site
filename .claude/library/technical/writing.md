@@ -1,69 +1,411 @@
-# Writing Guard — Anti-AI, Human Voice, Platform Adaptation
+# Writing Workflow - Purpose, Truth, And Four Semantic Modes
 
-## The Rule
-All text produced by the writer agent (and any agent writing user-facing content) MUST pass anti-AI detection, follow project BAN-LISTs, and adapt to the target platform.
+## Scope And Ownership
 
-This rule applies to: articles, landing pages, social posts, game lore, marketing copy, documentation for end users, emails, newsletters.
-This rule does NOT apply to: code comments, commit messages, internal docs, technical specs.
+This is the single source of truth for user-facing writing: literary/narrative,
+marketing/advertising, informational/explanatory, and communication text. It
+also governs editing and client-facing work reports.
 
-## BAN-LIST Enforcement (MANDATORY)
+Claude uses `.claude/agents/writer.md` and `.claude/skills/writing-workflow/SKILL.md`.
+Codex uses `$codex-writing-workflow`. Review skills remain independent critics;
+they do not own the generation workflow.
 
-### Default BAN-LIST (Russian)
-Never use these words/phrases — they are AI-slop markers:
-- является, представляет собой, ключевой аспект, стоит отметить
-- важно понимать, нюанс, комплексный подход, в современном мире
-- безусловно, зачастую, по сути, на самом деле (as filler)
-- Кроме того, Более того, Помимо этого, Таким образом
-- Подведём итог, В заключение, Резюмируя
+Reference metadata, provenance, reusable properties, and editor role IDs live in
+`.claude/library/technical/writing-reference-registry.json`. Project-owned
+references live in `brain/03-knowledge/writing/reference-registry.json` and take
+effect only through explicit `supersedes` entries, including project editor-role
+replacements. Validate both registries before
+using a profile; do not silently load an external example corpus.
 
-### Default BAN-LIST (English)
-- Furthermore, Moreover, Additionally, In conclusion
-- It's worth noting, It's important to understand
-- In today's world, In this day and age
-- Comprehensive, Holistic, Synergy, Leverage (as verb)
-- Delve, Navigate, Landscape, Embark, Journey (metaphorical)
-- Cutting-edge, Game-changer, Paradigm shift
+Project-owned constitutions, terminology, brand voice, audience research,
+approved claims, legal constraints, and style guides override template defaults.
+If two plausible sources of truth conflict, use the SOT Conflict Protocol in
+`docs/AGENT_CONTEXT_SOT.md` instead of choosing silently.
 
-### Project BAN-LIST Override
-If the project has its own BAN-LIST file → merge with default. Project-specific bans take priority.
+## Four Semantic Modes
 
-## Anti-AI Detection Patterns
+| Mode | Production purpose | Typical outputs | Primary acceptance signal |
+| --- | --- | --- | --- |
+| Literary | Create a specific experience, dramatic change, image, or meaning | prose, scenes, dialogue, scripts, game lore | the intended reader experience and narrative function occur without breaking story truth |
+| Marketing/advertising | Help a qualified audience make an informed commercial decision | landing copy, ads, product pages, campaigns, sales email | honest offer comprehension and a measurable next action tied to the application KPI |
+| Informational | Help the reader understand, decide, or perform a task correctly | guides, articles, manuals, documentation, reports | the reader can find the answer or complete the job with supported claims |
+| Communication | Change the state of an interaction between people or organizations | email, support reply, notification, announcement, PR response | the recipient knows what happened, what matters, what to do, who owns it, and when |
 
-### Structural markers (AI writes like this — don't):
-- All paragraphs same length → vary: 1 line, 3 lines, 6 lines, 2 lines
-- Smooth transitions between ALL paragraphs → humans jump, skip, digress
-- Every section starts with a topic sentence → break this pattern
-- Perfect grammar everywhere → humans make minor imperfections
-- Lists for everything → prose for emotional content, lists for reference
-- Ending with summary/conclusion → end on action, question, or half-thought
+These are operating modes, not cosmetic tones. Voice, tone, formality, rhythm,
+density, terminology, and channel are separate profile dimensions inside a mode.
+When a text spans modes, choose one primary reader job and treat the others as
+supporting sections. Do not average incompatible purposes into generic copy.
 
-### Required human markers:
-- Start some sentences with "И", "А", "Но", "Ну" (Russian) or "And", "But", "Or" (English)
-- Include 1-2 incomplete thoughts or digressions per 1000 chars
-- Mix sentence lengths: 3-word punches + 30-word explanations
-- Use specific numbers (4477, not "about 4500")
-- Include at least one moment of self-doubt or self-irony
+Technical writing is a specialization over informational or communication mode,
+not a fifth reader job. When truth depends on code, schemas, interfaces, versions,
+commands, operating systems, or runtime behavior, load
+`technical-writing-profile.md` and require technical accuracy, procedure,
+architecture, and language review lanes.
 
-## Platform Adaptation
+Target language and source function are independent decisions. The route must
+return four authority groups separately: language/editorial, process, domain,
+and technical profiles. A process source may shape planning and client service;
+a domain or technical source may be authoritative about API semantics,
+advertising claims, crisis response, or document architecture. None of them is
+therefore qualified to shape the output language. Never flatten these groups
+into an undifferentiated author list.
 
-Each platform has DNA. Don't write "an article" — write for the SPECIFIC audience.
-If no platform specified → write neutral quality prose.
-If platform specified → load platform rules from writer agent (.claude/agents/writer.md).
+Each registry profile belongs to exactly one `authorityGroup`. Language profiles
+may control syntax, lexical choice, line editing, and voice; process profiles
+control planning and client communication; domain profiles control reader jobs,
+claims, explanation, structure, and genre behavior; technical profiles control
+product-specific accuracy and technical conventions. Split a mixed profile
+instead of relying on first-match routing.
 
-## Human Voice Verification (Post-Write Check)
+## Shared Primary-Source Library
 
-After writing, run this checklist:
-1. **Read aloud test** — does it sound like a human talking, or a press release?
-2. **BAN-LIST scan** — zero violations from default + project BAN-LISTs
-3. **Paragraph variation** — no 3 consecutive paragraphs of similar length
-4. **Transition check** — at least 2 "hard cuts" (no transition word) per 2000 chars
-5. **Specificity check** — at least 3 specific details (names, numbers, places) per 1000 chars
-6. **Mirror check** — does the reader think about THEMSELVES after reading, not the author?
+For every substantive informational, explanatory, business, technical, sales,
+marketing or communication artifact, including a substantive answer in chat,
+read fresh relevant primary passages and apply their principles before drafting
+or review. This is not limited to requests containing "write an article".
+Use `writing-source-grounding.md` for source selection, bounded retrieval,
+read receipts and the principle-to-artifact application record. The six-source
+catalog is `writing-library-catalog.json`; sources are one shared machine store
+outside Git, not copied into each project, release or website.
 
-If any check fails → rewrite that section before presenting.
+Actual fiction, literary scenes and lore prose do not use the informational
+book-editing workflow. A nonfiction book about game business, a technical chapter,
+a game pitch, project plan or production decision is not fiction. Mixed tasks
+are classified per artifact: the scene can be exempt while its sales description
+or project plan remains grounded. The fiction exclusion does not exempt a
+creative project from planning, production or acceptance checks.
 
-## Writer Agent Routing
+Small acknowledgements, one-line status and code-only edits do not require a
+book ritual. Once those tasks also produce substantive explanatory or business
+text, ground that artifact. Do not use this proportionality exception to skip
+an ordinary substantive explanation.
 
-All writing tasks MUST go to the writer agent (`.claude/agents/writer.md`), which runs on Opus.
-Never delegate writing to Sonnet or Haiku — quality degrades catastrophically.
-If the main orchestrator is on Sonnet and receives a writing task → route to writer agent.
+A missing, modified, edition-mixed or unverified cache is
+`source-grounding-blocked`, never permission to substitute model memory or a
+method summary. Continue safe non-writing work, report the source limitation,
+and request a valid library or an explicit change to the grounding requirement.
+Profiles, indexes and cached summaries help navigate but do not replace reading
+primary passages for this task. The verified text cache preserves supplied
+page/EPUB-section locators; inspect original files for layout, illustrations or
+extraction ambiguity. Books are method sources, not present-day market,
+technology, law, health or platform evidence.
+
+## Writing Contract Gate
+
+Before drafting, determine:
+
+1. Reader or recipient: situation, knowledge, objections, accessibility needs.
+2. Production purpose: the one job the text must perform.
+3. After-state: what the reader should understand, feel, decide, or do.
+4. Product/business link: user value and the relevant KPI, trust, loyalty,
+   conversion, retention, activation, support load, or operational outcome.
+5. Mode, target language, channel, format, length, deadline, and publication constraints.
+6. Sources of truth: approved facts, terminology, claims, evidence, links, lore,
+   plan, previous messages, and superseded material.
+7. Voice contract: desired qualities, concrete references, and forbidden traits.
+8. Acceptance evidence: how the client can judge that the text did its job.
+
+For a short low-risk request, infer obvious fields and write. Make material
+decisions explicit for long-form, consequential or ambiguous work; a routine
+public UI edit does not require a new contract document. If a missing fact would change the promise, advice, recipient action,
+story logic, safety, or legal meaning, stop and ask with 2-3 concrete options.
+
+## Public Copy Gate
+
+For websites, app UI, landing pages, public announcements and other customer-
+facing nonfiction, keep the published artifact separate from the agent's work
+report. This gate also applies when copy is produced inside a coding/design
+task rather than an explicit writing request.
+
+**Confident, useful, truthful.** Lead with the available value, supported facts
+and a real next action. Do not publish the agent's self-justification, defensive
+hedging, apologies for the draft, or explanations of why implementation was hard.
+For an ambiguous offer, resolve consequential facts with the owner off-page;
+offer concrete options rather than making the customer read internal debate.
+State a necessary limitation briefly in the customer's terms, then give the
+available alternative or next step. Future improvements need an approved scope;
+do not replace an awkward admission with an invented roadmap, date or guarantee.
+A genuine service apology or material warning is not prohibited self-justification.
+
+**No production-work residue.** Do not inject labels such as "prototype",
+"MVP", "mock data" or "backend not connected" merely to describe how the agent
+built the page. No TODOs, editorial notes, alternative draft blocks, revision
+instructions, prompt fragments, validation receipts, stack traces or raw debug
+messages in public copy. Keep these in development tools or the owner handoff,
+not in visitor-facing banners, tooltips, metadata, alt text or hidden DOM.
+Technical content belongs in the product when the audience actually needs it
+(for example API documentation), not as commentary on the production process.
+
+**Finished presentation is not fictional functionality.** A private visual
+prototype should contain coherent product copy, without unsolicited development
+labels; explain simulation and unimplemented behavior in the review handoff.
+If real visitors can mistake a simulation for an actual purchase, booking,
+saved record or service, isolate the demo, remove the misleading action or
+give a concise truthful boundary at that action. Never fabricate success,
+availability, customer proof or legal/safety facts. Keep required disclosures
+and deliberately approved preview/demo positioning. Do not turn this into a
+word blacklist: meaning, audience and the actual working path decide.
+
+Examples, only when the stated alternatives really exist:
+
+- "Sorry, this is only a prototype; the backend is not connected" -> keep that
+  implementation status in the owner report, not the cafe homepage.
+- "Unfortunately we haven't built online booking yet" -> "Book by phone" with
+  the working number. Do not claim "Booking confirmed" from a local simulation.
+- "We may add delivery soon" -> omit unless approved; describe currently
+  available pickup rather than inventing a delivery launch date.
+
+Before calling copy channel-ready, review the assembled artifact, not just its
+strings: visible page plus metadata/accessibility text and applicable empty,
+loading, error, success, mobile/desktop states. Remove accidental duplication,
+conflicting old/new wording, placeholder leftovers and editing residue across
+components. Repeated navigation or an intentional repeated CTA is not a defect
+by itself. Check claims and CTAs against the real path. Block acceptance on
+unresolved residue, self-justification or false claims; fix and recheck the
+affected surface. If rendering cannot be inspected, report that gap to the
+owner, not inside the published copy, and do not claim the rendered gate passed.
+
+## Language And Reference Boundary
+
+The structured registry assigns every source a language, usage class, and allowed
+effects. Every profile declares output languages and effects. The validator must
+reject these cases:
+
+- a domain or regulatory standard claims voice, syntax, line-editing, or
+  example-method authority;
+- a language-sensitive profile targets `all` languages;
+- no source in the target language authorizes a language-sensitive effect;
+- a project voice placeholder is treated as active before the project records
+  real approved material.
+
+For Russian output, load `russian-writing-profile.md`. It turns the Ilyakhov and
+Sarycheva methods into operational review steps and original template examples.
+For Russian communication, also load `russian-business-correspondence.md`. For
+Russian informational, marketing, or communication text that explains or
+persuades, load `russian-explanation-and-persuasion.md`.
+For English or another language, do not apply that profile merely because the
+request was written in Russian. Mixed-language artifacts require per-section
+language resolution.
+
+## External Tool Truth Gate
+
+External services are capabilities, not authors or hidden review evidence. The
+registry records their access state separately from source and profile records.
+The template ships `glavred-api` as `not-configured`: it has no paid access,
+credentials, HTTP adapter, or provider response. Information-style methods
+selected by active profiles may still guide a manual edit, but the result must not be labeled a
+Glavred check.
+
+Configuration and execution are different states. A configured adapter still
+routes as `execution:not-run` until an artifact-bound provider call succeeds.
+Runtime routing validates the merged registry and fails closed before exposing a
+project-configured tool or any profile.
+
+An agent may claim an external check, score, warning, or provider result only
+when all of these are true:
+
+1. The project registry explicitly supersedes the template tool and marks it
+   `project-configured` with configuration evidence.
+2. The integration actually ran against the current artifact or its recorded
+   content hash/version.
+3. A successful provider response is available as evidence for this iteration.
+4. The report distinguishes provider output from the agent's interpretation.
+
+If any condition is missing, report `external check not run` and continue with
+the applicable manual profiles. Never estimate, simulate, or backfill a vendor
+score from model judgment or public methodology.
+
+## LitAI-Derived Workflow
+
+The workflow adapts LitAI's strongest mechanisms without importing its
+book-specific entities or gates.
+
+These are available activities, not ten mandatory phases for every answer.
+Choose the depth needed for the requested artifact. Preserve primary-source
+reading and truth gates; avoid separate planning, reports or workers when a
+bounded edit can be completed and checked directly. Publication and external
+writes require task authority, not merely reaching the last activity below.
+
+1. **Route** - select the semantic mode from the reader's job, not keywords alone.
+2. **Research** - locate project SOTs, facts, prior text, audience evidence,
+   references, constraints, and known gaps before drafting.
+3. **Specify** - complete the writing contract and mark facts versus assumptions.
+4. **Analyze references** - separate language/editorial authority from domain
+   correctness, then extract usable properties such as structure, rhythm,
+   density, evidence placement, vocabulary, and tone. Do not copy a source's
+   structure blindly or mechanically imitate a named author.
+   Select explicit registry profile IDs, record the resulting editor IDs, and
+   reject stale, unverified-default, unlicensed, or hash-mismatched sources.
+5. **Architect** - define thesis or dramatic function, reader path, section
+   inventory, claims, evidence slots, transitions, and final action or resolution.
+6. **Create the functional whole** - produce the smallest complete text that
+   already performs the production purpose end to end.
+7. **Sharpen** - deepen evidence, examples, scenes, objections, explanations,
+   texture, and phrasing while preserving the accepted architecture.
+8. **Review** - check purpose, source fidelity, logic, omissions, harm,
+   manipulation, and applicable mode criteria. Use the independent-review
+   decision below rather than spawning a worker for every text.
+9. **Edit** - run structural, line, terminology, grammar, and channel passes in
+   that order. Preserve intentional voice and project terminology.
+10. **Release and evolve** - verify final claims and links, publish in the right
+    format, collect outcome evidence, update the active SOT, and replace
+    superseded versions rather than leaving contradictory copies active.
+
+## Progressive JPEG For Text
+
+Use progressive JPEG for substantial writing developed in successive useful
+versions, not as mandatory staged ceremony for every reply or typo fix.
+A low-detail text is not an
+outline pretending to be a deliverable. At 1% it must already perform the text's
+real production function honestly from beginning to end; later passes increase
+resolution.
+
+- Literary: a short complete scene has setup, pressure, turn, and resulting
+  change, even if imagery and subtext are still rough.
+- Marketing: the reader can identify the real offer, relevant outcome, honest
+  proof boundary, and working next action. A placeholder testimonial is not proof.
+- Informational: the core answer, required caveat, and executable next step are
+  present, even if examples and edge cases are sparse.
+- Communication: the recipient can act correctly from the message now; owner,
+  timing, consequence, and reply path are not deferred.
+
+Plans, headings, evidence slots, TODOs, and draft fragments are preparation, not
+product evidence. Mark unresolved slots explicitly. Never invent a fact, quote,
+testimonial, citation, statistic, customer detail, deadline, price, capability,
+or narrative canon to make the text look complete.
+
+Before each sharper pass:
+
+1. Verify the accepted final section/function inventory still exists.
+2. Check that the current whole still performs the production purpose.
+3. Replace obsolete passages and stale placeholders; do not preserve them as
+   disabled, commented, hidden, or release-excluded alternatives.
+4. Report current depth honestly: contract, functional 1%, structured draft,
+   reviewed draft, channel-ready, or outcome-validated.
+
+## Mode-Specific Gates
+
+### Literary
+
+- Treat the author-approved story bible, plan, character/location facts, and
+  chronology as active SOTs; do not fill canon gaps silently.
+- Load relevant past state, current scene function, intended future consequence,
+  character knowledge, location, and reference profile before drafting.
+- Check causality, point of view, motivation, information access, continuity,
+  pacing, sensory specificity, dialogue function, and tonal consistency.
+- Use editorial lenses as diagnostic perspectives, then synthesize one coherent
+  voice. Do not write one paragraph per lens.
+
+### Marketing And Advertising
+
+- Identify audience/ICP, category situation, journey stage, offer, objection,
+  channel, distribution, proof, desired action, and measurement before copy.
+- Connect claims to verifiable evidence. Distinguish features, outcomes,
+  guarantees, estimates, and hypotheses.
+- Optimize for the product's real KPI and long-term trust, not clicks, vanity
+  metrics, fake urgency, pressure tactics, hidden conditions, or dark patterns.
+- A CTA must lead to a real available path. If fulfillment is manual or limited,
+  state that boundary instead of implying automation or availability.
+
+### Informational
+
+- Lead with the reader's answer or task, then provide context in dependency order.
+- Separate facts, interpretations, assumptions, procedures, warnings, and examples.
+- Cite or link sources when freshness, precision, disputed claims, or high stakes
+  matter. Do not use citations as decoration.
+- Test procedures against the stated environment. Include prerequisites, expected
+  result, failure states, recovery, and version boundaries when relevant.
+
+### Communication
+
+- Identify sender, recipient, relationship, prior state, desired state change,
+  action owner, timing, consequence, and reply/escalation path.
+- Put urgent decisions and actions where the recipient will see them; provide
+  context only to support correct interpretation.
+- Match authority and emotional weight. Be direct without manufacturing certainty,
+  blame, intimacy, apology, or urgency.
+- For support and incident messages, separate observed facts, impact, current
+  action, workaround, next update, and owner.
+
+## Human Voice And Truth Boundary
+
+Human voice comes from specific observation, meaningful choices, project language,
+rhythm appropriate to the reader, and an accountable point of view. It does not
+come from deliberately adding errors or random quirks.
+
+Never require or claim:
+
+- deliberate typos, grammar mistakes, incomplete thoughts, fake digressions, or
+  arbitrary paragraph-length patterns;
+- fake precise numbers, fabricated self-doubt, invented anecdotes, or unsupported
+  personal experience;
+- evasion of AI detectors or proof that a text is "undetectable";
+- a universal ban list applied without regard to meaning, quotation, genre, or
+  project voice;
+- one stereotyped voice for every audience on a platform.
+
+Use word and phrase lists as diagnostic signals. Remove filler, corporate
+abstractions, cliches, and repeated structures when they reduce meaning; keep a
+word when it is the clearest accurate choice.
+
+## Review And Editing Order
+
+1. Purpose: does the text perform the writing contract?
+2. Truth: are facts, claims, canon, sources, and uncertainty represented honestly?
+3. Structure: can the reader follow the intended path and find the next action?
+4. Mode: does it pass the selected profile's gates?
+5. Voice: is the language specific, coherent, natural, and project-appropriate?
+6. Public copy: apply the Public Copy Gate to the assembled customer surface;
+   keep production notes separate and verify actual claims/actions.
+7. Line edit: remove repetition, nominalizations, weak abstractions, accidental
+   passive voice, buried actors, and inconsistent terminology.
+8. Grammar and format: correct errors without flattening intentional voice.
+9. Channel: verify length, hierarchy, links, accessibility, rendering, and CTA.
+
+Check the completed text, not just the intention behind it. Compatible review
+lenses may be covered in one pass; a role list is not a worker-count requirement.
+For source-grounded substantive authored nonfiction and material rewriting,
+the source-grounding acceptance gate requires a separate editorial pass with
+concrete observations on the completed artifact. A brief status/explanation,
+literal mechanical edit or explicit user opt-out may self-check. A short ad or
+letter remains authored writing. See `writing-source-grounding.md` for current
+reading, exact-artifact review and host evidence boundaries.
+Use a separate reviewer when explicitly requested, required by a project gate,
+or when material claim, safety, legal, operational or source-interpretation risk
+would benefit from independent evidence. Public/commercial placement or an M+
+label alone is insufficient. Otherwise a focused self-check is appropriate.
+Do not present a self-check as independent review evidence. Follow shared
+fan-out limits and do not bypass a required acceptance gate when no reviewer is
+available: report that specific gap.
+
+## Client-Facing Work Reports
+
+A closeout is a communication-mode text. It should let the client understand the
+result and make the next decision without reading an internal build log.
+
+Default order:
+
+1. `Что было` - the user-visible problem, gap, or risk.
+2. `Что стало` - the verified state now.
+3. `Что это даёт` - the practical user or business effect.
+4. `Чего ожидать дальше` - remaining dependency, next evidence, or operating note.
+
+Lead with outcome, separate done from not verified, and mention files or commands
+only when they change a decision or provide useful evidence. For work inside
+an accepted staged product plan, include current readiness and next version or
+replan trigger when they affect the user's decision. Bounded tasks need no
+invented roadmap or ritual four-part report. Follow
+`.claude/library/process/client-executor-contract.md`; never claim research,
+tests, review, release, or completion without fresh evidence.
+
+## Final Check
+
+- The chosen mode matches the reader's real job.
+- The text performs its production purpose at the declared depth.
+- Facts, proof, citations, canon, and uncertainty are honest.
+- The project voice and terminology are preserved.
+- Public copy passes the Public Copy Gate: confident facts and available actions,
+  no self-justification, production notes, accidental duplicates or false promises.
+- The next action or resolution is available and clear.
+- Obsolete versions and placeholders are replaced or explicitly unresolved.
+- UTF-8, no-BOM, line-ending, and mojibake policy passes for tracked text.

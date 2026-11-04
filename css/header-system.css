@@ -86,6 +86,9 @@ body.is-nav-mobile-open .nav__mobile-toggle {
 }
 .nav__brand,
 .brand-logo {
+  display: inline-flex;
+  min-height: var(--button-min-height);
+  align-items: center;
   font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: var(--font-weight-strong);
@@ -221,7 +224,7 @@ body.is-nav-solid.is-nav-mobile-open .nav__inner {
   -webkit-backdrop-filter: none;
 }
 
-@media (min-width: 48.8125rem) {
+@media (min-width: 80.0625rem) {
   body.is-nav-menu-open .nav .nav__brand,
   body.is-nav-menu-open .nav .brand-logo,
   body.is-nav-menu-open .nav .nav__link,
@@ -284,7 +287,7 @@ body.is-nav-mobile-open main {
   }
 }
 
-@media (max-width: 48.75rem) {
+@media (max-width: 80rem) {
   body,
   .pdp-hero-page {
     --nav-height: var(--nav-height-pdp);
@@ -307,7 +310,7 @@ body.is-nav-mobile-open main {
     gap: var(--space-half);
     height: var(--button-min-height);
     min-height: var(--button-min-height);
-    padding: 0;
+    padding: 0 var(--space-half);
   }
 
   .nav__links,
@@ -317,6 +320,7 @@ body.is-nav-mobile-open main {
     right: var(--shell-padding-x);
     left: var(--shell-padding-x);
     z-index: 2;
+    width: auto;
     max-height: var(--nav-mobile-panel-max-height);
     display: none;
     grid-template-columns: 1fr;
@@ -344,6 +348,7 @@ body.is-nav-mobile-open main {
   .nav__trigger,
   .nav .nav__link.nav__trigger {
     width: 100%;
+    min-height: var(--button-min-height);
     justify-content: space-between;
     padding: var(--space-half) var(--space-base);
     color: var(--text-primary);

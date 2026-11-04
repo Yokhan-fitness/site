@@ -18,6 +18,9 @@ description: "Systematic debugging approach: reproduce, isolate, fix, verify, do
 - Use CodeGraphContext (if available) to find callers/callees
 - Narrow down to the specific module/function
 - Check recent changes: `git log --oneline -20` and `git diff`
+- Run a bounded negative check over the affected path and direct consumers for
+  causal final-plan, SOT/owner, duplicate-state, obsolete-path, or
+  protected-boundary mismatch. This is not a general architecture review.
 
 ### 3. Hypothesize
 - Form a specific hypothesis about the cause
@@ -30,22 +33,35 @@ description: "Systematic debugging approach: reproduce, isolate, fix, verify, do
   - Missing error handling
 
 ### 4. Fix
-- Make the minimal change that fixes the issue
+- If reading already proves a qualifying system mismatch, invoke the shared
+  Change Strategy Gate before the first patch. Reroute once only when pipeline,
+  risk, or approval authority changes.
+- Make the smallest reasonable change toward the accepted final architecture
 - Do not refactor unrelated code in the same change
 - Prefer fixing the root cause over symptoms
 
 ### 5. Verify
+- Follow `.claude/library/process/self-verification.md` for verification cadence.
+  For the fix task, choose focused checks and any required integration check;
+  the parent/integrator owns broad verification. A fix is not a product wave.
 - Write a test that reproduces the original bug (it should fail without the fix)
 - Apply the fix -- test passes
-- Run full test suite -- no regressions
-- Run typecheck and linter
+- After a coherent fix batch, run the affected regression tests and relevant
+  typecheck/lint. Do not run the full suite unconditionally after every patch.
+- Workers return scoped command/result/tested-state evidence, not independent
+  duplicate full runs. Reuse evidence only for matching scope/content/inputs/
+  toolchain, and state concrete invalidation before repeating a broad check.
+- Preserve mandatory security, CI, release, and artifact-bound acceptance gates;
+  older full-suite evidence is a baseline, not a pass of the changed tree.
 
 ### 5b. Regression Check
-After fixing the immediate module, also run integration tests:
-- `npm test -- --testPathPattern=integration` (Node)
-- `pytest tests/integration/` (Python)
-- `go test ./tests/integration/...` (Go)
-If integration tests fail, the fix may have introduced a regression -- investigate before committing.
+Choose affected integration tests when the fix crosses a boundary or evidence
+shows integration risk. Use the repository's supported focused command; do not
+append another integration run when the selected acceptance suite already covers
+it and no relevant delta invalidates that evidence. On failure, reproduce and
+diagnose narrowly, fix the cause, then widen coverage if needed rather than
+blindly restarting the whole suite. Integration failures remain unresolved
+until explained and repaired; do not hide them before committing.
 
 ### 6. Document
 - Log the bug and fix in `brain/03-knowledge/` for future reference
@@ -168,7 +184,9 @@ Stop when you reach something you can change structurally (architecture, process
 Sunk cost awareness is critical. Consider rewriting when:
 
 - **Time investment exceeds value**: you have spent 2+ hours on a function that would take 30 minutes to rewrite from scratch with tests
-- **Fix count is climbing**: the same area has been "fixed" 3+ times and keeps breaking -- the design is wrong, not the implementation
+- **Fix count is climbing**: a second repair failed against the same acceptance
+  criterion. This is the mandatory fallback circuit breaker; architecture
+  evidence found earlier must activate the gate without waiting for attempt two.
 - **Understanding is lost**: nobody (including you) can confidently explain what the code is supposed to do -- you are pattern-matching, not reasoning
 - **The bug reveals a design flaw**: the fix requires violating the module contract or adding special cases that make future bugs more likely
 - **Test coverage is zero**: adding characterization tests to understand behavior takes longer than rewriting with TDD

@@ -1,252 +1,780 @@
 {
-  "template_version": "3.4.0",
+  "template_version": "6.4.3",
   "created": "2026-03-22",
-  "updated": "2026-04-09",
+  "updated": "2026-10-29",
   "template_remote": "https://github.com/Yokhan/agent-project-template.git",
   "files": {
-    ".claude/settings.json": {
+    "_reference/agent-sot/originals/ai-agent-spec-v3-final.md": {
       "category": "template",
-      "hash": "519258b96290af95c1dad1838208e9dcf669c508663b55b50625fca4e32b85ee"
+      "hash": "1a3e65302b965232df93639790025e71b04648dc9b2e71906ba38048dca03468"
     },
-    ".claude/rules/architecture.md": {
+    "_reference/agent-sot/README.md": {
       "category": "template",
-      "hash": "c2fc6a56958fd9f20a035f44516784fa35a407220a5353768c4bc396c83634d0"
+      "hash": "389264abfe13ba38fc7add4d9772310d1965303202ed0bd45d7e3bedc7eb7b33"
     },
-    ".claude/rules/code-style.md": {
+    "_reference/agent-sot/sources.json": {
       "category": "template",
-      "hash": "329a2d3537c37eebf399640a6c74913d653eaa512b9c83ebbaa867210b946593"
+      "hash": "419e41f7c8f464a57676cdfe15a8796702f3d3c742f4187a7ea92d67794ecf8e"
     },
-    ".claude/rules/conflict-resolution.md": {
+    "_reference/agent-sot/top-works.md": {
       "category": "template",
-      "hash": "87a2f2825392ab1f634c4c991faa47c6624198493d0cb9a4d5fdcc1f664370cc"
+      "hash": "d1d6ef68d170aa6a88ec979356c7a313228f9cb475d37864bba8335dc5f08a30"
     },
-    ".claude/rules/critical-thinking.md": {
+    "_reference/code-intelligence-tools.json": {
       "category": "template",
-      "hash": "fa6bd5490ae4aef989c2d0855b55599a7d236c92e35d6eff8704ac15ed2bb1dc"
+      "hash": "1ea3ab3f125173150c2b78775f0103053d67f5bf966bdbbac8f2c40e9b6f003a"
     },
-    ".claude/rules/domain-business.md": {
+    "_reference/codex-mcp-config.toml": {
       "category": "template",
-      "hash": "7d4dca0f399eeec05a99e950444d71bbf2d329783848e0c5dd2ac04d1d08bf92"
+      "hash": "1ce5e0c177dc9776847b463334b609ce3e324278acb28481b441fab45bb40a7b"
     },
-    ".claude/rules/domain-design.md": {
+    "_reference/README.md": {
       "category": "template",
-      "hash": "0ebb943204ab79c581ac84583b5f58893acca3385ae12f8cfbeb7f5ef42a214a"
+      "hash": "88a42410360558b583874f6cd45ea9d1dbf9cbcbfe449a918a615d8a4fa6a77d"
     },
-    ".claude/rules/domain-health.md": {
+    "_reference/spec-kit/manifest.json": {
       "category": "template",
-      "hash": "565aec7e0e8541c3fb6d6e82441de14b900b656a61912db1c87b94fad51e7b15"
+      "hash": "0992c1437b55dda0fb2cdcd635bf00a324776ac4e092ac4bf4f8f5a903012a67"
     },
-    ".claude/rules/domain-marketing-sales.md": {
+    "_reference/spec-kit/README.md": {
       "category": "template",
-      "hash": "f01e1bcacbe064d0b3192e0430109c31dc64a108073c2c28feb454d085a7e3f2"
+      "hash": "ec97342ed3a284393f0691ebbacf5b3dd5add615577eadf92a0bf5307aa703b7"
     },
-    ".claude/rules/domain-productivity.md": {
+    "_reference/spec-kit/upstream/docs/installation.md": {
       "category": "template",
-      "hash": "f10f7fb1361c3813cfd0231ec5bdcf1140b00b6799e02413b62ef17fdd9c6bfd"
+      "hash": "d60fcd2f52d9421522480ed90fdcc8461be1b9884ef8ad9c9aa18b2115cf92af"
     },
-    ".claude/rules/domain-psychology.md": {
+    "_reference/spec-kit/upstream/docs/quickstart.md": {
       "category": "template",
-      "hash": "c5a3322df4ac5d9901ed9115596ce8d9da401d45850e29e3a77e4892d7b78664"
+      "hash": "a1c627dd192c8f2d9289ce5911d22a7ecce3bac95a59dfb2009887313ac5d127"
     },
-    ".claude/rules/domain-science.md": {
+    "_reference/spec-kit/upstream/docs/reference/core.md": {
       "category": "template",
-      "hash": "d86d69739ce72467504fd7b6cabc088de731214af099a9f65bedf16096628801"
+      "hash": "fe947487833f60a506192f5f5fc138af628f97e39e18624905d98b148c5a272e"
     },
-    ".claude/rules/domain-software.md": {
+    "_reference/spec-kit/upstream/docs/reference/extensions.md": {
       "category": "template",
-      "hash": "b163ba2a53145c022be933eaa9833bb3350b7b9fe046eb9e058174111a31ab03"
+      "hash": "9093fddaf6605562ffbf0e5b0ad22dbe3df51d269d731b7b59bdee3f7dbe63b7"
     },
-    ".claude/rules/error-handling.md": {
+    "_reference/spec-kit/upstream/docs/reference/integrations.md": {
       "category": "template",
-      "hash": "770afce0a40ca2ea6b2d9d00416926408e1aacfcee3500aab44b31305c59d07a"
+      "hash": "9fe6c295a5258ffb7cce7a45f3a1bc052672bc3f8560d8c44eda62d45d30eaf7"
     },
-    ".claude/rules/git-workflow.md": {
+    "_reference/spec-kit/upstream/docs/reference/presets.md": {
       "category": "template",
-      "hash": "0adebf6804b7c0da0f467e5aa0f93f0fb0c55c2a2f19d528f59e6f6a810ab144"
+      "hash": "ab7e2260a282fcec11958b8b450277a01fabecb143da154e8d71180541f52d3f"
     },
-    ".claude/rules/self-improvement.md": {
+    "_reference/spec-kit/upstream/docs/upgrade.md": {
       "category": "template",
-      "hash": "9a84c85503ed2c5e79366c855875dcb157c8a4388772b7c139e9a9d54db1446e"
+      "hash": "7e039c1134f29b8ef0deccf16cb1f424ce63fefe9278c828d99478909e99b479"
     },
-    ".claude/rules/strategic-thinking.md": {
+    "_reference/spec-kit/upstream/integrations/catalog.community.json": {
       "category": "template",
-      "hash": "48ad315186243bfd288a0924a9452ce2c7c8c6d1cd077f2a3923f71bf2fda7c9"
+      "hash": "217fa305377bdf798a168795416593c514035b7978683b34f070131fcea9b5d3"
     },
-    ".claude/rules/testing.md": {
+    "_reference/spec-kit/upstream/integrations/catalog.json": {
       "category": "template",
-      "hash": "ab8eb78ee4de5ac9f345fa6ea057463435638c9bd7f59bb8719cc41a20d95b8b"
+      "hash": "ba52ea07a342f363ac31a6fcbe48bc4126138ac6b7857f9ec075e51929e43b85"
+    },
+    "_reference/spec-kit/upstream/LICENSE": {
+      "category": "template",
+      "hash": "c59d8dd3991fc1eb310b0478ea35adbe55a7afb6bac8734c2f0ac6fbda5aaa36"
+    },
+    "_reference/spec-kit/upstream/README.md": {
+      "category": "template",
+      "hash": "a4a5257423bcbf5c3ab20a5752aa1daf4deb4e5034de053bc8cd4fa9f6cf5351"
+    },
+    "_reference/spec-kit/upstream/scripts/bash/check-prerequisites.sh": {
+      "category": "template",
+      "hash": "aff361639c504b95a2901493f5022788adc01a6792fd37f132de8f57782e4b80"
+    },
+    "_reference/spec-kit/upstream/scripts/bash/common.sh": {
+      "category": "template",
+      "hash": "dd638316259e699fd466542c77ef16af5eb198efe0447c081f86b890db414ba8"
+    },
+    "_reference/spec-kit/upstream/scripts/bash/create-new-feature.sh": {
+      "category": "template",
+      "hash": "bcf4964ca0c6c78717bb42d9e66b8c7e5ee82779cd96afc5aa7b08b75abe5790"
+    },
+    "_reference/spec-kit/upstream/scripts/bash/setup-plan.sh": {
+      "category": "template",
+      "hash": "0d1d7a66de157b0be1385bb91aa71e5bf95550217abf47a73270dab0dc52895a"
+    },
+    "_reference/spec-kit/upstream/scripts/bash/setup-tasks.sh": {
+      "category": "template",
+      "hash": "e8d050c63c5afb664a8b671b0b0155513fb9cab0567b335e16b9eb035482aad2"
+    },
+    "_reference/spec-kit/upstream/scripts/powershell/check-prerequisites.ps1": {
+      "category": "template",
+      "hash": "08b1872f165889e89a06e0b43fe0c6ea1aa3540f6c4989a41ab9e731604407a6"
+    },
+    "_reference/spec-kit/upstream/scripts/powershell/common.ps1": {
+      "category": "template",
+      "hash": "798cc255e851a360aa7a3acf5fd8ee3076bcc69db5efb916d6a511d9d47ecdd8"
+    },
+    "_reference/spec-kit/upstream/scripts/powershell/create-new-feature.ps1": {
+      "category": "template",
+      "hash": "6c700a29769bf08cd35d43bac13823018e1d5329a685c5dfbef9e4751273b5d9"
+    },
+    "_reference/spec-kit/upstream/scripts/powershell/setup-plan.ps1": {
+      "category": "template",
+      "hash": "1697a2f5fa64f590488e2841e9ba6871652406813fbffd242880276e1a042b5e"
+    },
+    "_reference/spec-kit/upstream/scripts/powershell/setup-tasks.ps1": {
+      "category": "template",
+      "hash": "4d338d072b2cbfe1b897e2d34f98623cb0a143aa04c402613e5443db540b9b96"
+    },
+    "_reference/spec-kit/upstream/spec-driven.md": {
+      "category": "template",
+      "hash": "4cc69282f0f868345e7d2bcf438a4d1b01c169dbb230b8d7f17c4046072920a4"
+    },
+    "_reference/spec-kit/upstream/templates/checklist-template.md": {
+      "category": "template",
+      "hash": "dcf816e3a031a7d489773aa77a7144bf70e0bcaf91bd44a59671911dad5dbe58"
+    },
+    "_reference/spec-kit/upstream/templates/commands/analyze.md": {
+      "category": "template",
+      "hash": "33641d1bdf7e8d1534a4e2a1a83458d580a43d6975f72cc7455b4c71b6fb1c5e"
+    },
+    "_reference/spec-kit/upstream/templates/commands/checklist.md": {
+      "category": "template",
+      "hash": "9240ea6861ed7642e32cba88ee2934e69ad6952d69fa898af4de5e8553595857"
+    },
+    "_reference/spec-kit/upstream/templates/commands/clarify.md": {
+      "category": "template",
+      "hash": "b8a7518eaa599872ad513182e5e40817b748981724e9da5ff4a285edfa1a8f18"
+    },
+    "_reference/spec-kit/upstream/templates/commands/constitution.md": {
+      "category": "template",
+      "hash": "58d35eb026f56bb7364d91b8b0382d5dd1249ded6c1449a2b69546693afb85f7"
+    },
+    "_reference/spec-kit/upstream/templates/commands/implement.md": {
+      "category": "template",
+      "hash": "73ea3dad69a5d910eb5b20367a7b447e7f44abbdf574988ec193fbfb3c62be33"
+    },
+    "_reference/spec-kit/upstream/templates/commands/plan.md": {
+      "category": "template",
+      "hash": "eaeb022a427cecbd28e503944020d092a3162a858646972197088680fb72573f"
+    },
+    "_reference/spec-kit/upstream/templates/commands/specify.md": {
+      "category": "template",
+      "hash": "c2fb719a962a27b64820bcbcffde0a0b5669b6312de48898c80fc5466beb329d"
+    },
+    "_reference/spec-kit/upstream/templates/commands/tasks.md": {
+      "category": "template",
+      "hash": "acb2c4ad00a237810b02da36669ff38b4548d8f19a26441975d9c0aab51e49b1"
+    },
+    "_reference/spec-kit/upstream/templates/commands/taskstoissues.md": {
+      "category": "template",
+      "hash": "a8f9a927a48b5eb74d28b59cf49bb3c63d701e9b6695e2e1755f3fc2ed055224"
+    },
+    "_reference/spec-kit/upstream/templates/constitution-template.md": {
+      "category": "template",
+      "hash": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3"
+    },
+    "_reference/spec-kit/upstream/templates/plan-template.md": {
+      "category": "template",
+      "hash": "342848d1ca70680146da5558ae5792c3749bc07946e2685f04f91d1887d18571"
+    },
+    "_reference/spec-kit/upstream/templates/spec-template.md": {
+      "category": "template",
+      "hash": "3945437fc35cd30a5b2bf7beea680337c3516826d3efa5a6b92c4a7eca1ba28e"
+    },
+    "_reference/spec-kit/upstream/templates/tasks-template.md": {
+      "category": "template",
+      "hash": "1e448e9153462e8c5b5a55231a54c756d870a82950d4dd9425a2bf5b7008a0d9"
+    },
+    "_reference/spec-kit/upstream/templates/vscode-settings.json": {
+      "category": "template",
+      "hash": "c6782d67fc76b9128803b03247ddd015d542a574ee80a4fe0aca2429aa7bfe08"
+    },
+    "_reference/tool-registry.md": {
+      "category": "project",
+      "hash": "070e27b1e91e67dd6ccec6f4cf1da93a57626300a65a027fd0ecdb72261a61a3"
+    },
+    "_reference/writing-library-source.json": {
+      "category": "template",
+      "hash": "c31950d6354ed679a54c8733963844f196708e7ca6aa2e67034355f7882581fe"
+    },
+    ".agents/skills/codex-agent-metrics/agents/openai.yaml": {
+      "category": "template",
+      "hash": "33ce0752357c73d971e28a40130acbae5afe0251706fa24b3af21ccd5dd5056e"
+    },
+    ".agents/skills/codex-agent-metrics/SKILL.md": {
+      "category": "template",
+      "hash": "09909a3196faaac3549099077454bd81e1d458f3c4f43b165d6969670c98b41c"
+    },
+    ".agents/skills/codex-agent-router/agents/openai.yaml": {
+      "category": "template",
+      "hash": "d4b9e304be26b8c21fcfc5e45e1ecee3c7e44f3d6276be6178fbe8e226078a59"
+    },
+    ".agents/skills/codex-agent-router/SKILL.md": {
+      "category": "template",
+      "hash": "0dda37aa77aebc7debb67c05a406478666d82ae27026866bcf9a9a6c881406b5"
+    },
+    ".agents/skills/codex-api-contract/agents/openai.yaml": {
+      "category": "template",
+      "hash": "0de05deb2fcfca33d30e83e53b945834f5fd3070a3d9c74f3bd43f284ddd14e1"
+    },
+    ".agents/skills/codex-api-contract/SKILL.md": {
+      "category": "template",
+      "hash": "d6cb5d0051b09369563193b276c9b6ff4e87524b50a49a4e826d92939009795a"
+    },
+    ".agents/skills/codex-audit/agents/openai.yaml": {
+      "category": "template",
+      "hash": "be411a92a07f62bb03084b10eb55254d0c91a5b2eadf6dde330cf146665f14bc"
+    },
+    ".agents/skills/codex-audit/SKILL.md": {
+      "category": "template",
+      "hash": "c39791d0beb6a9b2b11e2ea8b8dbdfe4d13c8efa97f9932329e3f4dce3d74541"
+    },
+    ".agents/skills/codex-change-strategy/agents/openai.yaml": {
+      "category": "template",
+      "hash": "20cd3046fbd65c18f81e813ba82a13167fcc7906ae07053e300606d79e752ee9"
+    },
+    ".agents/skills/codex-change-strategy/SKILL.md": {
+      "category": "template",
+      "hash": "f0fd2dede4b7175c650d1349430b0a7abc8a1a59c7fffb8721692b9f062ab7b0"
+    },
+    ".agents/skills/codex-coverage/agents/openai.yaml": {
+      "category": "template",
+      "hash": "cc0d3cdc1c07bcfce34c4914b57994569b0af88de4559aa1d0843399ea81dd13"
+    },
+    ".agents/skills/codex-coverage/SKILL.md": {
+      "category": "template",
+      "hash": "568cae03b56800ef1f5ec3000b1e2f0a8bc79d00048fae0f810f237fee8138c1"
+    },
+    ".agents/skills/codex-cross-project-lessons/agents/openai.yaml": {
+      "category": "template",
+      "hash": "1357a906cc1448c447bea6910500d1490c3bc11f1d5c4b973f87359ad51a326e"
+    },
+    ".agents/skills/codex-cross-project-lessons/SKILL.md": {
+      "category": "template",
+      "hash": "5fce526df8ee9668ad2cafeba292becf92285e0cd127a5a42b9ffe9aa346f77d"
+    },
+    ".agents/skills/codex-daily-brief/agents/openai.yaml": {
+      "category": "template",
+      "hash": "d190be831ac64101b279ad3cb7cbdfbde54f44837ad45a2963696e11ffb7c923"
+    },
+    ".agents/skills/codex-daily-brief/SKILL.md": {
+      "category": "template",
+      "hash": "add1c592e9318a8494fdfa464f8ad4393f2804690481c0c0ddcdfa975790a04a"
+    },
+    ".agents/skills/codex-debug/agents/openai.yaml": {
+      "category": "template",
+      "hash": "9a425d18798b54ed2ab88d909929987a3bd071e070a3724d54d81d855d9d3322"
+    },
+    ".agents/skills/codex-debug/SKILL.md": {
+      "category": "template",
+      "hash": "d4caa5404bfff1450fd503c5de5e1f96268d14acc2af685d03620c3c3335f556"
+    },
+    ".agents/skills/codex-decompose/agents/openai.yaml": {
+      "category": "template",
+      "hash": "0f570146c75264c6f4ad6178bed7e2fbe7aed229836995b1b6a4703b80fbbb4d"
+    },
+    ".agents/skills/codex-decompose/SKILL.md": {
+      "category": "template",
+      "hash": "1e9f433a7a8acb00c24c9de0b4f0c4f403e1ff9978143dce391ad23a6a75eae9"
+    },
+    ".agents/skills/codex-design-system-workflow/agents/openai.yaml": {
+      "category": "template",
+      "hash": "b1367ca350b3cd1f7f715e158f5b2f5996fc4e0281e814908c346dfe39a023da"
+    },
+    ".agents/skills/codex-design-system-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "ca6b833dfa0bf39e9c5e14c9fc2acaadd9d918a7fffbf11cb57ff4b9e15464e1"
+    },
+    ".agents/skills/codex-design-workflow/agents/openai.yaml": {
+      "category": "template",
+      "hash": "29221c070bbf80a57f5cb5cd81ecf14ee36d1ad300025828e4a62792cfab0230"
+    },
+    ".agents/skills/codex-design-workflow/references/design-checks.md": {
+      "category": "template",
+      "hash": "b90d14be12cee27c351db85a1b81aee7c7e1b365e069a3c3ea7012c98fbf5daa"
+    },
+    ".agents/skills/codex-design-workflow/references/design-command-modes.md": {
+      "category": "template",
+      "hash": "6cc15a4b6f8fca4f0ef3398aa67c102099954463cf1cddde1f7e3afee687f040"
+    },
+    ".agents/skills/codex-design-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "234550b32ed23cef507d28d82f4e6d49ebaa18bbf4e0bca1289e81fec62c72b5"
+    },
+    ".agents/skills/codex-domain-business-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "dc3fc1bc2590103c1c995b4d4d28b3797d2ecf4a2ec8fdd0b3af2a595d49ce75"
+    },
+    ".agents/skills/codex-domain-business-review/SKILL.md": {
+      "category": "template",
+      "hash": "b3571578b6a08e2fb5e5bcca5c686ac83b36b359d3ec4874c5fbf91e4e4d8a09"
+    },
+    ".agents/skills/codex-domain-communication-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "1372d86c8df615d780a17748d1e855eab8918d171a4da5c1fe189aac01f8edb6"
+    },
+    ".agents/skills/codex-domain-communication-review/SKILL.md": {
+      "category": "template",
+      "hash": "b52331f3fdba659f40f4d8738155922e664d9fb0b8d5d26368a3f37b25ba99a5"
+    },
+    ".agents/skills/codex-domain-design-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "9e826f212898fef913b6850959a944f2dadab82e8358435dcee7a0dff3b145f6"
+    },
+    ".agents/skills/codex-domain-design-review/SKILL.md": {
+      "category": "template",
+      "hash": "1f754e2e8294f6e903def674c605263fb51203e16c18a3138b81701cb5d081f6"
+    },
+    ".agents/skills/codex-domain-health-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "d9e3795397c207b0579f536a22f9db379af072b5cb243de62d67bd838caec0bf"
+    },
+    ".agents/skills/codex-domain-health-review/SKILL.md": {
+      "category": "template",
+      "hash": "da6b5b70fbed0cbc12a56feda095dffdc90b3898811d88dbb057629a1c6c9a1e"
+    },
+    ".agents/skills/codex-domain-science-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "d19bac2d5c7c35546148891759a8a5106e9aace46d515b7ca5efac8eaae82d82"
+    },
+    ".agents/skills/codex-domain-science-review/SKILL.md": {
+      "category": "template",
+      "hash": "087b6899557277afcee51940f8895cc9399537c6c61b79004fa97f7786a3cd2b"
+    },
+    ".agents/skills/codex-domain-software-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "94e46ed7c2c7368289c1f588492ad305c43d6e6e9a9c7552e26cc684051dd2d9"
+    },
+    ".agents/skills/codex-domain-software-review/SKILL.md": {
+      "category": "template",
+      "hash": "e28fca654318e339741631a9a95e20481e620a9b57a33c4623d77276ffc0319a"
+    },
+    ".agents/skills/codex-feature-workflow/agents/openai.yaml": {
+      "category": "template",
+      "hash": "30399c91b1c47e26e31dddd32bf84ab211f413432296a7d68f9a55d6de40842b"
+    },
+    ".agents/skills/codex-feature-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "2b640e91b03f73816b3355f87b6cc60184e1a369d40bda150f0facd8f818fe92"
+    },
+    ".agents/skills/codex-figma-workflow/agents/openai.yaml": {
+      "category": "template",
+      "hash": "9cc788a2487c7ba6e1ba0aee79d771d674ff0a201b58abdb3559913d36945076"
+    },
+    ".agents/skills/codex-figma-workflow/references/figma-checks.md": {
+      "category": "template",
+      "hash": "b511974935adffd4c1fa23aff998212bf3642e46581fd0c16190951e0814342c"
+    },
+    ".agents/skills/codex-figma-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "e3880e22300a8399580e42efbead4b2f97f094c46f99518a34aeabbd690af259"
+    },
+    ".agents/skills/codex-health-check/agents/openai.yaml": {
+      "category": "template",
+      "hash": "f5362f2e5e0833a624a7e41b0a56627d7f5a4ee0ab8ea5cd8ebe391c012470ef"
+    },
+    ".agents/skills/codex-health-check/SKILL.md": {
+      "category": "template",
+      "hash": "fdf7ef1607c5fceaf9c4478d50a7e0277de8ca9553c8e1662ab210b1c17a8366"
+    },
+    ".agents/skills/codex-memory-router/agents/openai.yaml": {
+      "category": "template",
+      "hash": "bb94778741ea878c1efca65d6283eaa665fe2867cc093571c52440421f18bb55"
+    },
+    ".agents/skills/codex-memory-router/SKILL.md": {
+      "category": "template",
+      "hash": "5ba1f81185af3de7dded1ffba9e29a689b4c8ff6fac88b1f4ffac7f78d914f57"
+    },
+    ".agents/skills/codex-mermaid-board-workflow/agents/openai.yaml": {
+      "category": "template",
+      "hash": "1105a8f8d1a05d4c85fc5da1bdad6032246bf0af305e737b2e580f78944e43c0"
+    },
+    ".agents/skills/codex-mermaid-board-workflow/references/mermaid-board-patterns.md": {
+      "category": "template",
+      "hash": "b549a32e0a48e795c258c2c7b3648a8ac695e83b49cc3015d334804333f3816f"
+    },
+    ".agents/skills/codex-mermaid-board-workflow/references/mermaid-viewer-ux.md": {
+      "category": "template",
+      "hash": "ee50e2a4c9320be9ea2821f3efaeec17458df49a5411124a1eb11b44a811ef80"
+    },
+    ".agents/skills/codex-mermaid-board-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "941c3214d42e2d97064fc02725853d1814dbdc2b675195c11ff0a4004839d6db"
+    },
+    ".agents/skills/codex-migrate/agents/openai.yaml": {
+      "category": "template",
+      "hash": "e0778a1d503a95b7b5a46fb60a9e8745666997790712235c7e838e660253a507"
+    },
+    ".agents/skills/codex-migrate/SKILL.md": {
+      "category": "template",
+      "hash": "c80bd91bd939e449cce391b08a1dd7717de4742841f04cc470f06ce2793689ad"
+    },
+    ".agents/skills/codex-modify-api/agents/openai.yaml": {
+      "category": "template",
+      "hash": "2863182f34576d8ecc25156366011aa2f38601b58052b0f58025112588d32c33"
+    },
+    ".agents/skills/codex-modify-api/SKILL.md": {
+      "category": "template",
+      "hash": "7f0a35502749958a7060b49d4e3bfac4eb08c61c0982272119d80d61577677f3"
+    },
+    ".agents/skills/codex-openai-model-guidance/agents/openai.yaml": {
+      "category": "template",
+      "hash": "bd115a78b0352bbfe12f2adb13040251349537ef74dbf9851111ec7f103649b4"
+    },
+    ".agents/skills/codex-openai-model-guidance/SKILL.md": {
+      "category": "template",
+      "hash": "4dccb3778cf70a1fd40eb946e058c06c5acd0236dc2608df340bdc08faeade8d"
+    },
+    ".agents/skills/codex-pipeline-workflow/agents/openai.yaml": {
+      "category": "template",
+      "hash": "c1ac1753e7801a8ba8c280c758ccb8aa889f3a90667b2cb1442fbd83ab620d26"
+    },
+    ".agents/skills/codex-pipeline-workflow/references/pipelines.md": {
+      "category": "template",
+      "hash": "7bc4db679cae4ae6d6663e3b0fc58e2515dbdc3744cc75675511e186de4a4cc2"
+    },
+    ".agents/skills/codex-pipeline-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "36c0da3877200715a957e102fa048cd03abc8aaf7ef5246b462c7cf1273b19d7"
+    },
+    ".agents/skills/codex-product-goal/agents/openai.yaml": {
+      "category": "template",
+      "hash": "96770fb12d30c7b5ac7be8588bcd4c4186cbf9ae297780c058e127a2c7c7379f"
+    },
+    ".agents/skills/codex-product-goal/SKILL.md": {
+      "category": "template",
+      "hash": "ea6dfb76af2df1dd25ce5900d2d5e8440a29cf1dabed28377e0df203ae1b5995"
+    },
+    ".agents/skills/codex-product-ux-audit/agents/openai.yaml": {
+      "category": "template",
+      "hash": "f62fef572886a845e23d6c62b520adf73d69f0b4013317ba92088bf6950c1fc3"
+    },
+    ".agents/skills/codex-product-ux-audit/SKILL.md": {
+      "category": "template",
+      "hash": "d237ecc6452d7e5e6646f2fd92a74dfb88da91d0bce97f76a942383f9a8541a0"
+    },
+    ".agents/skills/codex-progressive-jpeg-planner/agents/openai.yaml": {
+      "category": "template",
+      "hash": "2565cbd2cf6004abf983be731b8c4da94ee004357e6424af743b95a1bc274583"
+    },
+    ".agents/skills/codex-progressive-jpeg-planner/references/domain-examples.md": {
+      "category": "template",
+      "hash": "cf2051bda4157fe1ae792514852e42a6f13d3b65c53d4b2f31e1733ae97eef69"
+    },
+    ".agents/skills/codex-progressive-jpeg-planner/SKILL.md": {
+      "category": "template",
+      "hash": "10630600e71c2130342b4feecf46c0b954192aed9e96e4ac8a190eafdf383c29"
+    },
+    ".agents/skills/codex-security-audit/agents/openai.yaml": {
+      "category": "template",
+      "hash": "f6b21b8c492b1df50c24028ed0b0d8ee512f5ba8ac4f8b75386e76620c4845db"
+    },
+    ".agents/skills/codex-security-audit/SKILL.md": {
+      "category": "template",
+      "hash": "698ece47f0467613eb9a7e0e1c1298a1754c282bea9a7fdb6bc7079a113f6940"
+    },
+    ".agents/skills/codex-self-update/agents/openai.yaml": {
+      "category": "template",
+      "hash": "b7692eb159e66024236e253e5483370ada94685878c8aefc709477af1f784d25"
+    },
+    ".agents/skills/codex-self-update/SKILL.md": {
+      "category": "template",
+      "hash": "ac5bbf1736373df9dea47c7e57df205b41058b9daff61094f96b1aeb35a5e284"
+    },
+    ".agents/skills/codex-setup-integrations/agents/openai.yaml": {
+      "category": "template",
+      "hash": "6abe88b91a505b117e456860c70087283d9906c3eade13dc640f678461b3856e"
+    },
+    ".agents/skills/codex-setup-integrations/SKILL.md": {
+      "category": "template",
+      "hash": "450011c3cb9c77124f345419bd310c0359e88b9ae464a6dca20c6ed824eed602"
+    },
+    ".agents/skills/codex-setup-project/agents/openai.yaml": {
+      "category": "template",
+      "hash": "1117d460e84cbfa195e0c46ae43aed2d38d37d8996d08785b07958374b747570"
+    },
+    ".agents/skills/codex-setup-project/SKILL.md": {
+      "category": "template",
+      "hash": "ed012166cdc869581a480f0ab29cb13eb07e994c6e003e4d79aa0d47098871f5"
+    },
+    ".agents/skills/codex-setup-telegram/agents/openai.yaml": {
+      "category": "template",
+      "hash": "7ed5404b226d093f7f40d0f6e4fc4a90da185ace3321432f3801d8e24d526f31"
+    },
+    ".agents/skills/codex-setup-telegram/SKILL.md": {
+      "category": "template",
+      "hash": "bedd8e7cb412adc343fade5557b7bb8b7e9956afd570459041ae76c8676dfae6"
+    },
+    ".agents/skills/codex-skill-maintenance/agents/openai.yaml": {
+      "category": "template",
+      "hash": "cdd9803ddb813b841e5e64e99e221bf47faf47c5059c89e05906386f50424dec"
+    },
+    ".agents/skills/codex-skill-maintenance/SKILL.md": {
+      "category": "template",
+      "hash": "ad58af921d55de855d9e63e632f5c5ae6bc00b68a2e7d7e162f6fe20c27f23db"
+    },
+    ".agents/skills/codex-sprint/agents/openai.yaml": {
+      "category": "template",
+      "hash": "ab2d723a0d8d7032bcfd1baa7e2b2878473e697a26c62ad2eebed9f7fc0d02c4"
+    },
+    ".agents/skills/codex-sprint/SKILL.md": {
+      "category": "template",
+      "hash": "b9e0ad5db8dc888d9d66054e23d8ee8d8d055cd9a21978f598550435eae1e786"
+    },
+    ".agents/skills/codex-strategic-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "c53ddb44de78ba981730c4cc4e3f801292626c26878331b2bbe57c81fcc31cf1"
+    },
+    ".agents/skills/codex-strategic-review/SKILL.md": {
+      "category": "template",
+      "hash": "188e760525cf0f05aff84d7e914e7d10d653ab7df398f472a03633267429bb65"
+    },
+    ".agents/skills/codex-subagent-orchestration/agents/openai.yaml": {
+      "category": "template",
+      "hash": "7984c74895c47d50da44d832c9ed314503be547d8be02ac6644617a05e41ef12"
+    },
+    ".agents/skills/codex-subagent-orchestration/SKILL.md": {
+      "category": "template",
+      "hash": "026a18a3a5d8ee2eaf4053f9ae0a4949cadcac1158552fd7bcffecb9c0abeabd"
+    },
+    ".agents/skills/codex-task-queue/agents/openai.yaml": {
+      "category": "template",
+      "hash": "3c1dc2309313e1eec3abe20f36e6f2c2ce2225798317852f7fd15f3ebcbb7053"
+    },
+    ".agents/skills/codex-task-queue/SKILL.md": {
+      "category": "template",
+      "hash": "923dda5cf91e6d98effab6f33d6e5296167ee02c3f601755c315b13f440a95fe"
+    },
+    ".agents/skills/codex-technical-writing-review/agents/openai.yaml": {
+      "category": "template",
+      "hash": "b1eb3439143bba2f6096fe1c683327842736b7b8e33977d260f72a6e9d4eac5d"
+    },
+    ".agents/skills/codex-technical-writing-review/SKILL.md": {
+      "category": "template",
+      "hash": "c1eb9bb4a7dfe75eee224db4b61c7eccf2c88b334c1906e39f944c4538fb15c0"
+    },
+    ".agents/skills/codex-technical-writing/agents/openai.yaml": {
+      "category": "template",
+      "hash": "a3ebad9d60b38a7f31073a0fc205914ca6c12be6bbcc4edab91886a690b667d7"
+    },
+    ".agents/skills/codex-technical-writing/SKILL.md": {
+      "category": "template",
+      "hash": "ec64ffae17bad98e746dcc0fc4c4b46628e978d607d5992ae26efa5290d91857"
+    },
+    ".agents/skills/codex-template-sync/agents/openai.yaml": {
+      "category": "template",
+      "hash": "6f6b144d1ee4fdc7c8bd4f1f99b4464dae36548c73458b99bb5ca4c2006fe4d1"
+    },
+    ".agents/skills/codex-template-sync/SKILL.md": {
+      "category": "template",
+      "hash": "3328f65cf5f39f0547e7c06278d642cd5d7a2f243c96bb5fbcf95390be6d03d8"
+    },
+    ".agents/skills/codex-test-rules/agents/openai.yaml": {
+      "category": "template",
+      "hash": "7c41713d392dddcfd5a5e9f830b8b1368ae60d64bd7434ce0572ff64db1daba0"
+    },
+    ".agents/skills/codex-test-rules/SKILL.md": {
+      "category": "template",
+      "hash": "33c46b80b3392c84a6f504cdbbeda3b3561e6e95069db685173a1e03ffe8f98c"
+    },
+    ".agents/skills/codex-update-deps/agents/openai.yaml": {
+      "category": "template",
+      "hash": "b9bfcc28c3b5c6ea60736f5245dceae1518e08283cf1a3d730fb97865f7e71ff"
+    },
+    ".agents/skills/codex-update-deps/SKILL.md": {
+      "category": "template",
+      "hash": "de8788965b00f72996793ecd27f0af117c70b3de7531b4bc08d52813c5938caf"
+    },
+    ".agents/skills/codex-writing-workflow/agents/openai.yaml": {
+      "category": "template",
+      "hash": "9908a51972df895b10c4b325106759857367fbe58bb7e35078adf2bb36d01d28"
+    },
+    ".agents/skills/codex-writing-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "e672cdab0ecc22dfae9ef981117f3e4adad358b2e7af9ac5611c7330574f3f7a"
     },
     ".claude/agents/devops.md": {
       "category": "template",
-      "hash": "53f53579461d79f88bdc2efb8acaf6c6a6a5712a183e22183bc291254a730df1"
+      "hash": "2cf88fa9b715ae969bcb5134e9723449a99e281e4ed6da7c883dfb33a2e7cc61"
     },
     ".claude/agents/documenter.md": {
       "category": "template",
-      "hash": "8109d2f73420f7d3a364c391fe58524efe6fcc300fd9f8a7154936f121a96848"
+      "hash": "cfc3d2d8224299432cf96e5547356ab5571a2b9d62411e9728d6e595a9ad690a"
     },
     ".claude/agents/implementer.md": {
       "category": "template",
-      "hash": "c3f5c8fc35b5e01d3530eb197bb0c3d588ce6eb633e8da9696d3a81060bf03cf"
+      "hash": "5e937bbc9720b304406b5e3e37a5fbfec7908c1ca513afe96729bb7c6a95413d"
     },
     ".claude/agents/profiler.md": {
       "category": "template",
-      "hash": "6d1a6d278bdcfb055c24622390d8dd2a13f9d1b0c59d7d7771317038d227d4b5"
+      "hash": "8c0e9f504bfce3dd89a99c0866a6e826a2b7b1a31ae15e4e5dde2a8250cba05f"
+    },
+    ".claude/agents/PROTOCOL.md": {
+      "category": "template",
+      "hash": "c4e1989f8b27b6a3916c25f757350d1c5ebc98fdc842a938b7e952e2be7e5d32"
     },
     ".claude/agents/researcher.md": {
       "category": "template",
-      "hash": "6bbbba832b93397eb1d0eea9036e8c165111a512b8f1b9da9af4285b06884136"
+      "hash": "fb590fec8ab59b1d0e44a5f7477702488af129595a7ffc94cfc70fd6cb0a8116"
     },
     ".claude/agents/reviewer.md": {
       "category": "template",
-      "hash": "77085c3cf8e4bdc9ef08d652469f8a5497f30ce36db564898aeb8aa48e509b28"
+      "hash": "f2fb7e86a9bcc06bde77a347d595d81416585112bf6e33514ea3e5241739fa1b"
     },
     ".claude/agents/security-auditor.md": {
       "category": "template",
-      "hash": "df6be2e365c9f0fa9d64e3556ae84c5630c35367051a9a9c5e725f93033c16ec"
+      "hash": "b22edd537d576be51237ca272677714fe9163efd4ef71142926c7d892514327d"
     },
     ".claude/agents/simplifier.md": {
       "category": "template",
-      "hash": "833eb1124612dcf423ef12bfbaf53888c060d6b2f630a26759c04b53154d7d07"
+      "hash": "6350fb348215224dad980bddc9fdc29d4d63e8f2da364583321dac4f3a976bb4"
+    },
+    ".claude/agents/technical-writer.md": {
+      "category": "template",
+      "hash": "d775232436edcb65a889afd234732f009b6266a31cf2d1a0042bfa6181b99daf"
     },
     ".claude/agents/test-engineer.md": {
       "category": "template",
-      "hash": "a00b06246e0f3bbb44c32d9582ae2a51aceb4445b8e0b936a8c2ef19702d4c70"
+      "hash": "404613603a84811881764755e4ffdb02c0f212ad2b0acef6671d2842b0fb457b"
     },
-    ".claude/skills/add-feature/SKILL.md": {
+    ".claude/agents/writer.md": {
       "category": "template",
-      "hash": "78564a9a60ed3d031cf71cf5a65d64b89a7687cb01fe8a1ad5a4a97e8c4abb54"
+      "hash": "d4394a4a8870f7b0b5f7d594a81ad49e84c48822b59606e4246dd3befcf158db"
     },
-    ".claude/skills/api-contract/SKILL.md": {
+    ".claude/commands/audit-tools.md": {
       "category": "template",
-      "hash": "0534d6bcef4cca1ad13fd24e0f075debe13ee20642385839f81a3bddd7b2f49d"
-    },
-    ".claude/skills/coverage/SKILL.md": {
-      "category": "template",
-      "hash": "b1e3f72397fdb0180f3bb5bed47a746952f215b7eb86280aff51058f5010f57d"
-    },
-    ".claude/skills/daily-brief/SKILL.md": {
-      "category": "template",
-      "hash": "2ae1ed16828ab36855a6d30fe77e304888aaca48a8bf759a4f2b1f8521c1b5ae"
-    },
-    ".claude/skills/debug/SKILL.md": {
-      "category": "template",
-      "hash": "d2e4b40c168641cdf1057dae6b9feea766267afcef00391392f4ec58d005d588"
-    },
-    ".claude/skills/domain-business-review/SKILL.md": {
-      "category": "template",
-      "hash": "ecc114cdf35d8a06713e1f79bbe275a25563471b66643b4f783ab3ff5aa1d5c1"
-    },
-    ".claude/skills/domain-communication-review/SKILL.md": {
-      "category": "template",
-      "hash": "ad17852dd6ed5a7e0c85461616cf4763964eb2fa675d626e6d43012e6aa036c4"
-    },
-    ".claude/skills/domain-design-review/SKILL.md": {
-      "category": "template",
-      "hash": "e355b889bf68f9ea15051d936abb97f0021597499157ac093d16ea8a8c4300a2"
-    },
-    ".claude/skills/domain-health-review/SKILL.md": {
-      "category": "template",
-      "hash": "fd90493e2aeaf7cf9b7b6cfc46309fa813a5fac388dcb6abe37b3a7efa31307c"
-    },
-    ".claude/skills/domain-science-review/SKILL.md": {
-      "category": "template",
-      "hash": "d8b9303e3230ec91657bd375fc2735acb6f8b0e1a80526af4acde4fdcbcb5701"
-    },
-    ".claude/skills/domain-software-review/SKILL.md": {
-      "category": "template",
-      "hash": "a78998dd91d7c28933e08bef376cde8ef4678d18bdc4413ece2aa37287d48464"
-    },
-    ".claude/skills/health-check/SKILL.md": {
-      "category": "template",
-      "hash": "fc823edb12b3474a8baaede3f1f2f50328335eb89ffb030780bddfc3239ba564"
-    },
-    ".claude/skills/migrate/SKILL.md": {
-      "category": "template",
-      "hash": "10d97355db14e055c0fcd211107754a6f321bfabeeef1d3a594ce8039ca1059c"
-    },
-    ".claude/skills/modify-api/SKILL.md": {
-      "category": "template",
-      "hash": "059439ec304d9d0e94d17a36408c91efa60a4a7648d4b3468474bf78b970bf05"
-    },
-    ".claude/skills/security-audit/SKILL.md": {
-      "category": "template",
-      "hash": "7f127452c6ec28295b5c867cc0b96c050c45a2eda66c087ea97f798a2f782aa0"
-    },
-    ".claude/skills/self-update/SKILL.md": {
-      "category": "template",
-      "hash": "9b88441b46f710608dfc13b64fe9dba08d6be68b2def11f21b3d9663b2f8f66d"
-    },
-    ".claude/skills/setup-integrations/SKILL.md": {
-      "category": "template",
-      "hash": "0b0e255b3813fb803ba7830c5a966dd69d1148dc0d1af613b26a4192e6a2eb61"
-    },
-    ".claude/skills/setup-project/SKILL.md": {
-      "category": "template",
-      "hash": "5eef9433bb757734c37920bf8cfc1d9f4916aa52d32e230a2b2d008a1618ab0e"
-    },
-    ".claude/skills/setup-telegram/SKILL.md": {
-      "category": "template",
-      "hash": "b850f94c8b6db3e76b14a2e9f794d59bc3bf2e76a2d4f27dada5eba2224b7c22"
-    },
-    ".claude/skills/sprint/SKILL.md": {
-      "category": "template",
-      "hash": "4a09f275211515e3897bcecf6633d545979b9ea43cdbaf469d3584201834c931"
-    },
-    ".claude/skills/strategic-review/SKILL.md": {
-      "category": "template",
-      "hash": "addc4b0c54ef6ab0e567e7a66ef307113b18235d3dd75f0f826a67f277606d0d"
-    },
-    ".claude/skills/update-deps/SKILL.md": {
-      "category": "template",
-      "hash": "9388b8c62afef280153d9d90942e43d1968da5c905439af5e35021a581af8d0e"
+      "hash": "fd38d48397b676fe3da4bf8138433a0026b09fcd347f1fe65f053bd4d2201870"
     },
     ".claude/commands/brain-sync.md": {
       "category": "template",
-      "hash": "689d45a9df7328a157cd1c812c387ce4c9ce41433796157f4282f5a850fa95e7"
+      "hash": "baca334558069c4220297cad270d6cff99be5c642d1b71823d5a993e1137236f"
     },
     ".claude/commands/commit-push-pr.md": {
       "category": "template",
-      "hash": "36c4986217690d45eebf876755d6eeb5023aa748a1f6e4756b51306bc98d7b28"
+      "hash": "3cde5cd447f88d2c4ca688ea6801f2b4ff3214e3c9ed686cbe5bb71b391e5cd5"
+    },
+    ".claude/commands/hotfix.md": {
+      "category": "template",
+      "hash": "ac5385881a4bc7e0881d02ecc881df05576cf3abc141bc325378a39c0fca32fe"
     },
     ".claude/commands/implement.md": {
       "category": "template",
-      "hash": "d8eae4f5f941bbc3b118ffb00400058b6a867e72e6e62cfc42fd27f392479cae"
+      "hash": "378c3c3c3a90f1e8149b862a321ea0db031aecfb031126458ee61bed006d3452"
+    },
+    ".claude/commands/mode-code.md": {
+      "category": "template",
+      "hash": "7c5044eb1f693707c163107147b5f266d1890b7569d1e3b4d5e9d7ea408f1574"
+    },
+    ".claude/commands/mode-design.md": {
+      "category": "template",
+      "hash": "f52543791d6cc15253d38eb7f6f3b4346ef796831844c677b126461e3bc13334"
+    },
+    ".claude/commands/mode-fix.md": {
+      "category": "template",
+      "hash": "4b5e2a4be530444a85853c4fce800dfd87dc360348d09c8ba9014f71d906df4a"
+    },
+    ".claude/commands/mode-plan.md": {
+      "category": "template",
+      "hash": "e3a0e33a0d871841ca6ba260c61141ff3ed2dad51f9ca54fa58c91eb8a384bc8"
+    },
+    ".claude/commands/mode-research.md": {
+      "category": "template",
+      "hash": "8462f6c6010a2b62a80d86c3c03aee8fff985c26dcc7a05b9da6fc41291772b1"
+    },
+    ".claude/commands/mode-review.md": {
+      "category": "template",
+      "hash": "f02bdcd635b54890f2428096f7da5efce04c182774f0a9688accca2e044972eb"
+    },
+    ".claude/commands/mode-write.md": {
+      "category": "template",
+      "hash": "e748a780a24fffac24f76dcb5819e059e3afde78ddcae5fc8206ae2005c8b24c"
     },
     ".claude/commands/onboard.md": {
       "category": "template",
-      "hash": "f0f1d0c93716917a30f8d643af02eb2e19667aa02e9b78bb9fce87444644c704"
+      "hash": "cf4f2f48a804336a576db7f60de3532eef3c3b61e003b188fbd69dab79499327"
     },
     ".claude/commands/refactor.md": {
       "category": "template",
-      "hash": "97cb1d60a54561f4bf1fc1802e647dcbd55059dceb3aaeebd5f399ab603d8cd1"
+      "hash": "2751c0b1500160624ff9f476c70dd7ac92e36bfd6759823cd327e1933981de5f"
+    },
+    ".claude/commands/retrospective.md": {
+      "category": "template",
+      "hash": "31ff6be7236452f1a424ba6659aed2e0775ca7bc5ad653f454ba89b97e19bb23"
     },
     ".claude/commands/review.md": {
       "category": "template",
-      "hash": "5403f17ccf65f038423a28caf97cb882aae698b8ed97c69b3571deee15689ae8"
+      "hash": "048b922c3162a368505cde12f6439beae10d90ad260af89ad9d734f1623fe72f"
     },
     ".claude/commands/rollback.md": {
       "category": "template",
-      "hash": "394be1655d8310f446027870e6f82965d82938cc91b33ab4910162323713cb02"
+      "hash": "e627a9e1232609f6fc90b536b807d493e008b244adc3543b43bc140b9d190b7f"
     },
     ".claude/commands/setup-project.md": {
       "category": "template",
-      "hash": "d745caa12bca62f6998f85836e9a507c9f59b37a8360227cfcd68ae0d5369c70"
+      "hash": "a61742503b64c2ce8707ef8ca6b09243d8a97812ac08831cfab288197d9348b2"
     },
     ".claude/commands/sprint.md": {
       "category": "template",
-      "hash": "e14b7646e03489adcb44f7bb2d9311f6319219bc19cd03735482b5ccb89c88c6"
+      "hash": "00a41c7473fbfadfc7818e258410e9086d4aa2068bf0b5ff74fb27b12f672272"
     },
     ".claude/commands/status.md": {
       "category": "template",
-      "hash": "67a5b0c19f7444d91d39755a2873547b6a79d27429c9949dab8321b76e49185d"
+      "hash": "ba41cf5590e6bc079dd0ee0850b90349eac65a2e2802b079924acf37216df00d"
+    },
+    ".claude/commands/sync-all.md": {
+      "category": "template",
+      "hash": "bc302d8617b41954f3bd1f312e1cfba797c1bfbf400c46f8206ab5fe3d514a58"
     },
     ".claude/commands/update-template.md": {
       "category": "template",
-      "hash": "f4ef2a7fa6808c9312a10f383fbdfd863d353fbc367b6b10a55abf7a44210e38"
+      "hash": "caf8d6c9b81a7af9f5e0f5cfadadc0b48f13bcb9d945d889e4338198455faf7d"
     },
     ".claude/commands/weekly.md": {
       "category": "template",
-      "hash": "4475a6dd21af7d2c967903a8b7610ffef833a990b8cf7e24e7d7f273a4dd4876"
+      "hash": "287f35d203e0c835d32b31fa6cadb16d3bb9a4df43da4f4fd892bf20f9b169f9"
+    },
+    ".claude/docs/domain-full/domain-business.md": {
+      "category": "template",
+      "hash": "8dc9b146edd68f57bf7aa190b6901d7d3d2ba271fca12bc3e483122fe404300b"
+    },
+    ".claude/docs/domain-full/domain-design.md": {
+      "category": "template",
+      "hash": "4abcfb02ccaf6edcd9a457de3ceac6b3366ea2fd4f5444be3017f5df8ce6973c"
+    },
+    ".claude/docs/domain-full/domain-health.md": {
+      "category": "template",
+      "hash": "00aed274e0ef8a009570814d05bb7773d50aa5c2e06fb7694fabeb592c638fca"
+    },
+    ".claude/docs/domain-full/domain-marketing-sales.md": {
+      "category": "template",
+      "hash": "f1d82dcf581dc3f1f64d91515ba1ff90c5ac3144576f17fbc2c49dc073468236"
+    },
+    ".claude/docs/domain-full/domain-productivity.md": {
+      "category": "template",
+      "hash": "e80906f6cd6dc0aa66fd5e9b49e855ff861266e852cca725f27d86d6d1de8072"
+    },
+    ".claude/docs/domain-full/domain-psychology.md": {
+      "category": "template",
+      "hash": "5bef7cf753da5e29eb10d0b91fc1c5d7fc4381cc1fa1a3e8dbc06daf7457ce71"
+    },
+    ".claude/docs/domain-full/domain-science.md": {
+      "category": "template",
+      "hash": "b55d14a1a388eb57a5755d3b90832690f392972a933b3b9c5d0a8b6ae27c301e"
+    },
+    ".claude/docs/domain-full/domain-software.md": {
+      "category": "template",
+      "hash": "20ede627e78fcda6007c4f289c88f0e1b0159dc5e38a36723b4eede72c126503"
+    },
+    ".claude/docs/strategic-thinking-full.md": {
+      "category": "template",
+      "hash": "e916950fdd668b0ce6a0e9db5792597afca420aeaeb11c48003e818c45e70a00"
+    },
+    ".claude/hooks/check-encoding.sh": {
+      "category": "template",
+      "hash": "65fb9920b33dd7e17ca4c83ca5f7f3e49d2f8d496a1ec4a14415b084b8704379"
+    },
+    ".claude/hooks/deny-sensitive-paths.sh": {
+      "category": "template",
+      "hash": "d555c8e1d6c8dcf8b950ae4b540666a089f691a4883909a5ecb3235f69d954ec"
     },
     ".claude/hooks/format.sh": {
       "category": "template",
@@ -254,875 +782,1395 @@
     },
     ".claude/hooks/post-edit.sh": {
       "category": "template",
-      "hash": "6a86c2b1e56cd7649bbaba68c41ed61f7c18e5e99c8d8937863642baaab74ee6"
+      "hash": "56666a1c96e2f468225c640cc09b3de642e127ee2c4e054ef82ce6976b44cb77"
+    },
+    ".claude/hooks/pre-bash-safety.sh": {
+      "category": "template",
+      "hash": "874fef0429982083c199c7904fa9e62846d134506592c7526198c15d38f194cc"
     },
     ".claude/hooks/pre-compact.sh": {
       "category": "template",
-      "hash": "198929ed3a124117bac0f7c11a44232237fb015977ccb5c76751a79d62041dc7"
+      "hash": "cbe8aa233744cfccbea3fdff98683a1424dbc80610494a5c6f4916934d41fbbe"
     },
     ".claude/hooks/pre-edit-safety.sh": {
       "category": "template",
       "hash": "35afa428ccab88b364fbb48452e26baf93502e6fa96a2231e9ed1d6e8c79a4f8"
     },
+    ".claude/hooks/prompt-injection-defender.sh": {
+      "category": "template",
+      "hash": "1582c966e57d5cb4c7659b7c6a7d4e486a860c86b89c31485e49970963b54234"
+    },
+    ".claude/hooks/session-audit.sh": {
+      "category": "template",
+      "hash": "6842a963e42dcfc2085b76be44a200eacdd2168e95b9089661a8d6145178f73a"
+    },
     ".claude/hooks/session-start.sh": {
       "category": "template",
-      "hash": "7ffdec167395edc4620a6ba638439c6a1c0154265d26de954ba7c66663569bfb"
+      "hash": "9aa44945e8e85a44578db5977c0fdff4a28036db1b960328eebbcfd5be97f344"
     },
     ".claude/hooks/session-stop.sh": {
       "category": "template",
-      "hash": "85413725d5b04a9df45c088cf43458f87ae8f9fd6d078b1d03a2462ba7e31ecb"
+      "hash": "6e88b54b03692b3523d464990f155550b85604bc9c56fea5c9d243317042d67c"
     },
-    "scripts/brain-search.sh": {
+    ".claude/hooks/verify-gate.sh": {
       "category": "template",
-      "hash": "c083da18faf625e8ef83d608759b3afe9cb5bd14432943d7b7a0bc0e5f3dd6c4"
+      "hash": "f9c65795fce266af13eb1edcef229aa2d722a5d9d535525178285007fa76aa35"
     },
-    "scripts/check-drift.sh": {
+    ".claude/library/conflict/conflict-resolution.md": {
       "category": "template",
-      "hash": "555ace092449ef0808f8e5607cbf3c6c2a22df65956fdf5d57eacd37c1a1ad2e"
+      "hash": "e59282d1b3d278db78c359466bce399c7f463d3704fbb7485a3c17d70aa35f15"
     },
-    "scripts/sync-template.sh": {
+    ".claude/library/domain/domain-design-pipeline.md": {
       "category": "template",
-      "hash": "ccbc0d02b7d1b5f84a1147056fa958bc68a195c018a06e80189cd32fe04e72a3"
+      "hash": "376e0462391b5dd4a20ef971793d1ea8c7a20c8dc06dc5d5ef95719c3a2bfa3b"
     },
-    "scripts/test-hooks.sh": {
+    ".claude/library/domain/domain-design-system.md": {
       "category": "template",
-      "hash": "391144e50d994e5da548d11c82c65b15427912be08bbbcb34c3fe072495f2048"
+      "hash": "4b54892dda501ef1028737936ef4be32f921c1ffd46ae4ddea4c8f5c8133ebf4"
     },
-    "scripts/test-template.sh": {
+    ".claude/library/domain/domain-guards.md": {
       "category": "template",
-      "hash": "9c5282aa7b251301e5d9cc590d087edab74c7c7f1b94265664538d5b3672913d"
+      "hash": "e79557f8234ffba7043cdbc9527d3288687ff9a6e6b8fcd10ba689a6a745ef46"
     },
-    "scripts/update-template.sh": {
+    ".claude/library/meta/analysis.md": {
       "category": "template",
-      "hash": "c5ae284e7635f3684bf502958dbc32ac9e216cd50265217068f0e514cd2b89e1"
+      "hash": "52cd10ecc33945b275abfd826528f622b21784b5eaef9b9bf70d126a2a8ee9ca"
+    },
+    ".claude/library/meta/critical-thinking.md": {
+      "category": "template",
+      "hash": "2f889f4477c1b0402bdcb3f852c4a0d13940820a1ba18ef6052e8b85a7dc9a8c"
+    },
+    ".claude/library/meta/strategic-thinking.md": {
+      "category": "template",
+      "hash": "f1f97736264b1f65c553ff94455001b4e28095fec224caf0cd49bbfce785577a"
+    },
+    ".claude/library/process/brainstorm.md": {
+      "category": "template",
+      "hash": "5b9e3b54e25edf16df5b4dfbff7984167861dc76a8a1801de0debdcdce966530"
+    },
+    ".claude/library/process/change-strategy-gate.md": {
+      "category": "template",
+      "hash": "dcf626af2d383de85580456ff35ddadf08e428fbc500c187290bdbe33c4626c3"
+    },
+    ".claude/library/process/client-executor-contract.md": {
+      "category": "template",
+      "hash": "9aafa694cd2638dbbb95b8527aed9e0df846a2ae763913d7383c7d5d1bddd702"
+    },
+    ".claude/library/process/context-first.md": {
+      "category": "template",
+      "hash": "ef5184c75059b7a8848f9c72161d1684280a31e8c45ebd063e33b5c4eb7ef8eb"
+    },
+    ".claude/library/process/plan-first.md": {
+      "category": "template",
+      "hash": "7dcb2ecc43476c9bc64b87f23efb2ca9f8493d92afd2543ab6b4e2da49b156d1"
+    },
+    ".claude/library/process/privacy-transfer.md": {
+      "category": "template",
+      "hash": "b7e470dacedf93c6fd127787f35a87bcab79075ba76554a3b7db1bdd44b69b2b"
+    },
+    ".claude/library/process/product-delivery-recipes.md": {
+      "category": "template",
+      "hash": "1b7bd73bedbc519cbca0b3bfdbd060cd9e759b5fa0f892a7b03ac8fb3aa110f9"
+    },
+    ".claude/library/process/product-goal-loop.md": {
+      "category": "template",
+      "hash": "920cb171b0a9954bf2e2d9c018b929bbc61548059c072c41b008b65d38f3560b"
+    },
+    ".claude/library/process/research-first.md": {
+      "category": "template",
+      "hash": "c1f34ee83897470b7e3b7b4b5f886cb0b2823dfea0bccb253d36f00a4871abfc"
+    },
+    ".claude/library/process/risk-classification.md": {
+      "category": "template",
+      "hash": "b7fbb4d6a41cb907f588d03760e963108aeafc190be546ce6cdee48f8d6d4a5e"
+    },
+    ".claude/library/process/self-improvement.md": {
+      "category": "template",
+      "hash": "79d4d949f4915f0dae6971f57b111e609dce7939c0327890c70ff5935a1d0f50"
+    },
+    ".claude/library/process/self-verification.md": {
+      "category": "template",
+      "hash": "72cba91377b6602d0a75e17b9aa54b669c4020aff36ecb53dcaf18f2f0e1bbe1"
+    },
+    ".claude/library/process/task-wave-handoff.schema.json": {
+      "category": "template",
+      "hash": "c6edf81910faf91e96b73ddba884c7b80846b5f1e92556c1dec33df324a0a5f6"
+    },
+    ".claude/library/product/production-product-standard.md": {
+      "category": "template",
+      "hash": "b957ebdc304b765b078fadacd65b3307c7e56cd4f6dc8faaa7a90e0f9bcaa7dc"
+    },
+    ".claude/library/technical/architecture.md": {
+      "category": "template",
+      "hash": "2a3792a31ea25d78af002ecb5afae2628746173948de32fbb3c3aee2c09ee953"
+    },
+    ".claude/library/technical/atomic-reuse.md": {
+      "category": "template",
+      "hash": "1b8b1d00cca1ad49ee544b9b390a1173e41ec564110d96d9ee61254c4328434f"
+    },
+    ".claude/library/technical/code-style.md": {
+      "category": "template",
+      "hash": "e45e2e844444b754b0679e58edbddf8102e0b7616389844124bcdff706e73b53"
+    },
+    ".claude/library/technical/error-handling.md": {
+      "category": "template",
+      "hash": "cf1f5f6ae68adb472b95eb1f795f344fcc6d4f250e2b31e0964f78d52d4e2208"
+    },
+    ".claude/library/technical/git-workflow.md": {
+      "category": "template",
+      "hash": "3db842512e264d01fab8302845a24732881c1254f4a2dceeddc98ea40e178ee6"
+    },
+    ".claude/library/technical/preserve-product-value.md": {
+      "category": "template",
+      "hash": "f4f8dfe4276b8843d2491c7aadde61934b3d7e740e79bee5b9149534b4ae0773"
+    },
+    ".claude/library/technical/russian-business-correspondence.md": {
+      "category": "template",
+      "hash": "9cd2f00cd97943383c92a3ba6c4f9b343f9ffc5a6ba5eda680449a0f722031b0"
+    },
+    ".claude/library/technical/russian-explanation-and-persuasion.md": {
+      "category": "template",
+      "hash": "4d050c7f0a6b23de507080029cfef4c68a211a93d814886271c904d212c854bc"
+    },
+    ".claude/library/technical/russian-writing-profile.md": {
+      "category": "template",
+      "hash": "73346d3583d0394739a3f09c1f61f3407cc217397a648702a9897b63388890cb"
+    },
+    ".claude/library/technical/technical-writing-profile.md": {
+      "category": "template",
+      "hash": "9d59e976ce436783fbfb3164b96d6e1491bd9e4463981d07f6d263d128e7c285"
+    },
+    ".claude/library/technical/testing.md": {
+      "category": "template",
+      "hash": "a690b5427aebccd89c6fdf933e2f4b3ab705529b5cc42bec7a5edaeeecf4df9c"
+    },
+    ".claude/library/technical/writing-editorial-board.md": {
+      "category": "template",
+      "hash": "046c08d51ed31abb93d6ef1ce875e3f8176babb6c52f90ac2902133a3bcec9f9"
+    },
+    ".claude/library/technical/writing-library-catalog.json": {
+      "category": "template",
+      "hash": "b3867de342563245a8b5392ba719455e4602d5f429fb49405adedecb46db5f16"
+    },
+    ".claude/library/technical/writing-mode-profiles.md": {
+      "category": "template",
+      "hash": "8e655d9e285fddcf4d3bf4c232ead3b4f28d6160bad95d4832d2bb33f3e5d8a1"
+    },
+    ".claude/library/technical/writing-reading-map.json": {
+      "category": "template",
+      "hash": "0f6cf4b2b5576962d7d4c349ed941e954673e1ea2f3afd8808ca8a0efa76cb41"
+    },
+    ".claude/library/technical/writing-reference-registry.json": {
+      "category": "template",
+      "hash": "8dc260eb41b3df30f6402331cbf0ccb2fee401018f0f48c56451652b3b8bf8d5"
+    },
+    ".claude/library/technical/writing-source-grounding.md": {
+      "category": "template",
+      "hash": "298f221342baadccbc188ce3775e1a4e48045720af80c55210aaf0f55f28c655"
+    },
+    ".claude/library/technical/writing.md": {
+      "category": "template",
+      "hash": "24531221a1972e7f223b55f9d4d9c4d1c7020f2d598d777ef4e5e6ba2ff106d9"
+    },
+    ".claude/pipelines/bugfix.md": {
+      "category": "template",
+      "hash": "d15785a3ccecc449dab492ba502c68e38bae272269ff1f016ed7829b1b6d678b"
+    },
+    ".claude/pipelines/feature.md": {
+      "category": "template",
+      "hash": "8d53255e16cef8d20c3fbd315dd26e9c82b1d82715f7500e43113ccdc41f7090"
+    },
+    ".claude/pipelines/security-patch.md": {
+      "category": "template",
+      "hash": "c40e231931fc926ef0a0e55e7336fa190429772182b02674791a8a2543ab3377"
+    },
+    ".claude/rules/router.md": {
+      "category": "template",
+      "hash": "52f0d0789d82a7eb082969076d787d5cd2e39e08f5df8b5b51db645b9f020676"
+    },
+    ".claude/settings.json": {
+      "category": "template",
+      "hash": "b30b8b110cede811afed719f2f284d572fb4d91f113dde4415714ebec1347a57"
+    },
+    ".claude/settings.local.json.example": {
+      "category": "template",
+      "hash": "db89da1db56b71ecad58d0b3c6ca9af16d2c1ecef34220f54f7859b7dd6fd48c"
+    },
+    ".claude/skills/add-feature/SKILL.md": {
+      "category": "template",
+      "hash": "1a2ca01ccc4f807f04f1a5c982e49dde118ac83e927751db6b480e4d5964f3c0"
+    },
+    ".claude/skills/agent-metrics/SKILL.md": {
+      "category": "template",
+      "hash": "314097def8ae63e614af98339f6d3785bc989f72f7cb12e957e110e6c8a57b9b"
+    },
+    ".claude/skills/agent-router/SKILL.md": {
+      "category": "template",
+      "hash": "c1d26539ed51bfbe6f21e7e23a0f0a25df9dd75373f5d02ee5ff61e8678e2f7d"
+    },
+    ".claude/skills/api-contract/SKILL.md": {
+      "category": "template",
+      "hash": "529acc3dc652a8684c78ad5ff65ed7104793ee4d85e7e97a43e3c8904992054f"
+    },
+    ".claude/skills/audit/SKILL.md": {
+      "category": "template",
+      "hash": "3312ff7ebe1150f81fabda07e4388b5f50f665b0dffc0aee216dd6d114d7983a"
+    },
+    ".claude/skills/coverage/SKILL.md": {
+      "category": "template",
+      "hash": "040e2162802ea5d39f74f6ea90a869bb353dfd02cc8c46b5109ceb56ba406cf5"
+    },
+    ".claude/skills/daily-brief/SKILL.md": {
+      "category": "template",
+      "hash": "2009e38623c49ca4443f1abc84b8ba04f9e1146a353c8b5ed9adaaa6a3d039d6"
+    },
+    ".claude/skills/debug/SKILL.md": {
+      "category": "template",
+      "hash": "85795efc5483e0b384530df35fcde62d4f1b3ce4e356536256558b54893f5926"
+    },
+    ".claude/skills/decompose/SKILL.md": {
+      "category": "template",
+      "hash": "ffc6a9f5243b6eaca46a77393a595d002b92cf348ff1c0aff6647885ef118f33"
+    },
+    ".claude/skills/domain-business-review/SKILL.md": {
+      "category": "template",
+      "hash": "a98b032fb0b889e4e93ac6d6bc85781bd2ff622244ae31ea98c9da3c2c2874f4"
+    },
+    ".claude/skills/domain-communication-review/SKILL.md": {
+      "category": "template",
+      "hash": "d21f077bdfa3fb85d07835117d7c5115debecdfbc54807637e5be635ffea576a"
+    },
+    ".claude/skills/domain-design-review/references/design-failure-patterns.md": {
+      "category": "template",
+      "hash": "2c5d214ac2f765bf665d4b461119191729747e7ba1eb13e47a12c009110baa76"
+    },
+    ".claude/skills/domain-design-review/SKILL.md": {
+      "category": "template",
+      "hash": "65d5e4bb8bfa1bcbea70f5bf0f226ace63aba36eca820fea42f3bfcc3c1ed0cc"
+    },
+    ".claude/skills/domain-health-review/SKILL.md": {
+      "category": "template",
+      "hash": "5c6933fd7999e72702bbead47550d6334069c8f37042342a872c13805dbde649"
+    },
+    ".claude/skills/domain-science-review/SKILL.md": {
+      "category": "template",
+      "hash": "6467f5dccc7f2b5f2413bfbcbf16235135d3ac5be133471fef8f79db7235e3fa"
+    },
+    ".claude/skills/domain-software-review/SKILL.md": {
+      "category": "template",
+      "hash": "12ab3aa4d3c1535479c83b4df9dee22aed9c4b6c23a0117592d197db71c42f71"
+    },
+    ".claude/skills/health-check/SKILL.md": {
+      "category": "template",
+      "hash": "d3d5216a61aadd2f3e49a54015cb8c7eb50e20b3831623ffca294f48274f0c32"
+    },
+    ".claude/skills/memory-router/SKILL.md": {
+      "category": "template",
+      "hash": "001ac3be360c2c70cbb42856dbcecd76c0e46b29facc518134bcdc94c1b9309b"
+    },
+    ".claude/skills/migrate/SKILL.md": {
+      "category": "template",
+      "hash": "849597edd25c4c53a6b46a34d0a292fe461cfe26d530394d2af87277f04bb275"
+    },
+    ".claude/skills/modify-api/SKILL.md": {
+      "category": "template",
+      "hash": "59213140b682bca25598ee002d8dc7fd8494195bc4994d05b66c4f8a7a192216"
+    },
+    ".claude/skills/pipeline/SKILL.md": {
+      "category": "template",
+      "hash": "0dfd093a0ab55f86881fe9eb307546dfdb92828fd3762dc6c6c31367c70b4255"
+    },
+    ".claude/skills/security-audit/SKILL.md": {
+      "category": "template",
+      "hash": "885778cf82dd5411bf642d40274a3032812d6d7ebdffdc62fd230c51d64f7ee5"
+    },
+    ".claude/skills/self-update/SKILL.md": {
+      "category": "template",
+      "hash": "a6b5823e7d6a925360ed89085a4d580c8638b80ff97fb4f2265e0276e06709f7"
+    },
+    ".claude/skills/setup-integrations/SKILL.md": {
+      "category": "template",
+      "hash": "39f5292325d802e35069e36e78c8ead00dfd002d16c9a1cdb2a554dceb46aed4"
+    },
+    ".claude/skills/setup-project/SKILL.md": {
+      "category": "template",
+      "hash": "3695fc7e790b9dc5837e2f751d118acfc849f46f4e0940cd741e5a78e0fd1d25"
+    },
+    ".claude/skills/setup-telegram/SKILL.md": {
+      "category": "template",
+      "hash": "ef0c601bfd63d9311421b5590b6fe234d540ce28d0ad5eb42768740b11fe008f"
+    },
+    ".claude/skills/sprint/SKILL.md": {
+      "category": "template",
+      "hash": "47d9d9c9fa2b1d9b783a51ad2d74420ec629449c08d1da3a4728750a10c43951"
+    },
+    ".claude/skills/strategic-review/SKILL.md": {
+      "category": "template",
+      "hash": "e56ec63f93b444b1bb07a817d29a9c0886f098b5f1c04352420947c24bf0144f"
+    },
+    ".claude/skills/task-queue/SKILL.md": {
+      "category": "template",
+      "hash": "d3866e546a74d55256126417e7e68b30f859b264ed9cd7c3dfa1ba536b3d591d"
+    },
+    ".claude/skills/technical-writing-review/SKILL.md": {
+      "category": "template",
+      "hash": "3ae8b2ed8b3174c214b620572d068968a31e03669e777a344af6c6a4601066d7"
+    },
+    ".claude/skills/technical-writing/SKILL.md": {
+      "category": "template",
+      "hash": "79616a8beba2d5fc5ada251a69a6b648851fa9caa5c938809a7727a02b664b16"
+    },
+    ".claude/skills/test-rules/SKILL.md": {
+      "category": "template",
+      "hash": "12977e7494ecf77799f47f680e89975f4ab2c60d0ae12a8febca499801f45ca0"
+    },
+    ".claude/skills/update-deps/SKILL.md": {
+      "category": "template",
+      "hash": "5c51568e37043fc07ee42d4b4ee562219ff73820b840c71eca1139e7af541bc6"
+    },
+    ".claude/skills/writing-workflow/SKILL.md": {
+      "category": "template",
+      "hash": "7cbd89d9e05316d05892b6699e8a4fd57e97a637dafdfc2cfda2b17ac4aa6484"
+    },
+    ".codex/agents/architecture-consultant.toml": {
+      "category": "template",
+      "hash": "78765c3a30c5734446cbbc700b394c9a0a1837bc47a371fbe3f5686b7f69c91c"
+    },
+    ".codex/agents/design-reviewer.toml": {
+      "category": "template",
+      "hash": "349ad2ada0d79a9e9581c4fddc591037a6544ef5aa6074d66ee5a909c49aac35"
+    },
+    ".codex/agents/docs-researcher.toml": {
+      "category": "template",
+      "hash": "edd33463e68e50ee3d4fa9e472ad71bce0d6d1280a8303946ca33555d34d24b6"
+    },
+    ".codex/agents/implementer.toml": {
+      "category": "template",
+      "hash": "75c886bd1a21a834bffd05f2f71ef0e46d54d4fb87b8f275e83e38fb0c24af30"
+    },
+    ".codex/agents/log-analyst.toml": {
+      "category": "template",
+      "hash": "bdb8290090d29273f3639249c7a57531ca40c1271281d788ce1b7a43c42eb75a"
+    },
+    ".codex/agents/pr-explorer.toml": {
+      "category": "template",
+      "hash": "63344ad10b8b20acc70f4cc30d47691cc852d66787b1d1b53f135b82cbcd08c2"
+    },
+    ".codex/agents/product-reviewer.toml": {
+      "category": "template",
+      "hash": "d32d7fae03aa24688bf63f7edb2e50c1bfc6cdbe4556e903cf47723dca0c9f0f"
+    },
+    ".codex/agents/reviewer.toml": {
+      "category": "template",
+      "hash": "72007ca608bea97ce6528e998ceafd40d064febad2b1d874cd38d66dc4c81a56"
+    },
+    ".codex/agents/scout.toml": {
+      "category": "template",
+      "hash": "fae4e5cc0f5bd9c4a3643559fcd69e80a89ccf4357e976044d65796dfefeed9d"
+    },
+    ".codex/agents/security-reviewer.toml": {
+      "category": "template",
+      "hash": "bb2b7ac17925b774e059e3382ed9245dd077a9066eb8cae8012a1c212634e513"
+    },
+    ".codex/agents/summarizer.toml": {
+      "category": "template",
+      "hash": "0836893d523d5765ce7eee244e7a3c94efa02e15a5fa441b3a2a962ed1bb397c"
+    },
+    ".codex/agents/systems-reviewer.toml": {
+      "category": "template",
+      "hash": "2584f067c9522a40781f0b09fdf68fb5ead3bc03298405edde3a30153fd0c95d"
+    },
+    ".codex/agents/tester.toml": {
+      "category": "template",
+      "hash": "226e09ab4b39756065923e240f6d3531b3d977556d4eb2ed2b3d2b4558ff36bf"
+    },
+    ".codex/agents/writing-editor.toml": {
+      "category": "template",
+      "hash": "86d179d3beb45ceb40f43b17d6cace7e07b20bca3aaaf8aebc25f9c85fa7ca80"
+    },
+    ".codex/config.toml": {
+      "category": "hybrid",
+      "hash": "0584108837cd1576521f6565c17a6c86b5448fd88981526dd130b63451131465"
+    },
+    ".codex/hooks.json": {
+      "category": "template",
+      "hash": "be939e4bb4b708bc61c3d431432554623aac368078a82f5862b8b5de6673f1d4"
     },
     ".editorconfig": {
       "category": "template",
       "hash": "98072baaf1747dcd539b6618bc6fdc288a28f8294b2589a7b4b7f201e9a16cdf"
     },
-    "Makefile": {
-      "category": "template",
-      "hash": "722710ed095fb483ad76dab83caba4333c0a486f6aa5a087cde79a4b648ad66b"
-    },
-    "SECURITY.md": {
-      "category": "template",
-      "hash": "3b87c59132245a3127dc992f315c86f43011859d08e3d345674b76f5ed77b859"
-    },
-    "CONTRIBUTING.md": {
-      "category": "template",
-      "hash": "1c0b8076e95a3a63f67d6626a16da04c18a9ae094277004b4920e41345d80348"
-    },
-    "CLAUDE.md": {
+    ".env.example": {
       "category": "project",
-      "hash": "9e96904f6a38dc5dcd568c7e4d1ea5d46245bebf22ae002cd8b6986e6ff40152"
+      "hash": "e4f0591640159d82cd9d5632b669374a29daa9ab4a7af7fa4b527e18e85d0130"
+    },
+    ".gitattributes": {
+      "category": "template",
+      "hash": "df50ab23c1123b005d4c263fb18ee2c28188ad95a8f216632cf0e72c01aef3bc"
+    },
+    ".github/ci.yml.template": {
+      "category": "template",
+      "hash": "85a9ab4a065091e45730ed23f10766937fabd1f4d72d19dc5b4d53aa7f0292ba"
+    },
+    ".github/workflows/validate-template.yml": {
+      "category": "template",
+      "hash": "1f4e752f40785875480ada17ab4fbcd16054fdf0b9812abfca8a2662e01428fe"
     },
     ".gitignore": {
       "category": "hybrid",
-      "hash": "00b9867e37f702d86947bcdc8eacd600c6b03349999f88a1a9e230fc1bab3835"
+      "hash": "5f4d47f6702353babc9ca78b77b2873060b5dceecdddf474785d5f46ee30bc0f"
+    },
+    ".mcp.json": {
+      "category": "hybrid",
+      "hash": "39e8eef3d8d74591db81cf03ce2cba75f44b1562ab993784a05f0e9babedcb7d"
     },
     ".vscode/extensions.json": {
       "category": "hybrid",
       "hash": "988e969bfdaa02173b6cd2f0de5857397eadf3a0483ac308c28bba0d339ae131"
     },
-    ".claude/rules/analysis-first.md": {
-      "category": "template",
-      "hash": "5295cc9719839986f60d72bcae482273cc884551137969506417933ead4761a6"
-    },
-    ".claude/rules/self-verification.md": {
-      "category": "template",
-      "hash": "59e1689dbdced879a260ef18c1bc278df1f72881de42d638c6844eba4fa7c928"
-    },
-    ".claude/hooks/verify-gate.sh": {
-      "category": "template",
-      "hash": "b8a56d9b0fb6a7d64f163d589e0540a192e56630a89cc851298adde2f40ef6a7"
-    },
-    ".claude/agents/writer.md": {
-      "category": "template",
-      "hash": "08d2ae79daeed4cd878ee198fb8ce50227805aa9e7028808518c71edf8f289b3"
-    },
-    "scripts/bootstrap-mcp.sh": {
-      "category": "template",
-      "hash": "ba08145d0c2a2e43988600accc2857eee7a70534e52f6a621f352c7a1ab45c83"
-    },
-    ".claude/commands/hotfix.md": {
-      "category": "template",
-      "hash": "f3e322ad8fcdcf1deaaf1c6cf8aaab0aab4b6d422debaf7a78df36f73d8c7365"
-    },
-    ".claude/commands/retrospective.md": {
-      "category": "template",
-      "hash": "4d5f23ab7fa544daa63d19c15f16792d8b732ee762566cdc23e6c3fe4f26de00"
-    },
-    ".claude/commands/sync-all.md": {
-      "category": "template",
-      "hash": "a9ea868fef8dcaa9f7f01fa58fd3455b6035a4c4bae26113dc618d86261678db"
-    },
-    "scripts/sync-all.sh": {
-      "category": "template",
-      "hash": "2b6bc94e1cd39196fa96f305cc78da41c81a143871f0efba71b1edcc6af9a68b"
-    },
-    ".claude/skills/agent-metrics/SKILL.md": {
-      "category": "template",
-      "hash": "059d184a7a803973a8ec3ba66ad143d014b8b7f351d2a66645aeb7ba5631c5cc"
-    },
-    ".claude/skills/agent-router/SKILL.md": {
-      "category": "template",
-      "hash": "dd93edcb27c0b187d86081a76bfbc382c1a51576f4391391bf923412bac203e6"
-    },
-    ".claude/skills/decompose/SKILL.md": {
-      "category": "template",
-      "hash": "849cb62d00cb0932e98fa7bf826e832563d299b88fc0c1c08554023a44ef2bdc"
-    },
-    ".claude/skills/memory-router/SKILL.md": {
-      "category": "template",
-      "hash": "c331f17935437bd912f9197cdd96f9bf3919d976c703d23cd66047e52d770a48"
-    },
-    ".claude/skills/pipeline/SKILL.md": {
-      "category": "template",
-      "hash": "52b7b1e0afa9fe989c89476f7dcca23519d71223b1479cf8e0d225229782646d"
-    },
-    ".claude/skills/task-queue/SKILL.md": {
-      "category": "template",
-      "hash": "321258b138c59a7e3b590d140d7993c603c888deb34707e00360be2f8aa4182e"
-    },
-    ".claude/skills/test-rules/SKILL.md": {
-      "category": "template",
-      "hash": "430c3d3c6ec4fe7169b10951bbb71f4f15b5ccc17a97ae54ca48fa2dee6a20e1"
-    },
-    ".claude/rules/context-first.md": {
-      "category": "template",
-      "hash": "ae3dfbda7ed815e350c5df5869003bdac9ace3acd0e02c8ba9baed4b2c90afd9"
-    },
-    ".claude/rules/plan-first.md": {
-      "category": "template",
-      "hash": "69fe3060be6725c10a2722df967ebd5a49134028bc7f6450393c10c2280d63f3"
-    },
-    ".claude/rules/research-first.md": {
-      "category": "template",
-      "hash": "9fdca047d601b29858d26ea94f87cf5ba057dd7a7afa7b43098dda11ac0f5c12"
-    },
-    ".claude/rules/writing.md": {
-      "category": "template",
-      "hash": "5bda9c9cbe77ffff7befe59acf9489ad3ec0ed5ac2636cda85873a987e82d013"
-    },
-    ".claude/pipelines/bugfix.md": {
-      "category": "template",
-      "hash": "e7db898ce366eca7894d8251c3da8d50bcc704ddaf7cfae21b1292c82c71ae15"
-    },
-    ".claude/pipelines/feature.md": {
-      "category": "template",
-      "hash": "c8751f4d76e9a66bf31bc0cd2e20ba802d4e80dbc73a1ca0875e65374ce625fd"
-    },
-    ".claude/pipelines/security-patch.md": {
-      "category": "template",
-      "hash": "61b6da97c6f9c8a1993d40ce88065e47ddb00cf142495f3878604ee0bbcf9719"
-    },
-    "tests/rules/domain-health.test.md": {
-      "category": "template",
-      "hash": "d0beaf20ea840cdde0dc17177580ee038d5d8845a34619b0484a25c30acf830b"
-    },
-    "tests/rules/domain-software.test.md": {
-      "category": "template",
-      "hash": "ac58d47c1fed09bc63f062079bf4cf9208f4ee317d7a7125bc12f08cd0e01996"
-    },
-    ".claude/rules/analysis-first.md": {
-      "category": "template",
-      "hash": "/5295cc9719839986f60d72bcae482273cc884551137969506417933ead4761a6"
-    },
-    ".claude/rules/architecture.md": {
-      "category": "template",
-      "hash": "/c2fc6a56958fd9f20a035f44516784fa35a407220a5353768c4bc396c83634d0"
-    },
-    ".claude/rules/code-style.md": {
-      "category": "template",
-      "hash": "/329a2d3537c37eebf399640a6c74913d653eaa512b9c83ebbaa867210b946593"
-    },
-    ".claude/rules/conflict-resolution.md": {
-      "category": "template",
-      "hash": "/87a2f2825392ab1f634c4c991faa47c6624198493d0cb9a4d5fdcc1f664370cc"
-    },
-    ".claude/rules/context-first.md": {
-      "category": "template",
-      "hash": "/ae3dfbda7ed815e350c5df5869003bdac9ace3acd0e02c8ba9baed4b2c90afd9"
-    },
-    ".claude/rules/critical-thinking.md": {
-      "category": "template",
-      "hash": "/fa6bd5490ae4aef989c2d0855b55599a7d236c92e35d6eff8704ac15ed2bb1dc"
-    },
-    ".claude/rules/domain-business.md": {
-      "category": "template",
-      "hash": "/7d4dca0f399eeec05a99e950444d71bbf2d329783848e0c5dd2ac04d1d08bf92"
-    },
-    ".claude/rules/domain-design.md": {
-      "category": "template",
-      "hash": "/0ebb943204ab79c581ac84583b5f58893acca3385ae12f8cfbeb7f5ef42a214a"
+    "AGENTS.md": {
+      "category": "project",
+      "hash": "b21e15dfd56884c118de63f4fdb328cb4ce7b2cab60756bf0a0fc5de23d9458e"
     },
-    ".claude/rules/domain-health.md": {
-      "category": "template",
-      "hash": "/565aec7e0e8541c3fb6d6e82441de14b900b656a61912db1c87b94fad51e7b15"
-    },
-    ".claude/rules/domain-marketing-sales.md": {
-      "category": "template",
-      "hash": "/f01e1bcacbe064d0b3192e0430109c31dc64a108073c2c28feb454d085a7e3f2"
-    },
-    ".claude/rules/domain-productivity.md": {
-      "category": "template",
-      "hash": "/f10f7fb1361c3813cfd0231ec5bdcf1140b00b6799e02413b62ef17fdd9c6bfd"
-    },
-    ".claude/rules/domain-psychology.md": {
-      "category": "template",
-      "hash": "/c5a3322df4ac5d9901ed9115596ce8d9da401d45850e29e3a77e4892d7b78664"
-    },
-    ".claude/rules/domain-science.md": {
-      "category": "template",
-      "hash": "/d86d69739ce72467504fd7b6cabc088de731214af099a9f65bedf16096628801"
-    },
-    ".claude/rules/domain-software.md": {
-      "category": "template",
-      "hash": "/b163ba2a53145c022be933eaa9833bb3350b7b9fe046eb9e058174111a31ab03"
-    },
-    ".claude/rules/error-handling.md": {
-      "category": "template",
-      "hash": "/770afce0a40ca2ea6b2d9d00416926408e1aacfcee3500aab44b31305c59d07a"
-    },
-    ".claude/rules/git-workflow.md": {
-      "category": "template",
-      "hash": "/0adebf6804b7c0da0f467e5aa0f93f0fb0c55c2a2f19d528f59e6f6a810ab144"
-    },
-    ".claude/rules/plan-first.md": {
-      "category": "template",
-      "hash": "/69fe3060be6725c10a2722df967ebd5a49134028bc7f6450393c10c2280d63f3"
-    },
-    ".claude/rules/research-first.md": {
-      "category": "template",
-      "hash": "/9fdca047d601b29858d26ea94f87cf5ba057dd7a7afa7b43098dda11ac0f5c12"
-    },
-    ".claude/rules/router.md": {
-      "category": "template",
-      "hash": "/03e34bd1c5dd685fe7a91c2d2953cde4b4c86e356e49e4c060f36af9424d40d0"
-    },
-    ".claude/rules/self-improvement.md": {
-      "category": "template",
-      "hash": "/9a84c85503ed2c5e79366c855875dcb157c8a4388772b7c139e9a9d54db1446e"
-    },
-    ".claude/rules/self-verification.md": {
-      "category": "template",
-      "hash": "/59e1689dbdced879a260ef18c1bc278df1f72881de42d638c6844eba4fa7c928"
-    },
-    ".claude/rules/strategic-thinking.md": {
-      "category": "template",
-      "hash": "/48ad315186243bfd288a0924a9452ce2c7c8c6d1cd077f2a3923f71bf2fda7c9"
-    },
-    ".claude/rules/testing.md": {
-      "category": "template",
-      "hash": "/ab8eb78ee4de5ac9f345fa6ea057463435638c9bd7f59bb8719cc41a20d95b8b"
-    },
-    ".claude/rules/writing.md": {
-      "category": "template",
-      "hash": "/5bda9c9cbe77ffff7befe59acf9489ad3ec0ed5ac2636cda85873a987e82d013"
-    },
-    ".claude/agents/devops.md": {
-      "category": "template",
-      "hash": "/53f53579461d79f88bdc2efb8acaf6c6a6a5712a183e22183bc291254a730df1"
+    "brain/03-knowledge/communication/client-executor-anti-sycophancy-research.md": {
+      "category": "project",
+      "hash": "3413959bf16e679dfdcb8607284093f6572d043cad6a563911356bd966304337"
     },
-    ".claude/agents/devops.md.template-new": {
-      "category": "template",
-      "hash": "/0a0268afe3e58a1847d642fd206b1057a6486bc3ff72afc7bc78c6ad59945ef9"
-    },
-    ".claude/agents/documenter.md": {
-      "category": "template",
-      "hash": "/8109d2f73420f7d3a364c391fe58524efe6fcc300fd9f8a7154936f121a96848"
-    },
-    ".claude/agents/documenter.md.template-new": {
-      "category": "template",
-      "hash": "/cfc3d2d8224299432cf96e5547356ab5571a2b9d62411e9728d6e595a9ad690a"
-    },
-    ".claude/agents/implementer.md": {
-      "category": "template",
-      "hash": "/c3f5c8fc35b5e01d3530eb197bb0c3d588ce6eb633e8da9696d3a81060bf03cf"
-    },
-    ".claude/agents/implementer.md.template-new": {
-      "category": "template",
-      "hash": "/ece44349f085e267cc651fb9cb801faf42bb3896830724e09e8f15f358433cc8"
-    },
-    ".claude/agents/profiler.md": {
-      "category": "template",
-      "hash": "/6d1a6d278bdcfb055c24622390d8dd2a13f9d1b0c59d7d7771317038d227d4b5"
-    },
-    ".claude/agents/profiler.md.template-new": {
-      "category": "template",
-      "hash": "/5066bc871338a29e5306c3f61c4de8089c09a4b76ff4b74fd5b2115fae63d0af"
-    },
-    ".claude/agents/PROTOCOL.md": {
-      "category": "template",
-      "hash": "/1da8ea2a2e09aa2dbeac4da43ff91b9cd015239aacdbccfd38591f31cb5bbc57"
-    },
-    ".claude/agents/researcher.md": {
-      "category": "template",
-      "hash": "/6bbbba832b93397eb1d0eea9036e8c165111a512b8f1b9da9af4285b06884136"
-    },
-    ".claude/agents/researcher.md.template-new": {
-      "category": "template",
-      "hash": "/fb590fec8ab59b1d0e44a5f7477702488af129595a7ffc94cfc70fd6cb0a8116"
-    },
-    ".claude/agents/reviewer.md": {
-      "category": "template",
-      "hash": "/77085c3cf8e4bdc9ef08d652469f8a5497f30ce36db564898aeb8aa48e509b28"
-    },
-    ".claude/agents/reviewer.md.template-new": {
-      "category": "template",
-      "hash": "/f2fb7e86a9bcc06bde77a347d595d81416585112bf6e33514ea3e5241739fa1b"
-    },
-    ".claude/agents/security-auditor.md": {
-      "category": "template",
-      "hash": "/df6be2e365c9f0fa9d64e3556ae84c5630c35367051a9a9c5e725f93033c16ec"
-    },
-    ".claude/agents/security-auditor.md.template-new": {
-      "category": "template",
-      "hash": "/b22edd537d576be51237ca272677714fe9163efd4ef71142926c7d892514327d"
-    },
-    ".claude/agents/simplifier.md": {
-      "category": "template",
-      "hash": "/833eb1124612dcf423ef12bfbaf53888c060d6b2f630a26759c04b53154d7d07"
+    "brain/03-knowledge/communication/ilyakhov-planning-principles.md": {
+      "category": "project",
+      "hash": "0987dc97c0bd6d2851c5ab062117f010110a15dd3578ecb75fa987d923449c19"
     },
-    ".claude/agents/simplifier.md.template-new": {
-      "category": "template",
-      "hash": "/e5f3b2472b853f8ea0534867958ea41598e8e0dd195d87a0e8991bb47875ed59"
+    "CLAUDE.md": {
+      "category": "project",
+      "hash": "232e17f6fd76bea88da302ce048f9b1817d9edeec9233f70189108f639d4f0cb"
     },
-    ".claude/agents/test-engineer.md": {
+    "CONTRIBUTING.md": {
       "category": "template",
-      "hash": "/a00b06246e0f3bbb44c32d9582ae2a51aceb4445b8e0b936a8c2ef19702d4c70"
+      "hash": "1c0b8076e95a3a63f67d6626a16da04c18a9ae094277004b4920e41345d80348"
     },
-    ".claude/agents/test-engineer.md.template-new": {
+    "docs/AGENT_CONTEXT_SOT.md": {
       "category": "template",
-      "hash": "/ed723276ea4a5e57e2a5e639bfcee03686d6f09470ba61cf061915ca8e0ae59b"
+      "hash": "3c91f5b8d48f385e79f7dc3b7b8eff6f08410483fffc587444825d902efdfe2d"
     },
-    ".claude/agents/writer.md": {
+    "docs/AGENT_PIPELINES.md": {
       "category": "template",
-      "hash": "/08d2ae79daeed4cd878ee198fb8ce50227805aa9e7028808518c71edf8f289b3"
+      "hash": "3df3ee86bcd84cae70595f510782de54d977ff8aaf5bcff86ebfbb14765c615d"
     },
-    ".claude/agents/writer.md.template-new": {
+    "docs/API_CONTRACTS.md.template": {
       "category": "template",
-      "hash": "/923b7fbc7e5ea8cdc5d07da11fc0821548903415608b2314e4cd95cefb99bc01"
+      "hash": "b128d2c0d9d3235b94e7294ee9706e403a7b4f92c448bb8f21f9df3fa099c208"
     },
-    ".claude/commands/audit-tools.md": {
+    "docs/ARCHITECTURE.md.template": {
       "category": "template",
-      "hash": "/fd38d48397b676fe3da4bf8138433a0026b09fcd347f1fe65f053bd4d2201870"
+      "hash": "3fca64bc0481691d53efed60a143e7df45d3d3e3bf2f383c15b1c65c3ee1ceba"
     },
-    ".claude/commands/brain-sync.md": {
+    "docs/CODE_INTELLIGENCE_TOOLCHAIN.md": {
       "category": "template",
-      "hash": "/689d45a9df7328a157cd1c812c387ce4c9ce41433796157f4282f5a850fa95e7"
+      "hash": "ee4d65d3f27ef14ed7b0cfd33d77f2b1d26e0790077a9f0caa7f06f4d90b9bd2"
     },
-    ".claude/commands/brain-sync.md.template-new": {
+    "docs/CODEX_FANOUT_PATTERNS.md": {
       "category": "template",
-      "hash": "/baca334558069c4220297cad270d6cff99be5c642d1b71823d5a993e1137236f"
+      "hash": "74c3d3b29cc3e7ccdf9842d36bd70f3c1b30574349cd0912c07bc43874fb2fe0"
     },
-    ".claude/commands/commit-push-pr.md": {
+    "docs/CODEX_SKILLS_AUDIT.md": {
       "category": "template",
-      "hash": "/36c4986217690d45eebf876755d6eeb5023aa748a1f6e4756b51306bc98d7b28"
+      "hash": "97af0c9ffe57228fc86004b2c535d7c05f3f24101da60b1ba1dac2052128dedb"
     },
-    ".claude/commands/commit-push-pr.md.template-new": {
+    "docs/CODEX_SUBAGENTS_AUDIT.md": {
       "category": "template",
-      "hash": "/3cde5cd447f88d2c4ca688ea6801f2b4ff3214e3c9ed686cbe5bb71b391e5cd5"
+      "hash": "10245f2e5fd250eeaf86b421c74242a153ce3da90105dc63b80ae523d4fe5471"
     },
-    ".claude/commands/hotfix.md": {
+    "docs/DATA_DESIGN.md.template": {
       "category": "template",
-      "hash": "/f3e322ad8fcdcf1deaaf1c6cf8aaab0aab4b6d422debaf7a78df36f73d8c7365"
+      "hash": "21bf0a8f60bffafd9b9c92cc7531679a8237fcd42fce8432caf1958388550451"
     },
-    ".claude/commands/hotfix.md.template-new": {
+    "docs/DECISIONS.md.template": {
       "category": "template",
-      "hash": "/ac5385881a4bc7e0881d02ecc881df05576cf3abc141bc325378a39c0fca32fe"
+      "hash": "3ec038535b4fcec357c0e084c287f1202a8ceee6c7e87ba9799aecd4ac9729f7"
     },
-    ".claude/commands/implement.md": {
+    "docs/GPT6_MIGRATION_CANDIDATE.md": {
       "category": "template",
-      "hash": "/d8eae4f5f941bbc3b118ffb00400058b6a867e72e6e62cfc42fd27f392479cae"
+      "hash": "60c1708504fd3d3e73a216e1534e2bb10b31215bbc7abbe64cfbcb47e8e95218"
     },
-    ".claude/commands/implement.md.template-new": {
+    "docs/LUNA_EXECUTION_POLICY.md": {
       "category": "template",
-      "hash": "/378c3c3c3a90f1e8149b862a321ea0db031aecfb031126458ee61bed006d3452"
+      "hash": "9953dee6b9a0d1bc8622d974645b1a9d95169d830bde7f9981c2b5a6edd8d6fe"
     },
-    ".claude/commands/mode-code.md": {
+    "docs/MIGRATION_MATRIX.md": {
       "category": "template",
-      "hash": "/7c5044eb1f693707c163107147b5f266d1890b7569d1e3b4d5e9d7ea408f1574"
+      "hash": "5716cd0d41897659d5d015cc9272796ca4046c51b134d92b83edb968e52ab090"
     },
-    ".claude/commands/mode-design.md": {
+    "docs/MIGRATION_V5.md": {
       "category": "template",
-      "hash": "/f52543791d6cc15253d38eb7f6f3b4346ef796831844c677b126461e3bc13334"
+      "hash": "2375562a5871637e288db86b7cd513ffd562cf6e851ea3804d3f09cf57bd079f"
     },
-    ".claude/commands/mode-fix.md": {
+    "docs/NATIVE_WORKFLOW_ACCEPTANCE.md": {
       "category": "template",
-      "hash": "/4b5e2a4be530444a85853c4fce800dfd87dc360348d09c8ba9014f71d906df4a"
+      "hash": "a3f3f25a5d222d7c6eeed69ca7dcc59ce95049df8838eab9e8800111370fe659"
     },
-    ".claude/commands/mode-plan.md": {
+    "docs/NATIVE_WORKFLOW_GATES.md": {
       "category": "template",
-      "hash": "/e3a0e33a0d871841ca6ba260c61141ff3ed2dad51f9ca54fa58c91eb8a384bc8"
+      "hash": "e36152b5835e05fff73614db308717aa9bb98f6acd5a8052ed68e9d0e9bf109d"
     },
-    ".claude/commands/mode-research.md": {
+    "docs/OPENAI_MODEL_GUIDANCE.md": {
       "category": "template",
-      "hash": "/8462f6c6010a2b62a80d86c3c03aee8fff985c26dcc7a05b9da6fc41291772b1"
+      "hash": "f54c0781c37e0c5c1f980942e1e9cb6e23e243e2cef01f19497837269522e879"
     },
-    ".claude/commands/mode-review.md": {
+    "docs/ORCA_SETUP.md": {
       "category": "template",
-      "hash": "/f02bdcd635b54890f2428096f7da5efce04c182774f0a9688accca2e044972eb"
+      "hash": "d5d949e0596f96db2206f545c19f08f7915d903889c1f4ec7e9b6eb031cedf8a"
     },
-    ".claude/commands/mode-write.md": {
+    "docs/PRODUCT_BOUNDARY.md": {
       "category": "template",
-      "hash": "/2e474b9424a666dd1e3eab3ba71014d93b2783c68b0eb8c8808188c0cbcff203"
+      "hash": "a22ea76e5f6e2fa570569586e553be6ffc971ecfcc4f12da2469859e32a4b45a"
     },
-    ".claude/commands/onboard.md": {
+    "docs/RELEASE_CHECKLIST.md": {
       "category": "template",
-      "hash": "/f0f1d0c93716917a30f8d643af02eb2e19667aa02e9b78bb9fce87444644c704"
+      "hash": "8044646f47f99cb34ace846b327f9cca06e0111a47bb2f151206bab1dc608587"
     },
-    ".claude/commands/onboard.md.template-new": {
+    "docs/RELEASE_V5_0_1.md": {
       "category": "template",
-      "hash": "/cf4f2f48a804336a576db7f60de3532eef3c3b61e003b188fbd69dab79499327"
+      "hash": "9ecd46219e134cbed474ef22157fb0143c93b2d3145ba98380cc77c227a9b334"
     },
-    ".claude/commands/refactor.md": {
+    "docs/RELEASE_V5_0_2.md": {
       "category": "template",
-      "hash": "/97cb1d60a54561f4bf1fc1802e647dcbd55059dceb3aaeebd5f399ab603d8cd1"
+      "hash": "68c99c3a5263d7069f51b542ac27545769f5c5b43fa926f980c02425f2e83ad1"
     },
-    ".claude/commands/refactor.md.template-new": {
+    "docs/RELEASE_V6_0_0.md": {
       "category": "template",
-      "hash": "/2751c0b1500160624ff9f476c70dd7ac92e36bfd6759823cd327e1933981de5f"
+      "hash": "46f679fd6199f261e7c33d6dc26db522a27bb0548fbd46a1f327f105da4fd264"
     },
-    ".claude/commands/retrospective.md": {
+    "docs/RELEASE_V6_1_0.md": {
       "category": "template",
-      "hash": "/4d5f23ab7fa544daa63d19c15f16792d8b732ee762566cdc23e6c3fe4f26de00"
+      "hash": "4e219a149c19c0991ce4fc27b5879d9980946989efd2ecb7abd13e05119ba4d9"
     },
-    ".claude/commands/retrospective.md.template-new": {
+    "docs/RELEASE_V6_1_1.md": {
       "category": "template",
-      "hash": "/31ff6be7236452f1a424ba6659aed2e0775ca7bc5ad653f454ba89b97e19bb23"
+      "hash": "403ce1e9a9c11adc6da79dd08312e1e7a3a22ba4ad8519c66f2191416d7baf1b"
     },
-    ".claude/commands/review.md": {
+    "docs/RELEASE_V6_1_2.md": {
       "category": "template",
-      "hash": "/5403f17ccf65f038423a28caf97cb882aae698b8ed97c69b3571deee15689ae8"
+      "hash": "bce20e3d6c0b9f289ce44aca1f32cf0c5a831e2f72034ad3d44fa85dec624a55"
     },
-    ".claude/commands/review.md.template-new": {
+    "docs/RELEASE_V6_2_0.md": {
       "category": "template",
-      "hash": "/048b922c3162a368505cde12f6439beae10d90ad260af89ad9d734f1623fe72f"
+      "hash": "f5f3ec8968201e6275eca391c358cc364ed0c5c717fc0fae2e47093f78597e18"
     },
-    ".claude/commands/rollback.md": {
+    "docs/RELEASE_V6_3_0.md": {
       "category": "template",
-      "hash": "/394be1655d8310f446027870e6f82965d82938cc91b33ab4910162323713cb02"
+      "hash": "237c322f66d3b863a89b698fa23d7184c1e4662370fcfe2f0826c4c29b94950f"
     },
-    ".claude/commands/rollback.md.template-new": {
+    "docs/RELEASE_V6_3_1.md": {
       "category": "template",
-      "hash": "/e627a9e1232609f6fc90b536b807d493e008b244adc3543b43bc140b9d190b7f"
+      "hash": "e27f977cf20b48c5c233dbe48ca0208f77e33f598069643a3d8675503e33dc0e"
     },
-    ".claude/commands/setup-project.md": {
+    "docs/RELEASE_V6_3_2.md": {
       "category": "template",
-      "hash": "/d745caa12bca62f6998f85836e9a507c9f59b37a8360227cfcd68ae0d5369c70"
+      "hash": "40aac532905c83ba7c4dabedfe3dbd8c76ca805c9d78f8fbab09c29b8b1a2801"
     },
-    ".claude/commands/setup-project.md.template-new": {
+    "docs/RELEASE_V6_4_0.md": {
       "category": "template",
-      "hash": "/a61742503b64c2ce8707ef8ca6b09243d8a97812ac08831cfab288197d9348b2"
+      "hash": "2456a1cb5fc8abec8717b16948f6ca7f66f22acb7be76b9b8b7c2725bc411df1"
     },
-    ".claude/commands/sprint.md": {
+    "docs/RELEASE_V6_4_1.md": {
       "category": "template",
-      "hash": "/e14b7646e03489adcb44f7bb2d9311f6319219bc19cd03735482b5ccb89c88c6"
+      "hash": "5c0211402a02c0d51e3a33c6be537d19e989300a8b882ecfc343ba4b4ea9aa50"
     },
-    ".claude/commands/sprint.md.template-new": {
+    "docs/RELEASE_V6_4_2.md": {
       "category": "template",
-      "hash": "/00a41c7473fbfadfc7818e258410e9086d4aa2068bf0b5ff74fb27b12f672272"
+      "hash": "14ee7d8f70b82e3cac1637d3054179043ce69872dc6927c81c178c143d20ebcc"
     },
-    ".claude/commands/status.md": {
+    "docs/RELEASE_V6_4_3.md": {
       "category": "template",
-      "hash": "/67a5b0c19f7444d91d39755a2873547b6a79d27429c9949dab8321b76e49185d"
+      "hash": "df3d8114bbeb990662bddc77fb8e69f66f1f547ee0a633adb7d0967371d4115b"
     },
-    ".claude/commands/status.md.template-new": {
+    "docs/SAFE_DEFAULTS.md": {
       "category": "template",
-      "hash": "/ba41cf5590e6bc079dd0ee0850b90349eac65a2e2802b079924acf37216df00d"
+      "hash": "121fc44800f50967490d45b3bca8e72a8db0467766cc48b70d51285874fc88b2"
     },
-    ".claude/commands/sync-all.md": {
+    "docs/SHARED_CONVENTIONS.md": {
       "category": "template",
-      "hash": "/a9ea868fef8dcaa9f7f01fa58fd3455b6035a4c4bae26113dc618d86261678db"
+      "hash": "84361bff8d0d2874aa7e1835da597668f7e733ea870b68fba24cf8876f7b01f4"
     },
-    ".claude/commands/sync-all.md.template-new": {
+    "docs/STORAGE_OPERATIONS.md": {
       "category": "template",
-      "hash": "/ec2c2949cd7d91e022b57108846f4f4c2f00745f03bcb8731269ea44adf66bea"
+      "hash": "0d45276925a493576198a7b584ee019acc2c07f5fe23142f62d4679e942b6e6e"
     },
-    ".claude/commands/update-template.md": {
+    "docs/SUPPORTED_ENVIRONMENTS.md": {
       "category": "template",
-      "hash": "/f4ef2a7fa6808c9312a10f383fbdfd863d353fbc367b6b10a55abf7a44210e38"
+      "hash": "519e26b3673396b067241de9ce34ac4db8f8a2d98cda1cbcd28c1371225006ce"
     },
-    ".claude/commands/update-template.md.template-new": {
+    "docs/TEMPLATE_RELEASES.md": {
       "category": "template",
-      "hash": "/3924707bec0cadf9671444b777881d37a193116a297d9653611650ec6e080000"
+      "hash": "7dfbde664ae785bd4c96b943801494519722f8f3075deb9f3133313c15ba4f8e"
     },
-    ".claude/commands/weekly.md": {
+    "docs/WRITING_LIBRARY_SETUP.md": {
       "category": "template",
-      "hash": "/4475a6dd21af7d2c967903a8b7610ffef833a990b8cf7e24e7d7f273a4dd4876"
+      "hash": "1c6cda1140931e81f5200b78ad9c2cdce0f99a81160e960c604872a83d8b5aa3"
     },
-    ".claude/commands/weekly.md.template-new": {
+    "docs/WRITING_REFERENCE_PROVENANCE.md": {
       "category": "template",
-      "hash": "/287f35d203e0c835d32b31fa6cadb16d3bb9a4df43da4f4fd892bf20f9b169f9"
+      "hash": "e86d9821213c485d82e98422bc6dfe2bfb8a7b219fbe0d22cadb26c7359ccf96"
     },
-    ".claude/hooks/deny-sensitive-paths.sh": {
+    "docs/WRITING_WORKFLOW.md": {
       "category": "template",
-      "hash": "/0609bba608ba3695549f253308b73cb6b1867c7c987713948cfe8c9a61709ef1"
+      "hash": "3acf5249eb99cc4cd0c012e72025214af2568747d697d6f95d8b9041f36f832c"
     },
-    ".claude/hooks/format.sh": {
-      "category": "template",
-      "hash": "/3e98477507f8f139cf65e6a62fb631163bd5a1d471327551077895535c943178"
+    "ecosystem.md": {
+      "category": "project",
+      "hash": "b7779f4a73c3822ee3fdbb2c601a4e9bae86e6861b34dfd5bc12b7931d379ba5"
     },
-    ".claude/hooks/format.sh.template-new": {
+    "integrations/spec-kit/README.md": {
       "category": "template",
-      "hash": "/3e98477507f8f139cf65e6a62fb631163bd5a1d471327551077895535c943178"
+      "hash": "9a67f4747b353c18fea37a51bd88625857d2d641aa9b55023dda5f255ee6f4e1"
     },
-    ".claude/hooks/post-edit.sh": {
+    "Makefile": {
       "category": "template",
-      "hash": "/6a86c2b1e56cd7649bbaba68c41ed61f7c18e5e99c8d8937863642baaab74ee6"
+      "hash": "722710ed095fb483ad76dab83caba4333c0a486f6aa5a087cde79a4b648ad66b"
     },
-    ".claude/hooks/post-edit.sh.template-new": {
+    "mcp-servers/context-router/package-lock.json": {
       "category": "template",
-      "hash": "/4c275075b3f4292b63d0b565917b8517fd0a8c2085fdd6c31b8784ccb98ed9a3"
+      "hash": "b03bae7d66f64e582123419709bd8a2b40f3d54a2093f33e8ac300069fcb7293"
     },
-    ".claude/hooks/pre-bash-safety.sh": {
+    "mcp-servers/context-router/package.json": {
       "category": "template",
-      "hash": "/e5e256cb6b399d2e0122a7c58b293f6206be8b80afbd2429bc26861aa90c6225"
+      "hash": "069d44e095f7e87d72ada35d824df7d9a1d8c4a10f9d87ad28eed2429cea9f48"
     },
-    ".claude/hooks/pre-compact.sh": {
+    "mcp-servers/context-router/src/active-rules.ts": {
       "category": "template",
-      "hash": "/198929ed3a124117bac0f7c11a44232237fb015977ccb5c76751a79d62041dc7"
+      "hash": "f5b7b0273cbf8093dcba396d1f97fbd9417c9a5f9976219a346ee0a2c6c3924d"
     },
-    ".claude/hooks/pre-compact.sh.template-new": {
+    "mcp-servers/context-router/src/context.ts": {
       "category": "template",
-      "hash": "/59f2df0f944d7242a5582ffc09e587bfba6bb4f3fbf4ee52c25b6b7072a2fc33"
+      "hash": "37070d0061cae363318bfc65e4d1f32eb2570fc1b6d725ef33f48b4c0c15fd9c"
     },
-    ".claude/hooks/pre-edit-safety.sh": {
+    "mcp-servers/context-router/src/engram.ts": {
       "category": "template",
-      "hash": "/35afa428ccab88b364fbb48452e26baf93502e6fa96a2231e9ed1d6e8c79a4f8"
+      "hash": "cf2d42d4903b1226c4c362da00a8a731241674ced5a5867a06283defd83f2ffb"
     },
-    ".claude/hooks/pre-edit-safety.sh.template-new": {
+    "mcp-servers/context-router/src/index.ts": {
       "category": "template",
-      "hash": "/35afa428ccab88b364fbb48452e26baf93502e6fa96a2231e9ed1d6e8c79a4f8"
+      "hash": "e51e6920ae246beddfec25afaaead3a8fd4bb60b49b13349813bab9cfcbf6c33"
     },
-    ".claude/hooks/prompt-injection-defender.sh": {
+    "mcp-servers/context-router/src/mcp-runtime.test.ts": {
       "category": "template",
-      "hash": "/196f1ac8bf3f4992e9d2b1164e203346d0bb72331ab57b8c5b92c331cac40fa0"
+      "hash": "7d21ecaf2edc8d27c4a5d2786c49f75e79d63a64893087c3b390600861a7f8b7"
     },
-    ".claude/hooks/session-audit.sh": {
+    "mcp-servers/context-router/src/n8n.ts": {
       "category": "template",
-      "hash": "/6842a963e42dcfc2085b76be44a200eacdd2168e95b9089661a8d6145178f73a"
+      "hash": "92ec3880f9818b504aeb6072ca4d18b16f76cfe88783f542c7169b01e1e4fedc"
     },
-    ".claude/hooks/session-start.sh": {
+    "mcp-servers/context-router/src/project-files.ts": {
       "category": "template",
-      "hash": "/7ffdec167395edc4620a6ba638439c6a1c0154265d26de954ba7c66663569bfb"
+      "hash": "ad754473926d954accaad029a61923126738ab9b8168825ef2114da56b4bfad3"
     },
-    ".claude/hooks/session-start.sh.template-new": {
+    "mcp-servers/context-router/src/research.ts": {
       "category": "template",
-      "hash": "/e42253198db193a89264fc34169c273e02e30021c530e79fa536b5164c8cec22"
+      "hash": "b1428e3d92d06514c4ab27fa36202faa78e9f101de5ccb9bb7e0dbb365ca57d4"
     },
-    ".claude/hooks/session-stop.sh": {
+    "mcp-servers/context-router/src/router.test.ts": {
       "category": "template",
-      "hash": "/85413725d5b04a9df45c088cf43458f87ae8f9fd6d078b1d03a2462ba7e31ecb"
+      "hash": "9e85f185d175cf90350bc3c13523f418a33608a5d61b91d18ad888f1544723e4"
     },
-    ".claude/hooks/session-stop.sh.template-new": {
+    "mcp-servers/context-router/src/router.ts": {
       "category": "template",
-      "hash": "/85413725d5b04a9df45c088cf43458f87ae8f9fd6d078b1d03a2462ba7e31ecb"
+      "hash": "e5c631f5127dec429936a0054910476cf68db67175e988f7dc1b382a4495e310"
     },
-    ".claude/hooks/verify-gate.sh": {
+    "mcp-servers/context-router/src/security.test.ts": {
       "category": "template",
-      "hash": "/b8a56d9b0fb6a7d64f163d589e0540a192e56630a89cc851298adde2f40ef6a7"
+      "hash": "f1e2d60d86456c97e722d14c0bd08dd8745a6cdf6d830cc1bcfd716b4c5d7805"
     },
-    ".claude/hooks/verify-gate.sh.template-new": {
+    "mcp-servers/context-router/src/state.ts": {
       "category": "template",
-      "hash": "/f9c65795fce266af13eb1edcef229aa2d722a5d9d535525178285007fa76aa35"
+      "hash": "76c15d44f7c9d96cf688ed01449b91261d58aa34b1cceb86409071f84acb24fa"
     },
-    ".claude/pipelines/bugfix.md": {
+    "mcp-servers/context-router/src/types.ts": {
       "category": "template",
-      "hash": "/e7db898ce366eca7894d8251c3da8d50bcc704ddaf7cfae21b1292c82c71ae15"
+      "hash": "e7619a5312c5b19fb7fe85e5bdce7a8f1c563bb007465feb66ddf62d80339e88"
     },
-    ".claude/pipelines/bugfix.md.template-new": {
+    "mcp-servers/context-router/src/writing-contract.ts": {
       "category": "template",
-      "hash": "/7305fbfe96b2e35536992c798179ee13d0bc90acc5295c96f2cade884538f9dd"
+      "hash": "46faf684373b9af38d9420fc76baf746531d6830ab77beeb0b67ea422f6c6787"
     },
-    ".claude/pipelines/feature.md": {
+    "mcp-servers/context-router/tsconfig.json": {
       "category": "template",
-      "hash": "/c8751f4d76e9a66bf31bc0cd2e20ba802d4e80dbc73a1ca0875e65374ce625fd"
+      "hash": "beb08af0182b7267c780737c84fb269f13da82a4f31cc4c4de096d4b42940950"
     },
-    ".claude/pipelines/feature.md.template-new": {
-      "category": "template",
-      "hash": "/72338577e53e0c727c3b6cbf856ae9e963b1a2cf79a2465c553e056844967ae3"
+    "orca.yaml": {
+      "category": "hybrid",
+      "hash": "f8814f450818e5e85b5c617bbc99295f9b5e4b369b1ce7b6166f008a77ff4b8f"
     },
-    ".claude/pipelines/security-patch.md": {
-      "category": "template",
-      "hash": "/61b6da97c6f9c8a1993d40ce88065e47ddb00cf142495f3878604ee0bbcf9719"
+    "PROJECT_SPEC.md": {
+      "category": "project",
+      "hash": "1c31ad5d50351947801c8e36763d646f044d04ffa9bb957eee67582066c7297a"
     },
-    ".claude/pipelines/security-patch.md.template-new": {
+    "README.md": {
       "category": "template",
-      "hash": "/c40e231931fc926ef0a0e55e7336fa190429772182b02674791a8a2543ab3377"
+      "hash": "af306da7ffd5fa455946de01d61a63e11abb77c520e3bac6f8dfc239bea9792f"
     },
     "scripts/audit-reuse.sh": {
       "category": "template",
-      "hash": "/ac926e737e1b47be9fab7305c5473ff192de18afb99963505085f9b91e39c18c"
+      "hash": "a8e8b440ae3bf270ca450c9ee8ee8dc042fe73ca480c8f7a7eb132c6086ad2d8"
     },
     "scripts/blast-radius.sh": {
       "category": "template",
-      "hash": "/ff953c9b8fc6f22a364c2e40312f36be4f1aa32c45c23754c53e6d1f31961334"
+      "hash": "f72f45b47be32fef94fc0e013171552611f845936f39a85b00405523ec2d9d9f"
     },
     "scripts/bootstrap-mcp.sh": {
       "category": "template",
-      "hash": "/ba08145d0c2a2e43988600accc2857eee7a70534e52f6a621f352c7a1ab45c83"
-    },
-    "scripts/bootstrap-mcp.sh.template-new": {
-      "category": "template",
-      "hash": "/d8be54bdcf02b3200edbafacd0bb3eb670e537e6f7f6935e4a1c2a3c133f3009"
+      "hash": "b983fe8cf119af521b7d1df4f0c72f7034a6bd98ed6bff2a94d043f9ed8a6072"
     },
     "scripts/brain-search.sh": {
       "category": "template",
-      "hash": "/c083da18faf625e8ef83d608759b3afe9cb5bd14432943d7b7a0bc0e5f3dd6c4"
-    },
-    "scripts/brain-search.sh.template-new": {
-      "category": "template",
-      "hash": "/c083da18faf625e8ef83d608759b3afe9cb5bd14432943d7b7a0bc0e5f3dd6c4"
+      "hash": "c083da18faf625e8ef83d608759b3afe9cb5bd14432943d7b7a0bc0e5f3dd6c4"
     },
     "scripts/check-banlist.sh": {
       "category": "template",
-      "hash": "/7b1b693803894b81426fd74a8aa2cb1610703bc3ac18d18f7fc4cdffc88299e2"
+      "hash": "6e25a53490a8810b2c7e28fee479e468faa5d9dc2bcd51c44bf12d86ca56f6cf"
     },
     "scripts/check-drift.sh": {
       "category": "template",
-      "hash": "/555ace092449ef0808f8e5607cbf3c6c2a22df65956fdf5d57eacd37c1a1ad2e"
+      "hash": "512342894c574997252e3046c371ddd9dfe65f80bde4c36f1f5bc1e937d5cd2c"
     },
-    "scripts/check-drift.sh.template-new": {
+    "scripts/check-transfer-allowlist.js": {
       "category": "template",
-      "hash": "/f09262a19ab69e4ba024f1b836bf5d2373a62278cf006fc4e12e1188b99969a5"
+      "hash": "8949e1f8abe23fa6ef8624516220691dafd34db79925894b4f13437a790d7332"
+    },
+    "scripts/code-intelligence-tools.js": {
+      "category": "template",
+      "hash": "fc13b3615dabefb63d6439a424842ca80c9e8e75bc851e2dbb0463537fae58f7"
+    },
+    "scripts/codex-agent-policy.js": {
+      "category": "template",
+      "hash": "9f2a1c8ee919837e6a626c20d47f5165fc25e636ac53c73d627940e085596ba0"
+    },
+    "scripts/codex-delegation-report.js": {
+      "category": "template",
+      "hash": "d2586f64657d22d4d73219e96e596be261a155cdf19a4d67e8588cef6e2d4687"
+    },
+    "scripts/codex-hook-adapter.sh": {
+      "category": "template",
+      "hash": "29c2946a26a6ea5759c997ba3bf131e0bdf2e6b790a74b1835349e33fc9ae951"
+    },
+    "scripts/codex-hooks.js": {
+      "category": "template",
+      "hash": "65652c558fcf000545e2d0cfd636f9ddf434af207316ceb0c181ab96f1e75ca5"
+    },
+    "scripts/codex-route-config.js": {
+      "category": "template",
+      "hash": "96ef532f729a7c02a54349a2a0698a997fccbd4f3aa13031600de382ef575149"
+    },
+    "scripts/codex-route-task.js": {
+      "category": "template",
+      "hash": "c40afce825e6d1c5015d0228d06a624215335af623aa4e6ad6fdd0cd5282bafe"
+    },
+    "scripts/codex-routing-cases-a.js": {
+      "category": "template",
+      "hash": "21fd631b893a5dec550f6f29fe9058a62b60e59c1944762fac36120498c2ee94"
+    },
+    "scripts/codex-routing-cases-b.js": {
+      "category": "template",
+      "hash": "a7453034beb891d818eff3837694889371e7538391a3bdf7a878d19cade99b9a"
+    },
+    "scripts/codex-turn.js": {
+      "category": "template",
+      "hash": "756fce35139f5680a1e2a9d23ea8dfe3fd06b0e1cb47347aebebda4d9edf7178"
+    },
+    "scripts/configure-codex-mcp.js": {
+      "category": "template",
+      "hash": "57fe231b8ed0c332a7283e7ce488fc723c7666b93c609931808bd8fb385e1493"
     },
     "scripts/context-restore.sh": {
       "category": "template",
-      "hash": "/ff6f1f06dcb6fb9d3528591bb74759aa382a8a3035b1e6b60b05bbc7ed96da4e"
+      "hash": "fccde7775eb118327515f260994791f00119f4cb053ef94af732a506efc3d311"
+    },
+    "scripts/downstream-census.sh": {
+      "category": "template",
+      "hash": "381d9d72534a2bd6022c3de9efa2835cdccd43927480edce36723e8bf479fea0"
+    },
+    "scripts/generate-project-spec.sh": {
+      "category": "template",
+      "hash": "f2bab62c1c52685159856680831a71cb5764be69237fd9f8786300e43322c1e7"
     },
     "scripts/import-graph.sh": {
       "category": "template",
-      "hash": "/94c61be10b54c1d17f59a86caabe040678f978d3d217e9c86dd4fc9e9b80f2fc"
+      "hash": "2c5857de229e0fef23bca4f92d602f91d5b67d4bc22ba11b88f3ce89984d98c0"
+    },
+    "scripts/init-spec-kit.sh": {
+      "category": "template",
+      "hash": "e2ed72d8fb4adb9318843d2d150d6d7d698becfcbf0efab10bdee9280baa0f23"
+    },
+    "scripts/lesson-index.js": {
+      "category": "template",
+      "hash": "fc2292d879c2621f99e60e1b423fe6ea6240f24b0e3d4a3adba1d2d48d0fb6ac"
+    },
+    "scripts/lib/cache.sh": {
+      "category": "template",
+      "hash": "1629b1d0d723fdb960b8bdc9d01e48dea5c772b7d0be64a76569e6b2626dbb08"
+    },
+    "scripts/lib/change-strategy-policy.js": {
+      "category": "template",
+      "hash": "1c9285c997a3592de52bdc56c327c7b884f3ce7b25278344e0afc4a41fc2e1c6"
+    },
+    "scripts/lib/code-intelligence-policy.js": {
+      "category": "template",
+      "hash": "62165fa6874ba4c5df3ae104fa1785ec393c069a123d8dffa61cb402986e52e2"
+    },
+    "scripts/lib/codex-discovery-reroute.js": {
+      "category": "template",
+      "hash": "96ba78d98d576ab2dd355a9f1dceb9e14daf7ff117fa276d4e2e6d6f2281e89d"
+    },
+    "scripts/lib/codex-request-context.js": {
+      "category": "template",
+      "hash": "c14dfaa20047e4cc507471065d7e653e1e104b709d30ebd736f307ea53eaf393"
+    },
+    "scripts/lib/codex-request-recovery.js": {
+      "category": "template",
+      "hash": "2d9fd9f9bcd338a285f20d58a428465e211c0846145eb963e11ea72db71e4d30"
+    },
+    "scripts/lib/codex-route-cli.js": {
+      "category": "template",
+      "hash": "1ee0686d14da310166b9176039d6c2d14655ad7b9fee47dcaa9e5be2b07b24cd"
+    },
+    "scripts/lib/codex-route-intents.js": {
+      "category": "template",
+      "hash": "88c734cd2f8a6f87ad86b4374708fa9982287f7be9578e3f7933fa9139500acf"
+    },
+    "scripts/lib/codex-route-summary.js": {
+      "category": "template",
+      "hash": "215787c1a4234211414b48e98d241ad402dcf38baa44a697ed7421ae4f69ea98"
+    },
+    "scripts/lib/codex-runtime.js": {
+      "category": "template",
+      "hash": "567658567e176f3796e7c2945c7e650b7e8be18769977f2219188ef45f509dcc"
+    },
+    "scripts/lib/codex-turn-policy.js": {
+      "category": "template",
+      "hash": "d7b7b224dd3b18400b8e07a499995b1e1a74ca1dd1374f1c13baabd4b89e7880"
+    },
+    "scripts/lib/external-worker-policy.js": {
+      "category": "template",
+      "hash": "471f6171675635be94cb5f31e989d01124aedc0d7f583f4cd7b9cd917af5f827"
+    },
+    "scripts/lib/managed-cache.js": {
+      "category": "template",
+      "hash": "4af608be95774c3411e5cb8dca99bdd70e1dde8432cecdf3ae5a1bd6fe6315d9"
+    },
+    "scripts/lib/managed-observation-worker.js": {
+      "category": "template",
+      "hash": "35de23879347fea03ed2793960eae81b1c83ca11ccff116f17767a96ff49e399"
+    },
+    "scripts/lib/managed-process.js": {
+      "category": "template",
+      "hash": "3413dfeb1f66a3f6b4b6b8081fbdd9274b6263e0f1dfd84332046c4e309a6672"
+    },
+    "scripts/lib/managed-process.ps1": {
+      "category": "template",
+      "hash": "2a00761af23d4c24592128c69e438aa45c7f51fb519db426f3c551c9621fae67"
+    },
+    "scripts/lib/managed-run-ownership.js": {
+      "category": "template",
+      "hash": "edb093cf6c0307e98b6ea37eba0f63d554217ef1cfef39695fd50a9c7ac83548"
+    },
+    "scripts/lib/managed-run-profiles.js": {
+      "category": "template",
+      "hash": "1fbfab93f5651a3f00f5d6866437048bf761e379a843dac05659029783a9a9a4"
+    },
+    "scripts/lib/managed-run-report.js": {
+      "category": "template",
+      "hash": "0632d7001535e3e24db2dec75d6bf130d33482385e5ed6b2af39643fe83c1ffb"
+    },
+    "scripts/lib/managed-temp.js": {
+      "category": "template",
+      "hash": "d150648f35f1c333347b690ac7b65131fcdf07e1bfd194f4b90ea5354b10ca1f"
+    },
+    "scripts/lib/outcome-acceptance.js": {
+      "category": "template",
+      "hash": "dca178da2c80f0c64213eb90221bb7458cc291ce6c883c9ddc17ee138ec1d5af"
+    },
+    "scripts/lib/platform.sh": {
+      "category": "template",
+      "hash": "7b8a932c989de35dfd5d21c0dc66e011c648ad66f38482f3432b0833f06666d2"
+    },
+    "scripts/lib/progressive-plan.js": {
+      "category": "template",
+      "hash": "e468ece7a56fd9bd8cd49fdca97fa3b6edc9422451c9f339d096ebcb0ef2bb86"
+    },
+    "scripts/lib/safe-config-write.js": {
+      "category": "template",
+      "hash": "affef0f39b8dd4f76fa0740a8b385e5b9d12308d66f151a3b58f4ed60062a93b"
+    },
+    "scripts/lib/setup-manifest.js": {
+      "category": "template",
+      "hash": "7c271bc0d787f3bd86f3a163377163541f26880df8e32c5dfa06bc789be80150"
+    },
+    "scripts/lib/skill-links.js": {
+      "category": "template",
+      "hash": "8e2ca9e6722a999eeae3bd047fe7cf5d9bf459951faa9cb20148b5b8f073cfb3"
+    },
+    "scripts/lib/storage-operation-hooks.js": {
+      "category": "template",
+      "hash": "ed17f9eb234738a6ad8352e095c806d635442c6d04087754035b173a881f4ce5"
+    },
+    "scripts/lib/storage-operation-registry.js": {
+      "category": "template",
+      "hash": "8b4258f7e25c639d6bdd43f9bbf19aa1191d1a57f0e14ba8a58f8ff9a4571f39"
+    },
+    "scripts/lib/storage-volume-identity.ps1": {
+      "category": "template",
+      "hash": "a91f89484534d475f62d10fcb7d293f625da2a0e325066fd3336ff76e14e7c2b"
+    },
+    "scripts/lib/storage-volume-registry.js": {
+      "category": "template",
+      "hash": "516590c1220e581f9c0da607c3bfa4c77c33357ab2ea4e4ec486793aab32d41f"
+    },
+    "scripts/lib/subagent-trace.js": {
+      "category": "template",
+      "hash": "f7b7cd327dfb3a8bc09cd61b1ce53f8bc0fb91895421f89bf5cbee0969f32c45"
+    },
+    "scripts/lib/sync-manifest-reconcile.js": {
+      "category": "template",
+      "hash": "1a55a51ac454df1d0554a2e20986cd7b016fd4c0cf46d118832a98bee691faac"
+    },
+    "scripts/lib/sync-safe-copy.js": {
+      "category": "template",
+      "hash": "d4b89c516187f9215aefa9791b5bf14c7c6b81460ea00217f073eb68dcd68a2c"
+    },
+    "scripts/lib/sync-template-apply.js": {
+      "category": "template",
+      "hash": "17ae59233e02fa113bd3d68cedd8dad2e2151187f100dc35b361ee143b843624"
+    },
+    "scripts/lib/sync-template-core.js": {
+      "category": "template",
+      "hash": "44ae20d7d1e8a5b4113981eea2553f752bf2af0afa244be351da986c7bdb9386"
+    },
+    "scripts/lib/task-wave-handoff.js": {
+      "category": "template",
+      "hash": "fc1c72726b350e7604976f3cc64da78fd8d17160d5d5b8ba6b18faf4b39051dc"
+    },
+    "scripts/lib/template-payload-policy.js": {
+      "category": "template",
+      "hash": "c3ff82097c9d33598af800b4310efbd9acd69815695ba6403d22a88a2ea90ca5"
+    },
+    "scripts/lib/writing-editorial-review.js": {
+      "category": "template",
+      "hash": "3a9b95e367df56308188483c86cc17f821ae4d9d49353ada86178a0f7ba651df"
+    },
+    "scripts/lib/writing-external-tool-policy.js": {
+      "category": "template",
+      "hash": "c059b15894c986892fe7d355fd6c301fc23ab113bff63b1689298a15de892d31"
+    },
+    "scripts/lib/writing-intent.js": {
+      "category": "template",
+      "hash": "cce55778588792a4a7be7970790dd70d22b93c56dce3ba50510fe53281a9ac5b"
+    },
+    "scripts/lib/writing-library-index.js": {
+      "category": "template",
+      "hash": "0a3dbcbf45c9fa13f523cc14b8e09a21998447a004e9b3b6963f7562990f6ab5"
+    },
+    "scripts/lib/writing-library-policy.js": {
+      "category": "template",
+      "hash": "2bb1c5ed9fffa82d835e174e505a8a5a0d9b20c8dc067bbce5536086b785481d"
+    },
+    "scripts/lib/writing-library-provision.js": {
+      "category": "template",
+      "hash": "bcb31b830b1fc2e3e148ab3a329f2e721af991cd3253dc5af7197b6a3dfb5238"
+    },
+    "scripts/lib/writing-library-retrieve.js": {
+      "category": "template",
+      "hash": "a95034f8d06c912dd8bddb278c526ce122b30e75376507e48b6f0e0c84666aab"
+    },
+    "scripts/lib/writing-library-store.js": {
+      "category": "template",
+      "hash": "911f10034d1acc4a0b4ddb5f1db4e53fccf150a4ad4a9a055bb3ed3e9c593569"
+    },
+    "scripts/lib/writing-path-policy.js": {
+      "category": "template",
+      "hash": "2befb435517eb1cdc8dfc37f56fb84eb01044ad4a657b43bb48e02a0fa8d597d"
+    },
+    "scripts/lib/writing-reading-plan.js": {
+      "category": "template",
+      "hash": "14b73d142763962c65f84f91b4d6d54b446d3b59942687654679f4323d33fed9"
+    },
+    "scripts/lib/writing-reference-policy.js": {
+      "category": "template",
+      "hash": "07ad423b55fb25b414989d232c4d81bb93cf2503f42443ca1767e411c12bd5c5"
+    },
+    "scripts/lib/writing-route-policy.js": {
+      "category": "template",
+      "hash": "1713ca9050bf68942657f4392abf41c25264c5ff5446a5ceb2d7d401f375c202"
+    },
+    "scripts/managed-temp.js": {
+      "category": "template",
+      "hash": "312b0a084fcd7d1b45e3988b754c5b2c1f9fbde5b89e5cba2a8d02585430d149"
     },
     "scripts/measure-context.sh": {
       "category": "template",
-      "hash": "/cf0b76a159ef477684f89f829b61d7bc899915081cf1f6e87087ac7d8daeab6a"
+      "hash": "b98dd87232e4bbf912279591ff2f6cfa6a87831b9b269eddd145c17c307b8cfa"
     },
     "scripts/module-status.sh": {
       "category": "template",
-      "hash": "/a0996ad0e91e48d31332f04c78741876bcb1035ff30a1282ab479038c864143d"
+      "hash": "a0996ad0e91e48d31332f04c78741876bcb1035ff30a1282ab479038c864143d"
+    },
+    "scripts/orca-setup.js": {
+      "category": "template",
+      "hash": "73e13f7487343673a9f20c8034d67df3ff4b98859f0396f9048e4924fd19520e"
     },
     "scripts/plan-scaffold.sh": {
       "category": "template",
-      "hash": "/89b674953f098f3402509ab675c57fe6e60058cee51948f0d9ae5bd771e81539"
+      "hash": "89b674953f098f3402509ab675c57fe6e60058cee51948f0d9ae5bd771e81539"
+    },
+    "scripts/progressive-status.js": {
+      "category": "template",
+      "hash": "b411ceefa167a1c7ea8a13003884382dde3b7ce157fbe72686a1f97dc64f231e"
     },
     "scripts/research.sh": {
       "category": "template",
-      "hash": "/d1031709bb64372f5e1fc4b05f6322ef6c94daac50ead2870bfca94dfc161e1d"
+      "hash": "d1031709bb64372f5e1fc4b05f6322ef6c94daac50ead2870bfca94dfc161e1d"
     },
     "scripts/route-task.sh": {
       "category": "template",
-      "hash": "/5350fc7b7ff9f5a3733de4ba35dc7e390490b214508e56005d8899061c836919"
+      "hash": "4ecd31536735aaad7dc21a4645eb1db66abfe4172511e208cb3d1e88a9c50e6c"
     },
     "scripts/scan-project.sh": {
       "category": "template",
-      "hash": "/98942fd992126e9b63f3d0c5332c74391407055f7c9a64ce94d5318eebf7d3db"
+      "hash": "c94112e773f5238ed44f0af905439b80e6d20e3523d6f4636b0c159fdad88059"
     },
     "scripts/scan-projects.sh": {
       "category": "template",
-      "hash": "/90ff8cdf52054d3fbfba63ba17e3391f69e029768c2f394a30d6634019bb436e"
+      "hash": "90ff8cdf52054d3fbfba63ba17e3391f69e029768c2f394a30d6634019bb436e"
     },
     "scripts/scan-repo.sh": {
       "category": "template",
-      "hash": "/15835789b7006bc47bec0b89ca218a873b53b097505d5c5bc413d4193d0bc0ce"
+      "hash": "15835789b7006bc47bec0b89ca218a873b53b097505d5c5bc413d4193d0bc0ce"
     },
     "scripts/session-metrics.sh": {
       "category": "template",
-      "hash": "/f0518455346efc4512daf586a5f7a4e3ca4112a362455bd6d52b2e7470f2f6a9"
+      "hash": "527b65f88a15cfb4b576c4549348120cf977a7a9a16b2a5deec5984c8fbc6bb1"
     },
     "scripts/set-mode.sh": {
       "category": "template",
-      "hash": "/050cf85c103b0eee5f2f9e72a296f4390f02e63ec70ae2e6f1ab694d17f14e5e"
+      "hash": "050cf85c103b0eee5f2f9e72a296f4390f02e63ec70ae2e6f1ab694d17f14e5e"
+    },
+    "scripts/storage-operation.js": {
+      "category": "template",
+      "hash": "be54a5e2e768401e8f5417072b060fb0916e1f23a2578e40f1593dc6ae8664e8"
+    },
+    "scripts/sync-agents.sh": {
+      "category": "template",
+      "hash": "d84cf67a3ab4fa5669fb0fb70e1be5357c9059cfd92916af5938105543ee4572"
+    },
+    "scripts/sync-all.js": {
+      "category": "template",
+      "hash": "439e537c88b660e6cb221bff9dab94055a02031327f8126912ce1eeef97a6aa9"
     },
     "scripts/sync-all.sh": {
       "category": "template",
-      "hash": "/2b6bc94e1cd39196fa96f305cc78da41c81a143871f0efba71b1edcc6af9a68b"
+      "hash": "581a08a1e6f979a12b30c83921483f43e3af81c8136c87c8e97e3ddd0481d015"
     },
-    "scripts/sync-all.sh.template-new": {
+    "scripts/sync-spec-kit.sh": {
       "category": "template",
-      "hash": "/70c13f60d8f5e942233a5531bac86742c7afc37e03b20c41b2f14810ddf1a49d"
+      "hash": "619fe58d1038c249fb064c07e5fec7a19f36c783ae4a695d90dcfa5cca5d80f0"
+    },
+    "scripts/sync-template.cmd": {
+      "category": "template",
+      "hash": "de2e3533a6dafd86d90edc63d513f425f8eb94a4033753b28e947f6d45f8e4eb"
+    },
+    "scripts/sync-template.js": {
+      "category": "template",
+      "hash": "58d835d23edae8eddc381aa04032270101a82f02d56de1f3733a0918c8f60642"
     },
     "scripts/sync-template.sh": {
       "category": "template",
-      "hash": "/ccbc0d02b7d1b5f84a1147056fa958bc68a195c018a06e80189cd32fe04e72a3"
+      "hash": "fa3e006e0c2a79bd17a95fd29ab3d0e18e6fc254db32fa3468d8b2dae0cc0424"
     },
-    "scripts/sync-template.sh.template-new": {
+    "scripts/task-brief.sh": {
       "category": "template",
-      "hash": "/a3060498ed050f672117247a087008f16aa50820fc70d1890122ab5e651fc553"
+      "hash": "80a54841aad088b75e870efe155c4b3cbdf26e364e0db89e30349862eb908f61"
+    },
+    "scripts/test-change-strategy.js": {
+      "category": "template",
+      "hash": "98ab96df58072075a8affe6f7bfca91d4b71073ece8d2f3ea76909fc35d27e3f"
+    },
+    "scripts/test-ci-native-exit.js": {
+      "category": "template",
+      "hash": "d72ed4390299ef92d5005dea7120bd91f082b1cb96d2aa255609c199f7407bfa"
+    },
+    "scripts/test-code-intelligence-tools.js": {
+      "category": "template",
+      "hash": "cf9f3a3658fc1a80882c23288b694cd810db572397690d452e5bb2e36ebfaeb2"
+    },
+    "scripts/test-codex-agent-policy.js": {
+      "category": "template",
+      "hash": "de7a3674761f3521e1742733bd73325be53e20b57e9437ddfa751f27ebb23781"
+    },
+    "scripts/test-codex-delegation-report.js": {
+      "category": "template",
+      "hash": "865bfd4b4f9e78e7250680990ed24a7588884339389dffb9ccf3b4044c9854c0"
+    },
+    "scripts/test-codex-final-carrier.js": {
+      "category": "template",
+      "hash": "fd19569368bf723f8817532f934b9c89a6e1911d627ed0b6bc5e4a0092c35c7b"
+    },
+    "scripts/test-codex-hooks.js": {
+      "category": "template",
+      "hash": "e808776d2a073db3a81e409ed4f62501a3f4b36deda600ac02620d6e1bf6ce4c"
+    },
+    "scripts/test-codex-mcp-config.js": {
+      "category": "template",
+      "hash": "438c45e24e32e00dc7040e84e76aeceb85135652298a4adfe9ddc7b643c108ae"
+    },
+    "scripts/test-codex-request-recovery.js": {
+      "category": "template",
+      "hash": "b4e75bbb69fb0e57b4e3b9426383371d9a1adecdb892093ef6e596d5c2ea9b81"
+    },
+    "scripts/test-codex-routing.js": {
+      "category": "template",
+      "hash": "171a8399a07ac00393f4367876d004667c6e525f2f016173c8f9eadf59c96293"
+    },
+    "scripts/test-codex-runtime.js": {
+      "category": "template",
+      "hash": "cdd9430f5fb027bd88cd7f702311e0ba672baee0a10600d2a9a3816747152aa3"
+    },
+    "scripts/test-codex-subagents-live-launcher.sh": {
+      "category": "template",
+      "hash": "929fcb7360c9708c1f268ac891d480690343eb5f35b81c0bd12cf28b2882bc0a"
+    },
+    "scripts/test-codex-subagents-live.sh": {
+      "category": "template",
+      "hash": "213325b79c1cd1a404fa086d710b258f45ad6ab88952705931b449f886bd254e"
+    },
+    "scripts/test-codex-workflows-live.js": {
+      "category": "template",
+      "hash": "9a4e24e666b132129b587f239822ab46a92ef74509a5d6671b4aa0eb591d4cca"
+    },
+    "scripts/test-design-policy.js": {
+      "category": "template",
+      "hash": "2866a99139ef9da46cca111936b7333c1935f29f075ceb827ddbf81e3025b66e"
     },
     "scripts/test-hooks.sh": {
       "category": "template",
-      "hash": "/391144e50d994e5da548d11c82c65b15427912be08bbbcb34c3fe072495f2048"
+      "hash": "85b145a8861d8c3feb58f07e9ac9df9a9faa311223410a60c86ade6f3429c566"
     },
-    "scripts/test-hooks.sh.template-new": {
+    "scripts/test-lesson-index.js": {
       "category": "template",
-      "hash": "/391144e50d994e5da548d11c82c65b15427912be08bbbcb34c3fe072495f2048"
+      "hash": "f7a2d71397d8b88b45196a3bae21fbb76a7750e01996b8504df669a5dded9451"
+    },
+    "scripts/test-lessons.js": {
+      "category": "template",
+      "hash": "c9a36e9f6c07671a805feda944a154dc22da42bde4da756dfb4ad5cda4914435"
+    },
+    "scripts/test-managed-cache.js": {
+      "category": "template",
+      "hash": "6370371327202cef72e7cffb9f9910b11ee547c1ec5ede1341c8fe49a3003ac7"
+    },
+    "scripts/test-managed-process.js": {
+      "category": "template",
+      "hash": "9ea315c260fbc0ac56b5955d321b17e53a00826180f1a37544e1d80fd6dcb253"
+    },
+    "scripts/test-managed-run.js": {
+      "category": "template",
+      "hash": "0d3c5f36899b27acdf071f214739437036585b49ab837a295f79bf6ef03ec779"
+    },
+    "scripts/test-managed-stop-scope-live.js": {
+      "category": "template",
+      "hash": "18b4fc0a4b5c13b4bacbce13f7eb6e1677e94277c18228b055a0e55155a6cbdf"
+    },
+    "scripts/test-managed-temp.js": {
+      "category": "template",
+      "hash": "1b6ccf1e2cffc26ce94e3ea9d5bec33e3175bc73191b7f5fff8f62a1087487c6"
+    },
+    "scripts/test-orca-setup.js": {
+      "category": "template",
+      "hash": "317c00cfbf5a0c81c5feb56ed7a4f5e0b1d33d5c77b8a6ac8fdec519baf58f85"
+    },
+    "scripts/test-outcome-acceptance.js": {
+      "category": "template",
+      "hash": "850488fc4a435af47c7f36323105c1862f0dead97f04a1e2b5f63580fb8b307e"
+    },
+    "scripts/test-progressive-plan.js": {
+      "category": "template",
+      "hash": "88f97bb941f64eb9ae8198f61da9bfbdb2662594db6f44288eab9e849f5b7b2f"
+    },
+    "scripts/test-safe-config-write.js": {
+      "category": "template",
+      "hash": "516745e85e0f33cefb4a68cb19ad6bb7e97575e78f6f298f39b3f43eda72f8e7"
+    },
+    "scripts/test-skill-links.js": {
+      "category": "template",
+      "hash": "2e91d72c63381558f9c77ed5346f1e7680e436c24df6a9e5d11fda435fb86dc4"
+    },
+    "scripts/test-storage-operation-hooks.js": {
+      "category": "template",
+      "hash": "ecc703fadc5ad2e1e1ece74d8017ec5ee94746d11de3c9b2335858f8efecc5a6"
+    },
+    "scripts/test-storage-operation-registry.js": {
+      "category": "template",
+      "hash": "dda6b6b8edc8d654024a5659c2ee56b39c423b1ec8c0d879edca1c7368847a6a"
+    },
+    "scripts/test-storage-volume-live.js": {
+      "category": "template",
+      "hash": "b0bc8fb45c072c0b506aba914e94bf63568a177fb1b98327edb0717b869cd9f8"
+    },
+    "scripts/test-storage-volume-registry.js": {
+      "category": "template",
+      "hash": "79436dd91529adf1f67270b4d368c0a2d0424e5d98a41089ef18e394509afb5b"
+    },
+    "scripts/test-subagent-trace.js": {
+      "category": "template",
+      "hash": "164e2e3c86f12604cd939fc63c39b6a0e592304de84fa6e53b33a07bbd8d14cd"
+    },
+    "scripts/test-sync-template.js": {
+      "category": "template",
+      "hash": "23a9449a082013ea8a3f9f4bcf5e2a4085fa7da074f039513bbaba4e78d1118c"
     },
     "scripts/test-template.sh": {
       "category": "template",
-      "hash": "/9c5282aa7b251301e5d9cc590d087edab74c7c7f1b94265664538d5b3672913d"
+      "hash": "ccd80c65e81492ea3c1e3b73ccbb83360ffbac7c0149b69994a4b655dbee8b8f"
     },
-    "scripts/test-template.sh.template-new": {
+    "scripts/test-transfer-allowlist.js": {
       "category": "template",
-      "hash": "/f7f51d96ea889f6d343bba7d9253aa3bdcad1c553804d5328ec297798a685654"
+      "hash": "c9d35bb964037dd0bc1e6bafb731eda2bdfa9db902c819fa1fc83337a3bb8890"
+    },
+    "scripts/test-verify-check.js": {
+      "category": "template",
+      "hash": "28bf58ec352e39d9a106f784735bfb9d70818c214bd4ba97b6e43cc549f922a4"
+    },
+    "scripts/test-writing-editorial-review.js": {
+      "category": "template",
+      "hash": "22cf0534a98a9cdadb9342bbb146a926d6dc758b96084fff5388a60f93c24b82"
+    },
+    "scripts/test-writing-intent.js": {
+      "category": "template",
+      "hash": "1d5643656daf9913ef3b00fc218a864d194db45413b95ec0c441e98497bc996f"
+    },
+    "scripts/test-writing-library-index.js": {
+      "category": "template",
+      "hash": "d278d97f90bcb10f70b8fb373aae6ab8f7d03d7b77cc25984a16f2977d6e9547"
+    },
+    "scripts/test-writing-library-provision.js": {
+      "category": "template",
+      "hash": "71528083e0a48d9113beb040e83354b9dbc71d8747e88d7e2a0dc57cdbf3af0c"
+    },
+    "scripts/test-writing-library.js": {
+      "category": "template",
+      "hash": "cc6df6fa41b51457964922919e432dfadb0a10eafe92801b8b0cdbf57ec83953"
+    },
+    "scripts/test-writing-reading-plan.js": {
+      "category": "template",
+      "hash": "4f686e15c644b235359b1c91e9b100aeeb382ddf49da01ad344874e05d7ccfff"
+    },
+    "scripts/test-writing-references.js": {
+      "category": "template",
+      "hash": "322e688fa4c43725ac3c81c90f8591c0f5398d1b289b3ea9dadb1c9ccb6f2203"
     },
     "scripts/update-template.sh": {
       "category": "template",
-      "hash": "/c5ae284e7635f3684bf502958dbc32ac9e216cd50265217068f0e514cd2b89e1"
+      "hash": "d2345eab4b4336399056ff7c3d3d49f3a7b2f0c09eeb449d2a8f7c29b479d3c9"
     },
-    "scripts/update-template.sh.template-new": {
+    "scripts/validate-agent-sot.js": {
       "category": "template",
-      "hash": "/c5ae284e7635f3684bf502958dbc32ac9e216cd50265217068f0e514cd2b89e1"
+      "hash": "3bed53495bbba72a6eae06ef6ae153aeea401243db4a2c22a4b3ec8301804886"
+    },
+    "scripts/validate-change-strategy.js": {
+      "category": "template",
+      "hash": "8dd1720a22a01881518a5bf599fb2f651dce2462f60c5c0df3a8d3deabc2167d"
+    },
+    "scripts/validate-codex-agents.js": {
+      "category": "template",
+      "hash": "9279b805c64fb0efa1b3b7b84e5fc01de7b2953f7387d2f3dbae2b4506287b86"
+    },
+    "scripts/validate-codex-skills.js": {
+      "category": "template",
+      "hash": "765378c74ee18a75a9f402a1f168d84177703c262f77e38a673e03bbc3de8c5f"
+    },
+    "scripts/validate-design-policy.js": {
+      "category": "template",
+      "hash": "d41401ded65709604e233af271a5585a120a3b0f7bedf23476f874a9ef3b404e"
+    },
+    "scripts/validate-lessons.js": {
+      "category": "template",
+      "hash": "106f65f6c36261a577b482cd11172f1cd090312983145300872ade421d3074d6"
+    },
+    "scripts/validate-production-standard.js": {
+      "category": "template",
+      "hash": "f0bd51fc9393be4352fffbf026f4fbe11f88d42cc2fa8ef3f5fda822b01efd7a"
+    },
+    "scripts/validate-progressive-plan.js": {
+      "category": "template",
+      "hash": "d8b712048f436794dcb516ea7e3512a07edb80e570f482a8c8f7a626420d2400"
+    },
+    "scripts/validate-spec-kit.js": {
+      "category": "template",
+      "hash": "4b322f7a13098adea6ec3745ab6d520f3dc33c4b0ae4bfc17cc33d0ed2ef5d46"
+    },
+    "scripts/validate-subagent-trace.js": {
+      "category": "template",
+      "hash": "0ba07ef0c7e811d1b9293dff188cdbaa5bee8176b04ec17e0615979c13050b36"
     },
     "scripts/validate-template.sh": {
       "category": "template",
-      "hash": "/8796c315d9d9aac1a5f5d5efa9e6960abd4c57b5428c66752f418ffb27de18eb"
+      "hash": "bd5dd94cf5939c45627441c470bf0c4415327810307f7243ea84bd25798e64cb"
+    },
+    "scripts/validate-text-policy.js": {
+      "category": "template",
+      "hash": "8abb4b66cc2532c9204f42e20551469ba963fa1b72b65e22ce1dec52c3055393"
+    },
+    "scripts/validate-writing-references.js": {
+      "category": "template",
+      "hash": "4aeeba19f0fbcf8ea104dbf5563725f28106a3baf8086b9da1dedc8cd10aff11"
     },
     "scripts/verify-check.sh": {
       "category": "template",
-      "hash": "/981965782fe5cdd437250504d10f8b0446c3501029065b49f91bfcbee85174f8"
+      "hash": "d964c1a3e0b79b9b0f28936f82be1a181b3f4c17f062b5ce838e01ef7dbdfe33"
+    },
+    "scripts/writing-library.js": {
+      "category": "template",
+      "hash": "4fcf2d4aeec29a17ea230480cd299682bfef16a5058ffc7d4f12a00cf0ebc64d"
+    },
+    "SECURITY.md": {
+      "category": "template",
+      "hash": "3b87c59132245a3127dc992f315c86f43011859d08e3d345674b76f5ed77b859"
+    },
+    "SETUP_GUIDE.md": {
+      "category": "template",
+      "hash": "ec5f7f82ce9e47b3a01d8a1581897511d2c3f7bd5f01e4c8be71834716640680"
+    },
+    "tests/fixtures/change-strategy/discovery-architecture-mismatch.json": {
+      "category": "template",
+      "hash": "7b88312e25dfa27bdf45d721d967053264e0ec370e0b0731352beb6191828a5d"
+    },
+    "tests/fixtures/design-policy/fail/gradient-text.css": {
+      "category": "template",
+      "hash": "199c8b40d62a995d6ed12b946fa7dd83ec969feb72b88f2fb1affa4b3975d8f4"
+    },
+    "tests/fixtures/design-policy/pass/basic.css": {
+      "category": "template",
+      "hash": "ee2f55274b757ee3f4083cf565c82fd1ed1502d6a6f7abc898f1e3a4c8929cd0"
+    },
+    "tests/fixtures/writing-tools/external-tool-adapter.fixture.js": {
+      "category": "template",
+      "hash": "68fadc4408c663f25c6411c1b26ef9f657d78938007a11cfab666a3dda20aae6"
     },
     "tests/rules/domain-health.test.md": {
       "category": "template",
-      "hash": "/d0beaf20ea840cdde0dc17177580ee038d5d8845a34619b0484a25c30acf830b"
-    },
-    "tests/rules/domain-health.test.md.template-new": {
-      "category": "template",
-      "hash": "/1da1d571d3dd993d33a5e0275e7aa1680ef16e14609ccc87e0a0f4b68e2d6a15"
+      "hash": "1da1d571d3dd993d33a5e0275e7aa1680ef16e14609ccc87e0a0f4b68e2d6a15"
     },
     "tests/rules/domain-software.test.md": {
       "category": "template",
-      "hash": "/ac58d47c1fed09bc63f062079bf4cf9208f4ee317d7a7125bc12f08cd0e01996"
+      "hash": "0e442159284e4b26fe412fdb1e09d8e11f53027f5a1466e140f91e0d7ab16c0e"
     },
-    "tests/rules/domain-software.test.md.template-new": {
+    "tests/rules/public-copy.test.md": {
       "category": "template",
-      "hash": "/af6dca028fc788e00f26eea1f5d6e73aec567626b386bffb8f4e5f1594986c60"
+      "hash": "97b9eb806e10896bcc5fa4e7d5b670586f15972a5a86c2490404b897541ccf5d"
     },
-    "_reference/README.md": {
+    "tests/rules/skill-proportionality.test.md": {
       "category": "template",
-      "hash": "/caabb4f399e237f3d7976699c10d7eabbadc4e52b563b3522d5f35a10ce47258"
+      "hash": "35b910d66de59c6673995e01427f1ed32def4686a7d886b28c2a1ec167f865e5"
     },
-    "_reference/tool-registry.md": {
+    "upgrade-project.sh": {
       "category": "template",
-      "hash": "/818caf81eb563e9991a84dc0bcd01d417c9f9b2bc1eb18e8381a3f226cf11691"
-    },
-    ".claude/skills/add-feature/SKILL.md": {
-      "category": "template",
-      "hash": "/78564a9a60ed3d031cf71cf5a65d64b89a7687cb01fe8a1ad5a4a97e8c4abb54"
-    },
-    ".claude/skills/agent-metrics/SKILL.md": {
-      "category": "template",
-      "hash": "/059d184a7a803973a8ec3ba66ad143d014b8b7f351d2a66645aeb7ba5631c5cc"
-    },
-    ".claude/skills/agent-router/SKILL.md": {
-      "category": "template",
-      "hash": "/dd93edcb27c0b187d86081a76bfbc382c1a51576f4391391bf923412bac203e6"
-    },
-    ".claude/skills/api-contract/SKILL.md": {
-      "category": "template",
-      "hash": "/0534d6bcef4cca1ad13fd24e0f075debe13ee20642385839f81a3bddd7b2f49d"
-    },
-    ".claude/skills/coverage/SKILL.md": {
-      "category": "template",
-      "hash": "/b1e3f72397fdb0180f3bb5bed47a746952f215b7eb86280aff51058f5010f57d"
-    },
-    ".claude/skills/daily-brief/SKILL.md": {
-      "category": "template",
-      "hash": "/2ae1ed16828ab36855a6d30fe77e304888aaca48a8bf759a4f2b1f8521c1b5ae"
-    },
-    ".claude/skills/debug/SKILL.md": {
-      "category": "template",
-      "hash": "/d2e4b40c168641cdf1057dae6b9feea766267afcef00391392f4ec58d005d588"
-    },
-    ".claude/skills/decompose/SKILL.md": {
-      "category": "template",
-      "hash": "/849cb62d00cb0932e98fa7bf826e832563d299b88fc0c1c08554023a44ef2bdc"
-    },
-    ".claude/skills/domain-business-review/SKILL.md": {
-      "category": "template",
-      "hash": "/ecc114cdf35d8a06713e1f79bbe275a25563471b66643b4f783ab3ff5aa1d5c1"
-    },
-    ".claude/skills/domain-communication-review/SKILL.md": {
-      "category": "template",
-      "hash": "/ad17852dd6ed5a7e0c85461616cf4763964eb2fa675d626e6d43012e6aa036c4"
-    },
-    ".claude/skills/domain-design-review/SKILL.md": {
-      "category": "template",
-      "hash": "/e355b889bf68f9ea15051d936abb97f0021597499157ac093d16ea8a8c4300a2"
-    },
-    ".claude/skills/domain-health-review/SKILL.md": {
-      "category": "template",
-      "hash": "/fd90493e2aeaf7cf9b7b6cfc46309fa813a5fac388dcb6abe37b3a7efa31307c"
-    },
-    ".claude/skills/domain-science-review/SKILL.md": {
-      "category": "template",
-      "hash": "/d8b9303e3230ec91657bd375fc2735acb6f8b0e1a80526af4acde4fdcbcb5701"
-    },
-    ".claude/skills/domain-software-review/SKILL.md": {
-      "category": "template",
-      "hash": "/a78998dd91d7c28933e08bef376cde8ef4678d18bdc4413ece2aa37287d48464"
-    },
-    ".claude/skills/health-check/SKILL.md": {
-      "category": "template",
-      "hash": "/fc823edb12b3474a8baaede3f1f2f50328335eb89ffb030780bddfc3239ba564"
-    },
-    ".claude/skills/memory-router/SKILL.md": {
-      "category": "template",
-      "hash": "/c331f17935437bd912f9197cdd96f9bf3919d976c703d23cd66047e52d770a48"
-    },
-    ".claude/skills/migrate/SKILL.md": {
-      "category": "template",
-      "hash": "/10d97355db14e055c0fcd211107754a6f321bfabeeef1d3a594ce8039ca1059c"
-    },
-    ".claude/skills/modify-api/SKILL.md": {
-      "category": "template",
-      "hash": "/059439ec304d9d0e94d17a36408c91efa60a4a7648d4b3468474bf78b970bf05"
-    },
-    ".claude/skills/pipeline/SKILL.md": {
-      "category": "template",
-      "hash": "/52b7b1e0afa9fe989c89476f7dcca23519d71223b1479cf8e0d225229782646d"
-    },
-    ".claude/skills/security-audit/SKILL.md": {
-      "category": "template",
-      "hash": "/7f127452c6ec28295b5c867cc0b96c050c45a2eda66c087ea97f798a2f782aa0"
-    },
-    ".claude/skills/self-update/SKILL.md": {
-      "category": "template",
-      "hash": "/9b88441b46f710608dfc13b64fe9dba08d6be68b2def11f21b3d9663b2f8f66d"
-    },
-    ".claude/skills/setup-integrations/SKILL.md": {
-      "category": "template",
-      "hash": "/0b0e255b3813fb803ba7830c5a966dd69d1148dc0d1af613b26a4192e6a2eb61"
-    },
-    ".claude/skills/setup-project/SKILL.md": {
-      "category": "template",
-      "hash": "/5eef9433bb757734c37920bf8cfc1d9f4916aa52d32e230a2b2d008a1618ab0e"
-    },
-    ".claude/skills/setup-telegram/SKILL.md": {
-      "category": "template",
-      "hash": "/b850f94c8b6db3e76b14a2e9f794d59bc3bf2e76a2d4f27dada5eba2224b7c22"
-    },
-    ".claude/skills/sprint/SKILL.md": {
-      "category": "template",
-      "hash": "/4a09f275211515e3897bcecf6633d545979b9ea43cdbaf469d3584201834c931"
-    },
-    ".claude/skills/strategic-review/SKILL.md": {
-      "category": "template",
-      "hash": "/addc4b0c54ef6ab0e567e7a66ef307113b18235d3dd75f0f826a67f277606d0d"
-    },
-    ".claude/skills/task-queue/SKILL.md": {
-      "category": "template",
-      "hash": "/321258b138c59a7e3b590d140d7993c603c888deb34707e00360be2f8aa4182e"
-    },
-    ".claude/skills/test-rules/SKILL.md": {
-      "category": "template",
-      "hash": "/430c3d3c6ec4fe7169b10951bbb71f4f15b5ccc17a97ae54ca48fa2dee6a20e1"
-    },
-    ".claude/skills/update-deps/SKILL.md": {
-      "category": "template",
-      "hash": "/9388b8c62afef280153d9d90942e43d1968da5c905439af5e35021a581af8d0e"
+      "hash": "4335712d4ba9ce15a55c94bebf1f8c0a4ffe261d5c08b8cff73db6895738e1dd"
     }
   }
 }

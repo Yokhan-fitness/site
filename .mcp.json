@@ -1,18 +1,22 @@
 {
   "mcpServers": {
+    "context-router": {
+      "command": "node",
+      "args": [
+        "mcp-servers/context-router/dist/index.js"
+      ]
+    },
     "engram": {
       "command": "/c/Users/iohan/.local/bin/engram.exe",
-      "args": ["mcp"]
+      "args": [
+        "mcp"
+      ]
     },
-    "codegraphcontext": {
-      "command": "cgc",
-      "args": ["mcp", "start"]
-    },
-    "obsidian": {
-      "command": "obsidian-mcp-server",
-      "args": ["--vault", "./brain"],
+    "codebase-memory-mcp": {
+      "command": "codebase-memory-mcp",
+      "args": [],
       "env": {
-        "OBSIDIAN_API_KEY": "placeholder"
+        "CBM_ALLOWED_ROOT": "."
       }
     }
   }

@@ -2,6 +2,21 @@
   background: var(--surface-page-soft);
 }
 
+/* Legacy controls follow the active DS profile's interface and primary-action roles. */
+:root .btn {
+  font-family: var(--buffit-design-font-interface, var(--buffit-design-font-mono));
+}
+
+:root .btn--primary {
+  color: var(--buffit-design-primary-text, var(--buffit-color-white));
+  font-weight: var(--buffit-design-primary-label-weight, var(--buffit-weight-light));
+}
+
+:root .pdp-hero-page .hero__actions .btn--primary {
+  color: var(--buffit-design-primary-text, var(--buffit-color-white));
+  font-weight: var(--buffit-design-primary-label-weight, var(--buffit-weight-light));
+}
+
 .cta-section__inner {
   display: grid;
   gap: var(--space-1-5);

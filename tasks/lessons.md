@@ -21,6 +21,20 @@ When this file exceeds 50 entries, run `/weekly` to promote recurring patterns i
 
 ## Entries
 
+### 2026-07-25 — Design-system downstream markers do not prove pinned static-adapter freshness
+**Error**: `BuffItDesignSystem check:downstreams` passed, while the landing release gate still failed because three canonical source hashes in `contracts/design-system-consumer.json` were stale.
+**Root cause**: The design-system check validates consumer markers and forbidden patterns; the landing-owned `check-home-layout.mjs` separately owns exact source pinning for the `pinned-static-adapter`.
+**Rule**: Before a landing deploy, run both gates. Repin only after the current design-system build, contracts and rendered landing checks pass; never treat the shallow downstream marker check as source-freshness proof.
+**Applies to**: Codex / BuffItDesignSystem / YokhanFitnessLanding / deployment
+**Category**: workflow
+
+### 2026-07-22 — A partial media allowlist is not a complete landing release
+**Error**: Production HTML/CSS referenced 28 generated AVIF/WebP files that were absent from the server, although the previous media release itself had succeeded.
+**Root cause**: The release verified only its hand-written allowlist instead of deriving every active media dependency from the rendered HTML/CSS graph.
+**Rule**: Before and after a landing media deploy, compute the full HTML → CSS/import → src/srcset/poster/url dependency closure and require every local asset to exist locally and return 200 publicly.
+**Applies to**: Codex / landing deploy work
+**Category**: workflow
+
 ### 2026-03-17 — Example: Hallucinated npm package name
 **Error**: Recommended `@utils/smart-merge` package which does not exist on npm.
 **Root cause**: Generated a plausible-sounding package name from training data without verifying it exists. No verification step was performed before recommending.
@@ -137,3 +151,100 @@ When this file exceeds 50 entries, run `/weekly` to promote recurring patterns i
 **Category**: architecture
 **Track**: PROCESS
 **Severity**: P1
+
+### 2026-05-30 - Tar deploy can make public data directories unreadable
+**Track**: BUG
+**Severity**: P1
+**Error**: Public `https://yokhanfitness.ru/data/*.json` returned `index.html` with `text/html` even though the JSON files existed on the server.
+**Root cause**: The tar deploy created `/var/www/yokhan-landing/data` as `700 root:root`; nginx could not traverse the directory, so `try_files $uri $uri/ /index.html` fell through to the SPA fallback.
+**Rule**: After tar-based static deploys, normalize public web permissions: directories `755`, files `644`. Verify at least one file under every newly-created public directory through origin and public HTTPS.
+**Applies to**: Codex / deploy / static-site
+**Category**: bug
+
+### 2026-05-30 - Public deploy must include CSS-referenced critical assets
+**Track**: BUG
+**Severity**: P1
+**Error**: The public home page requested `assets/buffit-hero-home-training.png` from CSS and got 404, even though local static checks passed.
+**Root cause**: Recent deploys uploaded HTML/data but not the existing `assets/` directory; local CSS `url(...)` checks only proved the file existed locally, not that it existed on the server.
+**Rule**: Public smoke checks must include critical CSS-referenced assets, not only HTML and JSON. After deploying visual changes, verify browser network on a fresh context and check the hero/background assets return image content types.
+**Applies to**: Codex / codex-design-workflow / static deploy
+**Category**: bug
+
+### 2026-06-10 - Static docs aliases can hide broken routes behind 200 OK
+**Track**: BUG
+**Severity**: P1
+**Error**: `guide.yokhanfitness.ru` opened visually, but header auth links resolved to `guide.yokhanfitness.ru/hub/login`; nginx fallback returned the guide page with `200`, creating a fake login dead end.
+**Root cause**: Public HTML used origin-relative `/hub/*` links while the guide alias serves the same static files from a different host. The guide nginx block also fell back every unknown path to `guide.html`.
+**Rule**: For documentation/alias domains, verify in a real browser: rendered page, CTA `href` targets, direct old paths, mobile typography, and nginx fallback behavior. Hub/account links from public pages must use the canonical `https://yokhanfitness.ru/hub/*` origin or an explicit server redirect.
+**Applies to**: Codex / codex-design-workflow / static deploy / nginx
+**Category**: bug
+
+### 2026-06-10 - Fallback docs need asset-path regression checks
+**Track**: BUG
+**Severity**: P1
+**Error**: `guide.yokhanfitness.ru/Tools/everyday-activity/` rendered as raw browser HTML with all nav dropdown content expanded and no BUFF IT styling.
+**Root cause**: The guide nginx fallback served `guide.html` for nested documentation paths, but the document used relative `css/...`, `js/...`, and `fonts/...` paths. On `/Tools/everyday-activity/`, the browser requested `/Tools/everyday-activity/css/...`, and nginx returned HTML instead of assets.
+**Rule**: For any static page served through fallback or alias routes, verify a nested production URL in a fresh browser and smoke-check nested asset URLs by content type. Use `<base href="/">`, absolute asset paths, or nginx asset rewrites; never accept `200 text/html` for CSS/JS/font requests.
+**Applies to**: Codex / codex-design-workflow / static deploy / nginx
+**Category**: bug
+
+### 2026-06-10 - Guide subdomain is Docusaurus, not landing fallback
+**Track**: BUG
+**Severity**: P1
+**Error**: Tried to make `guide.yokhanfitness.ru/Tools/everyday-activity/` work by serving `YokhanFitnessLanding/guide.html`, which replaced the real Docusaurus documentation route.
+**Root cause**: Confused the product landing GUIDE page with the documentation product. `guide.yokhanfitness.ru` is backed by `yokhanFitnessDocsWebsite` Docusaurus with `routeBasePath: '/'`; `yokhanfitness.ru/guide.html` is the BUFF IT landing guide page.
+**Rule**: Before changing a subdomain root or nginx fallback, locate the owning repo/build artifact. Docusaurus docs domains must serve their `build/` root with `/index.html` fallback; product landing pages must stay on the main site or explicit product routes.
+**Applies to**: Codex / static deploy / nginx / Docusaurus
+**Category**: bug
+
+### 2026-06-10 - Restoring docs root is not enough without ingress links
+**Track**: BUG
+**Severity**: P1
+**Error**: After restoring `guide.yokhanfitness.ru` to Docusaurus, the main BUFF IT site still linked every GUIDE entry to local `guide.html`, so users could not reach the real docs from the site.
+**Root cause**: Fixed the serving layer but did not audit inbound links from the product site. The user's path starts on `yokhanfitness.ru`, not by typing a docs URL manually.
+**Rule**: For cross-site docs fixes, verify both sides: target docs routes and all public ingress links from the product site. Smoke checks must fail on local `href="guide.html"` when the intended destination is Docusaurus.
+**Applies to**: Codex / static deploy / Docusaurus / UX links
+**Category**: bug
+
+# 2026-07-20 — Remote shell substitutions must not cross the PowerShell boundary
+
+- Track: PROCESS
+- Severity: P2
+- Failure: a deploy preflight embedded a remote `$(sha256sum ...)` expression inside a PowerShell double-quoted string, so PowerShell tried to execute `sha256sum` locally before SSH connected.
+- Guard: for remote hash validation from PowerShell, use `echo '<sha>  <path>' | sha256sum -c --status` or a single-quoted remote script. Never place remote `$()` inside a PowerShell double-quoted command.
+
+# 2026-07-22 — Lifestyle media must preserve the user's real-life tension
+
+- Track: PATTERN
+- Severity: P1
+- Failure: image iterations drifted from an ordinary after-work home workout into office lifestyle and polished fitness-ad imagery, creating a false "successful success" promise.
+- Root cause: the generation brief described attractive styling more strongly than the product tension: training must fit a tired adult's real apartment and schedule.
+- Guard: every BUFF IT lifestyle brief must state the lived situation, ordinary clothing, imperfect household context, and explicit anti-goals before aesthetic direction. Reject office-dominant, private-gym, showroom, matching-activewear, and camera-pose results before integration.
+- Applies to: Codex / image generation / landing media / responsive art direction
+
+# 2026-07-22 — A shared image prompt can erase information architecture
+
+- Track: PATTERN
+- Severity: P1
+- Failure: six semantic media roles looked like consecutive frames from one beige apartment shoot and several movement poses had ambiguous equipment or joint geometry.
+- Root cause: the batch-level prompt owned apartment, daylight, framing and palette, while each product role supplied only a weak subject suffix. Visual consistency overrode navigation and technical legibility.
+- Guard: every lead/navigation role must declare location, light, camera, action, subject and accent; adjacent roles differ in at least four dimensions. Movement prompts include observable technique checkpoints, and automated metadata/file checks never substitute for full-resolution biomechanical review.
+- Applies to: Codex / image generation / landing navigation / responsive art direction
+
+# 2026-07-22 — A media category is not an art-direction contract
+
+- Track: PATTERN
+- Severity: P1
+- Failure: broad roles such as “fitness” or “health” allowed one attractive image to spread across unrelated routes and reduced navigation to first-order associations.
+- Root cause: the contract owned a category but not the exact route, slot, scene, responsive composition, identity owner or reuse limit.
+- Guard: every important placement declares `route + slot + sceneId + responsivePair + reuseLimit`; code-native metaphor is preferred when a photograph would merely repeat the section label.
+- Applies to: Codex / landing media / Storybook / design-system contracts
+
+# 2026-07-22 — Generated exercise technique needs a human acceptance gate
+
+- Track: BUG
+- Severity: P1
+- Failure: a visually plausible training frame showed an unacceptable lumbar position.
+- Root cause: file, dimension and semantic checks were treated as enough evidence for biomechanics.
+- Guard: movement imagery cannot ship without full-resolution review against explicit visible checkpoints. If anatomy remains uncertain, replace the movement with a safe coaching, calibration or preparation scene rather than trying to hide the defect with crop or overlay.
+- Applies to: Codex / image generation / coaching media / release review

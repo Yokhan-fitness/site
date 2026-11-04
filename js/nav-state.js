@@ -1,6 +1,24 @@
 (() => {
   const page = document.body;
-  const hero = document.querySelector(".hero__stage");
+  const root = document.documentElement;
+  const selectedProfile = document.querySelector(
+    ".buffit-design-profile[data-buffit-design-style]",
+  );
+  const designStyle =
+    root.dataset.buffitDesignStyle ||
+    page.dataset.buffitDesignStyle ||
+    selectedProfile?.dataset.buffitDesignStyle ||
+    "logik";
+  const designMode =
+    root.dataset.buffitMode ||
+    page.dataset.buffitMode ||
+    selectedProfile?.dataset.buffitMode ||
+    "light";
+
+  root.dataset.buffitDesignStyle = designStyle;
+  root.dataset.buffitMode = designMode;
+
+  const hero = document.querySelector(".buffit-landing-public-hero, .hero__stage");
 
   if (!hero) {
     return;

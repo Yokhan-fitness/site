@@ -10,7 +10,7 @@ body:not(.pdp-hero-page) .hero {
 .pdp-hero-page .hero > .hero__stage,
 body:not(.pdp-hero-page) .hero > .hero__stage {
   width: 100%;
-  max-width: var(--hero-shell-max);
+  max-width: var(--page-frame-max);
   min-height: var(--hero-min-height);
   margin-inline: auto;
   border: 0;
@@ -21,8 +21,11 @@ body:not(.pdp-hero-page) .hero > .hero__stage {
 
 .pdp-hero-page .hero__inner,
 body:not(.pdp-hero-page) .hero__inner {
+  width: min(100%, var(--page-grid-max));
+  max-width: var(--page-grid-max);
+  margin-inline: auto;
   min-height: var(--hero-min-height);
-  padding: var(--hero-padding);
+  padding: var(--hero-padding) var(--page-gutter);
   padding-top: calc(var(--nav-height) + var(--space-lg));
 }
 
@@ -31,5 +34,27 @@ body:not(.pdp-hero-page) .hero__inner {
   .pdp-hero-page .hero,
   body:not(.pdp-hero-page) .hero {
     padding: 0 var(--shell-padding-x) var(--space-base);
+  }
+
+  .pdp-hero-page .hero__inner,
+  body:not(.pdp-hero-page) .hero__inner {
+    padding-right: var(--hero-padding-mobile);
+    padding-bottom: var(--space-2);
+    padding-left: var(--hero-padding-mobile);
+  }
+
+  .hero__content,
+  .hero__panel {
+    width: 100%;
+    max-width: 100%;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 42.5rem) {
+  .hero,
+  .pdp-hero-page .hero,
+  body:not(.pdp-hero-page) .hero {
+    padding: 0;
   }
 }

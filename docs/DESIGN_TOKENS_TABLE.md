@@ -29,10 +29,10 @@ Generated from the current warm wellness token layer. Color primitives use perce
 
 | Token | Current value |
 |---|---|
-| `--color-ink-980` | `oklch(15% 0.018 56)` |
-| `--color-ink-900` | `oklch(22% 0.026 56)` |
-| `--color-ink-760` | `oklch(39% 0.035 62)` |
-| `--color-ink-620` | `oklch(52% 0.04 66)` |
+| `--color-ink-980` | `oklch(27% 0.035 55)` |
+| `--color-ink-900` | `oklch(34% 0.04 58)` |
+| `--color-ink-760` | `oklch(45% 0.04 62)` |
+| `--color-ink-620` | `oklch(57% 0.04 66)` |
 | `--color-cream-80` | `oklch(97.5% 0.025 78)` |
 | `--color-cream-120` | `oklch(92.5% 0.034 76)` |
 | `--color-cream-180` | `oklch(88% 0.044 74)` |
@@ -54,15 +54,15 @@ Generated from the current warm wellness token layer. Color primitives use perce
 | `--surface-panel` | `var(--color-cream-80)` |
 | `--surface-panel-muted` | `var(--color-cream-180)` |
 | `--surface-panel-strong` | `var(--color-cream-80)` |
-| `--surface-ink` | `var(--color-ink-980)` |
-| `--surface-hero-product` | `linear-gradient( 135deg, var(--color-ink-980) 0%, var(--color-moss-700) 48%, var(--color-copper-520) 140% )` |
+| `--surface-ink` | `var(--color-cream-180)` |
+| `--surface-hero-product` | `var(--color-cream-180)` |
 | `--surface-soft` | `color-mix(in oklch, var(--color-ink-900) 6%, transparent)` |
 | `--surface-soft-strong` | `color-mix( in oklch, var(--color-ink-900) 11%, transparent )` |
 | `--surface-nav` | `color-mix(in oklch, var(--color-cream-80) 88%, transparent)` |
 | `--surface-glass` | `color-mix(in oklch, var(--color-cream-80) 72%, transparent)` |
 | `--surface-glass-strong` | `color-mix( in oklch, var(--color-cream-80) 86%, transparent )` |
 | `--surface-nav-glass` | `color-mix( in oklch, var(--color-cream-80) 70%, transparent )` |
-| `--surface-nav-dark` | `color-mix( in oklch, var(--color-ink-980) 20%, transparent )` |
+| `--surface-nav-dark` | `color-mix( in oklch, var(--color-cream-80) 78%, transparent )` |
 | `--media-wash-light` | `color-mix( in oklch, var(--color-cream-80) 88%, transparent )` |
 | `--media-wash-soft` | `color-mix( in oklch, var(--color-cream-80) 48%, transparent )` |
 | `--media-wash-hero` | `color-mix( in oklch, var(--color-cream-80) 10%, transparent )` |
@@ -72,9 +72,9 @@ Generated from the current warm wellness token layer. Color primitives use perce
 | `--surface-sky` | `color-mix(in oklch, var(--color-sky-420) 14%, transparent)` |
 | `--surface-berry` | `color-mix(in oklch, var(--color-berry-420) 14%, transparent)` |
 | `--surface-inverse-soft` | `color-mix( in oklch, var(--color-cream-80) 10%, transparent )` |
-| `--media-overlay-soft` | `color-mix( in oklch, var(--color-ink-980) 17%, transparent )` |
-| `--media-overlay-strong` | `color-mix( in oklch, var(--color-ink-980) 40%, transparent )` |
-| `--media-overlay-deep` | `color-mix( in oklch, var(--color-ink-980) 72%, transparent )` |
+| `--media-overlay-soft` | `color-mix( in oklch, var(--color-cream-80) 24%, transparent )` |
+| `--media-overlay-strong` | `color-mix( in oklch, var(--color-cream-80) 66%, transparent )` |
+| `--media-overlay-deep` | `color-mix( in oklch, var(--color-cream-80) 90%, transparent )` |
 | `--media-overlay-hero` | `color-mix( in oklch, var(--color-copper-520) 12%, transparent )` |
 | `--promo-height` | `2.25rem` |
 | `--media-section-min` | `33.75rem` |
@@ -86,15 +86,15 @@ Generated from the current warm wellness token layer. Color primitives use perce
 | Token | Current value |
 |---|---|
 | `--text-gradient-warm` | `linear-gradient( 118deg, var(--color-ink-980) 0%, var(--color-moss-700) 34%, var(--color-copper-520) 66%, var(--color-action-620) 100% )` |
-| `--text-gradient-hero` | `linear-gradient( 118deg, var(--color-cream-80) 0%, var(--color-action-620) 58%, var(--color-copper-520) 100% )` |
+| `--text-gradient-hero` | `linear-gradient( 118deg, var(--color-ink-980) 0%, var(--color-copper-520) 64%, var(--color-action-520) 100% )` |
 | `--text-primary` | `var(--color-ink-980)` |
 | `--text-secondary` | `var(--color-ink-760)` |
 | `--text-muted` | `color-mix(in oklch, var(--color-ink-900) 58%, transparent)` |
-| `--text-inverse` | `var(--color-cream-80)` |
-| `--text-inverse-muted` | `color-mix( in oklch, var(--color-cream-80) 80%, transparent )` |
-| `--text-inverse-soft` | `color-mix( in oklch, var(--color-cream-80) 72%, transparent )` |
-| `--accent-primary` | `var(--color-ink-980)` |
-| `--accent-primary-strong` | `var(--color-moss-700)` |
+| `--text-inverse` | `var(--color-ink-980)` |
+| `--text-inverse-muted` | `color-mix( in oklch, var(--color-ink-900) 80%, transparent )` |
+| `--text-inverse-soft` | `color-mix( in oklch, var(--color-ink-900) 72%, transparent )` |
+| `--accent-primary` | `var(--color-copper-520)` |
+| `--accent-primary-strong` | `var(--color-action-620)` |
 | `--accent-warm` | `var(--color-copper-520)` |
 | `--accent-sage` | `var(--color-sage-500)` |
 | `--accent-sky` | `var(--color-sky-420)` |
@@ -164,16 +164,17 @@ Generated from the current warm wellness token layer. Color primitives use perce
 | `--hero-shell-max` | `96rem` |
 | `--hero-min-height` | `calc(var(--viewport-full) - var(--space-base))` |
 | `--hero-padding` | `clamp(var(--space-lg), 6vw, calc(var(--space-lg) * 1.5))` |
+| `--hero-padding-mobile` | `var(--space-1-5)` |
 | `--hero-image-position` | `center center` |
 | `--hero-border` | `1px solid color-mix(in oklch, var(--color-cream-80) 16%, transparent)` |
 | `--hero-shadow` | `0 3rem 7rem color-mix(in oklch, var(--color-ink-900) 22%, transparent)` |
-| `--hero-overlay` | `linear-gradient( 90deg, color-mix(in oklch, var(--color-ink-980) 74%, transparent) 0%, color-mix(in oklch, var(--color-ink-900) 48%, transparent) 34%, color-mix(in oklch, var(--color-copper-520) 16%, transparent) 62%, transparent 100% )` |
-| `--hero-tint` | `linear-gradient( 180deg, color-mix(in oklch, var(--color-action-620) 14%, transparent), color-mix(in oklch, var(--color-ink-900) 10%, transparent) )` |
+| `--hero-overlay` | `linear-gradient( 90deg, color-mix(in oklch, var(--color-cream-80) 94%, transparent) 0%, color-mix(in oklch, var(--color-cream-80) 80%, transparent) 38%, color-mix(in oklch, var(--color-cream-120) 34%, transparent) 64%, transparent 100% )` |
+| `--hero-tint` | `linear-gradient( 180deg, color-mix(in oklch, var(--color-cream-80) 14%, transparent), color-mix(in oklch, var(--color-copper-520) 8%, transparent) )` |
 | `--nav-height` | `4.5rem` |
 | `--nav-height-pdp` | `5.625rem` |
 | `--nav-mobile-height` | `9.75rem` |
 | `--nav-panel-radius` | `var(--radius-hero)` |
-| `--nav-menu-panel-height` | `clamp(28rem, 50svh, 31rem)` |
+| `--nav-menu-panel-height` | `clamp(32rem, 60svh, 36rem)` |
 | `--nav-menu-feature-min` | `9rem` |
 | `--nav-menu-list-min` | `4rem` |
 | `--nav-mobile-panel-max-height` | `calc(100svh - var(--nav-height) - var(--space-base))` |
@@ -181,7 +182,7 @@ Generated from the current warm wellness token layer. Color primitives use perce
 | `--nav-solid-offset` | `7.5rem` |
 | `--nav-dropdown-surface` | `var(--surface-page-soft)` |
 | `--nav-dropdown-surface-glow` | `radial-gradient(circle at 24% 0%, color-mix(in oklch, var(--color-action-620) 22%, transparent), transparent 34%)` |
-| `--nav-dropdown-lead-overlay` | `linear-gradient(180deg, transparent 0%, color-mix(in oklch, var(--color-ink-980) 20%, transparent) 100%)` |
+| `--nav-dropdown-lead-overlay` | `linear-gradient(180deg, color-mix(in oklch, var(--color-cream-80) 18%, transparent) 0%, color-mix(in oklch, var(--color-cream-80) 82%, transparent) 100%)` |
 | `--nav-dropdown-lead-surface` | `linear-gradient(135deg, color-mix(in oklch, var(--color-cream-260) 72%, var(--color-cream-80)), color-mix(in oklch, var(--color-action-620) 30%, var(--color-cream-80)))` |
 | `--nav-card-surface` | `color-mix(in oklch, var(--color-cream-180) 56%, var(--color-cream-80))` |
 | `--nav-chip-surface` | `color-mix(in oklch, var(--color-cream-80) 72%, transparent)` |
@@ -223,12 +224,20 @@ Generated from the current warm wellness token layer. Color primitives use perce
 
 | Token | Current value |
 |---|---|
-| `--image-hero` | `url("../assets/buffit-hero-home-training.png")` |
+| `--image-hero` | `var(--image-app)` |
 | `--image-brand-kit` | `none` |
-| `--image-fitness` | `url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=80")` |
-| `--image-health` | `url("https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80")` |
-| `--image-method` | `url("https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=2200&q=80")` |
-| `--image-women` | `url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1400&q=80")` |
-| `--image-men` | `url("https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1400&q=80")` |
-| `--image-food` | `url("https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80")` |
-| `--image-calls` | `url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80")` |
+| `--image-women` | desktop `image-set(...b03-08-women-strength-ceramic-desktop-v3...)`; mobile alias below `45rem` |
+| `--image-women-mobile` | `image-set(...b03-08-women-strength-ceramic-mobile-v3...)` |
+| `--image-men` | desktop `image-set(...b03-07-men-capability-ceramic-desktop-v3...)`; mobile alias below `45rem` |
+| `--image-men-mobile` | `image-set(...b03-07-men-capability-ceramic-mobile-v3...)` |
+| `--image-health` | desktop `image-set(...b01-09-health-safe-return-ceramic-desktop-v3...)`; mobile alias below `45rem` |
+| `--image-health-mobile` | `image-set(...b01-09-health-safe-return-ceramic-mobile-v3...)` |
+| `--image-food` | desktop `image-set(...b01-10-food-rhythm-ceramic-desktop-v3...)`; mobile alias below `45rem` |
+| `--image-food-mobile` | `image-set(...b01-10-food-rhythm-ceramic-mobile-v3...)` |
+| `--image-guide` | desktop `image-set(...b01-08-guide-materials-ceramic-desktop-v2...)`; mobile alias below `45rem` |
+| `--image-guide-mobile` | `image-set(...b01-08-guide-materials-ceramic-mobile-v2...)` |
+| `--image-app` | desktop `image-set(...b01-07-app-in-use-ceramic-desktop-v3...)`; mobile alias below `45rem` |
+| `--image-app-mobile` | `image-set(...b01-07-app-in-use-ceramic-mobile-v3...)` |
+| `--image-calls` | `image-set(...b01-06-calls-igor-ceramic-desktop-v6...)` |
+| `--image-fitness` | `var(--image-women)` |
+| `--image-method` | `var(--image-health)` |

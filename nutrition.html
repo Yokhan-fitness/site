@@ -3,29 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BUFF IT FOOD — питание и продуктовая корзина</title>
-  <meta name="description" content="Питание для формы и энергии: продуктовая корзина, замены, простые блюда и решения без диетической паники.">
-  <meta property="og:title" content="BUFF IT FOOD — питание и продуктовая корзина">
-  <meta property="og:description" content="Питание для формы и энергии: продуктовая корзина, замены, простые блюда и решения без диетической паники.">
+  <title>Вкусное и здоровое питание на каждый день — BUFF IT</title>
+  <meta name="description" content="Подбираем блюда под ваши вкусы, рассчитываем калорийность, даём практичные советы и список покупок. Чтобы меньше времени уходило на выбор и подготовку еды.">
+  <meta property="og:title" content="Вкусное и здоровое питание на каждый день — BUFF IT">
+  <meta property="og:description" content="Подбираем блюда под ваши вкусы, рассчитываем калорийность, даём практичные советы и список покупок. Чтобы меньше времени уходило на выбор и подготовку еды.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://buffit.fit">
   <link rel="preload" href="fonts/Unbounded-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/GolosText-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/tokens.css?v=20260722-ceramic-media-v4">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/hero.css?v=20260610-auth-hero">
   <link rel="stylesheet" href="css/programs.css">
   <link rel="stylesheet" href="css/sales.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/ecosystem.css">
-    <link rel="stylesheet" href="css/page-components.css">
+    <link rel="stylesheet" href="css/page-components.css?v=20260722-audience-media-v2">
   <link rel="stylesheet" href="css/cta.css">
   <link rel="stylesheet" href="css/hero-shell-system.css">
-    <link rel="stylesheet" href="css/nav-dropdown-system.css">
+    <link rel="stylesheet" href="css/nav-dropdown-system.css?v=20260722-ceramic-media-v3">
     <link rel="stylesheet" href="css/interaction-system.css">
   <link rel="stylesheet" href="css/header-system.css">
+  <link rel="stylesheet" href="css/account-system.css?v=20260610-auth-cta-reset">
 </head>
-<body>
+<body class="audience-hero-page audience-food">
   <a class="promo-bar" href="nutrition.html">BUFF IT FOOD: еда для формы</a>
     <nav class="nav" aria-label="Основная навигация">
     <div class="nav__inner">
@@ -75,7 +76,7 @@
                   <a href="program-entry-fitness.html">Вход в фитнес</a>
                   <a href="program-healthy-back.html">Спина и шея</a>
                   <a href="health.html">Ограничения</a>
-                  <a href="safety.html">Первая помощь</a>
+                  <a href="/health/first-aid/docs/">Первая помощь</a>
                 </div>
               </section>
             </div>
@@ -120,8 +121,8 @@
                 <small>Еда, корзина, восстановление и привычки вокруг нагрузки.</small>
                 <div class="nav__quicklinks" aria-label="Питание и ритм">
                   <a href="nutrition.html">Питание</a>
-                  <a href="app.html#dayflow">DAYFLOW скоро</a>
-                  <a href="guide.html">Гайд новичка</a>
+                  <a href="https://yokhanfitness.ru/dayflow/">DAY FLOW</a>
+                  <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд новичка</a>
                 </div>
               </section>
             </div>
@@ -135,7 +136,7 @@
               <strong>Понять, с чего начать безопасно</strong>
               <small>Материалы для первого шага: новичку, при боли, ограничениях и тревоге.</small>
               <div class="nav__quicklinks" aria-label="Материалы для старта">
-                <a href="guide.html">Гайд новичка</a>
+                <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд новичка</a>
                 <a href="start.html">Подобрать старт</a>
               </div>
             </article>
@@ -145,7 +146,7 @@
                 <strong>Без стыда и перегруза</strong>
                 <small>Как войти в тренировки спокойно и не бросить через две недели.</small>
                 <div class="nav__quicklinks" aria-label="Новичку">
-                  <a href="guide.html">Гайд</a>
+                  <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд</a>
                   <a href="program-entry-fitness.html">Вход в фитнес</a>
                   <a href="programs.html">Цели</a>
                 </div>
@@ -155,7 +156,7 @@
                 <strong>Боль, аптечка и ограничения</strong>
                 <small>Когда тело сигналит болью или есть ограничения по нагрузке.</small>
                 <div class="nav__quicklinks" aria-label="Риски и безопасность">
-                  <a href="safety.html">Первая помощь</a>
+                  <a href="/health/first-aid/docs/">Первая помощь</a>
                   <a href="health.html">Безопасный старт</a>
                   <a href="program-healthy-back.html">Спина</a>
                 </div>
@@ -220,17 +221,21 @@
           </div>
         </div>
       </div>
-      <a href="start.html" class="btn btn--primary nav__cta">Начать</a>
-      <button class="nav__mobile-toggle" type="button" aria-label="Menu" aria-expanded="false">
+      <div class="nav__actions">
+        <a href="https://app.yokhanfitness.ru/auth?mode=login&amp;returnTo=/home" class="nav__cta nav__cta--secondary">Войти</a>
+        <a href="https://app.yokhanfitness.ru/auth?mode=register&amp;returnTo=/home" class="nav__cta nav__cta--primary">Начать</a>
+      </div>      <button class="nav__mobile-toggle" type="button" aria-label="Menu" aria-expanded="false">
         <span></span>
         <span></span>
       </button>
     </div>
   </nav>
   <main>
-    <section class="hero"><div class="hero__stage"><div class="hero__inner"><div class="hero__content"><p class="eyebrow">BUFF IT FOOD</p><h1 class="heading hero__title">Еда должна помогать форме, а не срывать ее</h1><p class="hero__subtitle">Простые продуктовые решения: что купить, чем заменить, как собрать корзину и не превращать питание в отдельную работу.</p><div class="hero__actions"><a href="guide.html" class="btn btn--primary">Разобраться</a><a href="start.html" class="btn btn--secondary">Подобрать старт</a></div></div><aside class="hero__panel surface-card"><div class="hero__panel-top"><span class="status-dot" aria-hidden="true"></span><span>Фокус</span></div><ul class="stack-list"><li>Корзина под цель.</li><li>Замены без паники.</li><li>Еда, которую реально повторить.</li></ul></aside></div></div></section>
-    <section class="section section--cream"><div class="container"><div class="section-heading"><p class="eyebrow">Питание</p><h2 class="heading section-title">Не идеальный рацион, а рабочие решения</h2></div><div class="benefit-grid"><article class="benefit-card"><span>вес</span><h3>Снизить хаос в еде</h3><p>Понимать, какие покупки помогают цели, а какие тянут назад.</p></article><article class="benefit-card"><span>форма</span><h3>Поддержать тренировки</h3><p>Белок, простые блюда и нормальные порции без фанатизма.</p></article><article class="benefit-card"><span>ритм</span><h3>Не зависеть от силы воли</h3><p>Когда дома есть нормальная еда, срывы случаются реже.</p></article></div></div></section>
-  </main>
+<section class="hero"><div class="hero__stage"><div class="hero__inner"><div class="hero__content"><p class="eyebrow">Питание в системе BUFF IT</p><h1 class="heading hero__title">Вкусное и здоровое питание на каждый день</h1><p class="hero__subtitle">Подбираем блюда под ваши вкусы, рассчитываем калорийность, даём практичные советы и список покупок. Чтобы меньше времени уходило на выбор и подготовку еды.</p><div class="hero__actions"><a class="btn btn--primary" href="https://t.me/yokhan_yokhan">Обсудить питание</a></div></div><aside class="hero__panel surface-card" aria-label="Что вы получите"><ul class="stack-list"><li>Ваши вкусы и доступное время на готовку.</li><li>Калорийность и практичные изменения рациона.</li><li>Продукты для выбранных блюд в одном списке.</li></ul></aside></div></div></section>
+<section class="section section--cream"><div class="container"><div class="section-heading"><h2 class="heading section-title">Понятно, что приготовить и что купить</h2><p class="section-subtitle">Не нужно отдельно искать рецепты, разбираться с порциями и переносить продукты в список.</p></div><div class="benefit-grid"><article class="benefit-card"><h3>Блюда под ваши вкусы</h3><p>Учитываем привычные продукты и время на готовку, чтобы питание было вкусным, здоровым и выполнимым.</p></article><article class="benefit-card"><h3>Калорийность и порции</h3><p>Рассчитываем рацион под вашу задачу и объясняем, какие изменения имеют смысл в обычной еде.</p></article><article class="benefit-card"><h3>Советы и покупки</h3><p>Предлагаем практичные замены и собираем список продуктов для выбранных блюд.</p></article></div></div></section>
+<section class="section"><div class="container"><div class="section-heading"><h2 class="heading section-title">Планы поменялись — питание тоже можно изменить</h2><p class="section-subtitle">Например, вместо домашнего ужина вы решили пойти в ресторан. Можно разобрать меню на консультации, выбрать блюдо и учесть ужин в общем плане питания.</p></div><div class="hero__actions"><a class="btn btn--secondary" href="index.html#system">Посмотреть пример на главной</a></div></div></section>
+<section class="section section--cream"><div class="container"><div class="section-heading"><h2 class="heading section-title">Питание связано с вашей целью и занятиями</h2><p class="section-subtitle">Программа, рацион и консультации помогают принимать согласованные решения. Можно обсудить, что получается соблюдать и что мешает: вкус, готовка, покупки или график.</p></div><div class="hero__actions"><a class="btn btn--secondary" href="ecosystem.html">Как работает система</a><a class="btn btn--primary" href="https://t.me/yokhan_yokhan">Обсудить свой рацион</a></div></div></section>
+</main>
   <footer class="footer">
     <div class="container footer__inner">
       <a href="index.html" class="footer__brand brand-logo heading">BUFF IT</a>
@@ -239,6 +244,7 @@
         <a href="health.html">BUFF IT HEALTH</a>
         <a href="programs.html">Программы</a>
         <a href="calls-access.html">BUFF IT CALLS</a>
+        <a href="https://app.yokhanfitness.ru/auth?mode=login&amp;returnTo=/home">Войти</a>
         <a href="links.html">Все входы</a>
       </div>
     </div>

@@ -3,30 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BUFF IT APP — тренировки по структуре</title>
-  <meta name="description" content="Приложение BUFF IT для самостоятельных тренировок: программы, упражнения, календарь, прогресс и понятный план.">
-  <meta property="og:title" content="BUFF IT APP — тренировки по структуре">
-  <meta property="og:description" content="Приложение BUFF IT для самостоятельных тренировок: программы, упражнения, календарь, прогресс и понятный план.">
+  <title>BUFF IT APP — пробная тренировка и план</title>
+  <meta name="description" content="Откройте APP, посмотрите короткую пробную тренировку или выберите готовую программу для самостоятельных занятий.">
+  <meta property="og:title" content="BUFF IT APP — тренировки и план">
+  <meta property="og:description" content="Откройте APP, посмотрите короткую пробную тренировку или выберите готовую программу для самостоятельных занятий.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://buffit.fit">
   <link rel="preload" href="fonts/Unbounded-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/GolosText-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/tokens.css?v=20260722-ceramic-media-v4">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/hero.css?v=20260610-auth-hero">
   <link rel="stylesheet" href="css/programs.css">
   <link rel="stylesheet" href="css/sales.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/ecosystem.css">
-    <link rel="stylesheet" href="css/page-components.css">
+    <link rel="stylesheet" href="css/page-components.css?v=20260722-audience-media-v2">
   <link rel="stylesheet" href="css/cta.css">
   <link rel="stylesheet" href="css/hero-shell-system.css">
-    <link rel="stylesheet" href="css/nav-dropdown-system.css">
+    <link rel="stylesheet" href="css/nav-dropdown-system.css?v=20260722-ceramic-media-v3">
     <link rel="stylesheet" href="css/interaction-system.css">
   <link rel="stylesheet" href="css/header-system.css">
+  <link rel="stylesheet" href="css/account-system.css?v=20260610-auth-cta-reset">
+  <link rel="stylesheet" href="css/public-entry.css">
 </head>
-<body>
-  <a class="promo-bar" href="app.html">BUFF IT APP: план и прогресс</a>
+<body class="entry-page">
+
     <nav class="nav" aria-label="Основная навигация">
     <div class="nav__inner">
       <a href="index.html" class="nav__brand brand-logo heading" aria-label="BUFF IT">BUFF IT</a>
@@ -75,7 +77,7 @@
                   <a href="program-entry-fitness.html">Вход в фитнес</a>
                   <a href="program-healthy-back.html">Спина и шея</a>
                   <a href="health.html">Ограничения</a>
-                  <a href="safety.html">Первая помощь</a>
+                  <a href="/health/first-aid/docs/">Первая помощь</a>
                 </div>
               </section>
             </div>
@@ -120,8 +122,8 @@
                 <small>Еда, корзина, восстановление и привычки вокруг нагрузки.</small>
                 <div class="nav__quicklinks" aria-label="Питание и ритм">
                   <a href="nutrition.html">Питание</a>
-                  <a href="app.html#dayflow">DAYFLOW скоро</a>
-                  <a href="guide.html">Гайд новичка</a>
+                  <a href="https://yokhanfitness.ru/dayflow/">DAY FLOW</a>
+                  <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд новичка</a>
                 </div>
               </section>
             </div>
@@ -135,7 +137,7 @@
               <strong>Понять, с чего начать безопасно</strong>
               <small>Материалы для первого шага: новичку, при боли, ограничениях и тревоге.</small>
               <div class="nav__quicklinks" aria-label="Материалы для старта">
-                <a href="guide.html">Гайд новичка</a>
+                <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд новичка</a>
                 <a href="start.html">Подобрать старт</a>
               </div>
             </article>
@@ -145,7 +147,7 @@
                 <strong>Без стыда и перегруза</strong>
                 <small>Как войти в тренировки спокойно и не бросить через две недели.</small>
                 <div class="nav__quicklinks" aria-label="Новичку">
-                  <a href="guide.html">Гайд</a>
+                  <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд</a>
                   <a href="program-entry-fitness.html">Вход в фитнес</a>
                   <a href="programs.html">Цели</a>
                 </div>
@@ -155,7 +157,7 @@
                 <strong>Боль, аптечка и ограничения</strong>
                 <small>Когда тело сигналит болью или есть ограничения по нагрузке.</small>
                 <div class="nav__quicklinks" aria-label="Риски и безопасность">
-                  <a href="safety.html">Первая помощь</a>
+                  <a href="/health/first-aid/docs/">Первая помощь</a>
                   <a href="health.html">Безопасный старт</a>
                   <a href="program-healthy-back.html">Спина</a>
                 </div>
@@ -220,29 +222,17 @@
           </div>
         </div>
       </div>
-      <a href="start.html" class="btn btn--primary nav__cta">Начать</a>
-      <button class="nav__mobile-toggle" type="button" aria-label="Menu" aria-expanded="false">
+      <div class="nav__actions">
+        <a href="https://app.yokhanfitness.ru/auth?mode=login&amp;returnTo=/home" class="nav__cta nav__cta--secondary">Войти</a>
+        <a href="https://app.yokhanfitness.ru/auth?mode=register&amp;returnTo=/home" class="nav__cta nav__cta--primary">Начать</a>
+      </div>      <button class="nav__mobile-toggle" type="button" aria-label="Menu" aria-expanded="false">
         <span></span>
         <span></span>
       </button>
     </div>
   </nav>
-  <main>
-    <section class="hero"><div class="hero__stage"><div class="hero__inner"><div class="hero__content"><p class="eyebrow">BUFF IT APP</p><h1 class="heading hero__title">Тренироваться самому, но не вслепую</h1><p class="hero__subtitle">Для тех, кому не нужен постоянный созвон, но нужна структура: программа, упражнения, календарь и понятное движение к цели.</p><div class="hero__actions"><a href="https://t.me/YokhanGym_bot?start=buffit_app" target="_blank" rel="noopener" class="btn btn--primary">Открыть приложение</a><a href="programs.html" class="btn btn--secondary">Программы</a></div></div><aside class="hero__panel surface-card"><div class="hero__panel-top"><span class="status-dot" aria-hidden="true"></span><span>Внутри</span></div><ul class="stack-list"><li>План на тренировку.</li><li>Упражнения и техника.</li><li>Календарь и отметки прогресса.</li></ul></aside></div></div></section>
-    <section class="section section--cream"><div class="container"><div class="section-heading"><p class="eyebrow">Кому подходит</p><h2 class="heading section-title">Если дисциплина есть, но не хватает карты</h2></div><div class="benefit-grid"><article class="benefit-card"><span>сам</span><h3>Хочешь идти без созвонов</h3><p>Берешь структуру и тренируешься в своем расписании.</p></article><article class="benefit-card"><span>понятно</span><h3>Не собираешь план из роликов</h3><p>Видишь, что делать сегодня и зачем это связано с целью.</p></article><article class="benefit-card"><span>переход</span><h3>Можно усилить сопровождением</h3><p>Если застрял, переходишь в личное ведение или разбор.</p></article></div></div></section>
-  </main>
-  <footer class="footer">
-    <div class="container footer__inner">
-      <a href="index.html" class="footer__brand brand-logo heading">BUFF IT</a>
-      <div class="footer__links">
-        <a href="training.html">BUFF IT FITNESS</a>
-        <a href="health.html">BUFF IT HEALTH</a>
-        <a href="programs.html">Программы</a>
-        <a href="calls-access.html">BUFF IT CALLS</a>
-        <a href="links.html">Все входы</a>
-      </div>
-    </div>
-  </footer>
+  <main><section class="entry-intro"><div class="container"><p class="eyebrow">BUFF IT APP</p><h1 class="heading">Откройте тренировку и план</h1><p class="entry-intro__description">В APP собраны план занятий, упражнения и профиль. Для знакомства с форматом доступна короткая пробная тренировка без регистрации. Короткая пробная тренировка поможет посмотреть, как устроено занятие, до входа в аккаунт.</p><div class="hero__actions"><a class="btn btn--primary" href="https://app.yokhan.xyz/">Открыть APP</a><a class="btn btn--secondary" href="https://app.yokhan.xyz/train/guest">Попробовать без регистрации</a></div></div></section><section class="section"><div class="container"><h2 class="heading section-title">Что открыть дальше</h2><div class="support-grid"><a class="support-card" href="https://app.yokhan.xyz/train/guest"><span>Короткая проба</span><h3>Первая тренировка</h3><p>Три упражнения для первого знакомства с APP. Нужен устойчивый стул или край стола. Можно познакомиться с форматом до входа в аккаунт.</p><strong>Попробовать →</strong></a><a class="support-card" href="programs.html"><span>Программы</span><h3>План на 12 недель</h3><p>Выберите цель и место занятий. Форматы с тренером описаны отдельно, с ценами и составом сопровождения.</p><strong>Посмотреть программы →</strong></a><a class="support-card" href="https://calls.yokhan.xyz/"><span>CALLS</span><h3>Видеозвонок</h3><p>Создайте комнату и отправьте приглашение собеседнику или войдите по готовой ссылке.</p><strong>Открыть CALLS →</strong></a></div></div></section></main>
+  <footer class="footer"><div class="container footer__inner"><a href="/" class="footer__brand brand-logo heading">BUFF IT</a><div class="footer__links"><a href="programs.html">Программы</a><a href="coaching.html">Занятия с тренером</a><a href="https://app.yokhan.xyz/">APP</a><a href="https://calls.yokhan.xyz/">CALLS</a><a href="/projects.html">Все проекты</a><a href="links.html">Все входы</a></div></div></footer>
   <script src="js/pointer-glow.js"></script>
   <script src="js/nav-menu.js"></script>
   <script src="js/nav-state.js"></script>

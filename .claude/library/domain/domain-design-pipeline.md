@@ -1,160 +1,164 @@
-# Domain: Design (Product/UX/Visual/Game) — Evidence-Based Guard
+# Domain: Design (Product/UX/Visual/Game)
 
-## NEVER Recommend (Anti-patterns)
-1. **Feature Factory** — Measuring success by features shipped, not outcomes. Instead: outcome-driven development with retention metrics.
-2. **Dark Patterns** — 97% of top EU sites use deceptive UI (EC 2022). Erodes trust, now carries fines. Instead: transparent opt-ins.
-3. **Accessibility Overlays** — Only 2.4% of disabled users find them effective; they break assistive tech. Instead: semantic HTML, ARIA, keyboard nav.
-4. **A/B Testing Cargo Cult** — Peeking inflates false positives from 5% to 26%. Instead: pre-register, calculate sample size, use sequential testing.
-5. **Building What Users Literally Request** — Users can't articulate solutions ("faster horse"). Instead: Jobs-to-be-Done framework.
-6. **Loot Box Gambling** — Exploits variable-ratio reinforcement; illegal in Belgium/Netherlands. Instead: transparent direct purchase.
-7. **Tutorial Info Dump** — Front-loading all mechanics violates cognitive load limits. Instead: progressive disclosure, one concept at a time.
-8. **Ignoring Cognitive Load** — Miller's Law: 7+/-2 chunks. Hick's Law: more options = slower decisions. Instead: chunk info, progressive disclosure.
-9. **Using 4+ Fonts** — Creates visual chaos, resets cognitive processing ~20%. Instead: max 2-3 typefaces.
-10. **Pixel-Perfect Obsession** — Chasing pixel alignment kills shipping speed. Instead: define visual tolerance, focus polish on high-impact points.
-11. **Insufficient Color Contrast** — 96.3% of top 1M pages fail WCAG (WebAIM). DETECT: contrast ratio <4.5:1 for normal text. Instead: WCAG AA minimum, test with contrast checker.
-12. **Ignoring Fitts's Law** — Tiny touch targets and distant sequential actions increase errors. Apple HIG minimum: 44x44px. Instead: size targets proportional to importance.
-13. **Anti-Fun Exceeding Fun** — Game mechanics where negative experience for opponent > positive for user (hard CC, stunlocks). Instead: ensure fun-for-user outweighs anti-fun-for-opponent (Zileas).
-14. **Balance by Spreadsheet Only** — Math alone cannot predict player behavior; players find exploits designers never anticipated. Instead: spreadsheets for foundation + playtesting for truth.
-15. **Mandatory Account Before Value** — Requiring signup before users experience product value. Each friction point loses 3-8%. Instead: let users try core value first, sign up after.
+Use this guide to protect product fit, visual coherence, accessibility, and
+implementation quality. Choose the checks that match the requested outcome and
+changed surface; a small UI edit does not need a full design-process ritual.
 
-## ALWAYS Apply (Principles)
-1. **Continuous Discovery** — Weekly customer interviews + assumption testing keeps decisions evidence-based.
-2. **5-User Iterative Testing** — 5 users per round find ~85% of major problems; iterate and retest.
-3. **Accessible-First Design** — Integrate WCAG from first sprint. Retrofitting costs 10x more. 15-20% expanded market.
-4. **Flow Channel Design** — Balance challenge to skill (Csikszentmihalyi). Clear goals, immediate feedback, adaptive difficulty.
-5. **Core Loop First** — If the fundamental 30-second loop isn't compelling, no polish saves it.
-6. **Performance as UX** — 53% abandon at >3s load (Google). Each second costs ~7% conversions.
-7. **Behavioral Over Attitudinal** — Weight what users DO (analytics) over what they SAY (surveys). Say-do gap is massive.
-8. **Error-State-First Design** — Design error states and empty states before the happy path.
-9. **Visual Hierarchy via Contrast/Space** — Whitespace increases comprehension 20%. Use size, weight, color to guide attention.
-10. **Subtractive Design** — Remove until only essential remains. A game/product is done when nothing can be taken away.
-11. **Keyboard-First Interactive Design** — All interactive elements must work with keyboard before adding mouse/touch. Serves power users + screen readers + motor-impaired (WCAG 2.1 SC 2.1.1).
-12. **Respect prefers-reduced-motion** — ~35% of adults over 40 have vestibular disorders. Check the media query; provide static alternatives for all animations.
-13. **Negative Feedback Loops in Games** — Catch-up mechanics prevent snowball effects that drive losing players to quit. Mario Kart's item distribution is the gold standard.
-14. **Cognitive Load Budget: 4 chunks max per decision** — Cowan's updated limit (2001) is 4+/-1, not Miller's 7. Design screens around 3-5 actionable items, not 7-9.
-15. **Game Juice = Layered Feedback** — Visual + audio + haptic on every meaningful action. Audio alone is the cheapest high-impact improvement. Always include "reduce motion" option.
+## Context and outcome
 
-## For Details
-See `brain/03-knowledge/domains/product-design-ux.md`, `graphic-design-and-writing.md`, `game-design.md` for full practices.
+- Use the active project goal or task artifact for user value, product priority,
+  and accepted scope when one exists. Preserve accepted product waves and plans;
+  design tasks and technical checkpoints do not become product waves by
+  themselves.
+- Read the root `DESIGN.md` when present. It is project-owned visual direction;
+  preserve it unless the user asks to change that direction. If broad UI work
+  lacks enough visual context, ask only for what materially affects the result.
+- Identify the affected user job, surface, and constraints. Choose product,
+  brand, or mixed register when that choice changes the design; do not force a
+  formal register declaration for a self-evident minor edit.
+- Prefer the smallest useful path: focused edit, screen/flow design, review, or
+  new design system. State assumptions only when they materially shape the
+  outcome.
 
----
+## Source-to-consumer UI contract
 
-# Design Pipeline — Token-First, Component-First, Compose-First
+For a new or materially reworked screen/flow, discover the actual route,
+controller/data owner, approved visual examples, component exports, tokens,
+icons and assets before generating alternatives. Inspect the current source
+and the consuming package/build; a neighboring Storybook is a reference, not
+automatically the version the product loads. Resolve conflicting sources through
+the project SOT order. A small edit needs only the affected dependencies.
+If current source already meets the requested contract, record read-only
+satisfaction and obtain missing evidence instead of changing code for the
+report. An old unpinned render does not establish a current source defect.
 
-> Universal design production rules. Project-specific details (component IDs, brand tokens)
-> belong in `project-figma-workflow.md`, not here.
+For substantial visual-direction uncertainty, optional bitmap prototypes can
+help compare a few concrete compositions before implementation. First inspect
+the project's approved visual direction, accepted screens, existing assets,
+logos, icons, tokens and components; use a relevant accepted reference to ground
+the prototype. Record the reference, prompt and generation settings when
+available, and retain accepted and rejected variants with the reason for each
+decision. Translate an accepted direction into the existing component, token
+and asset contract, then validate the implemented responsive, interactive UI.
+A generated bitmap is a direction aid, not implementation, live UX evidence,
+device acceptance or production proof. Skip this step for small edits,
+component-only changes, code-native or vector work, and cases where no visual
+direction decision is needed. See
+[`product-delivery-recipes.md`](../process/product-delivery-recipes.md).
 
-## Core Principles
+Describe the real user path: entry, action, authoritative effect, visible
+confirmation, and return or reopen where promised. UI callbacks and sample data
+do not establish the effect. Keep unknown quantities unknown, distinguish
+measured from elapsed values, and do not infer detailed records from aggregates.
+Check empty, pending, failed and repeated-action behavior where it affects that
+promise; reopening a result must not repeat a committed action.
 
-### Token-First
-NEVER hardcode visual values. Always bind to tokens/variables:
-- Colors → design token or CSS variable (never raw hex in code or Figma)
-- Typography → text style or font token (never raw fontSize)
-- Spacing → spacing token (never raw px)
-- Border radius → radius token (never raw value)
-- Shadows → effect style (never raw box-shadow)
+Reuse the approved DS/component/icon contract, including asset variants and
+licenses where relevant. When settled contracts allow independent source
+assembly, give each author exact inputs, non-overlapping files and acceptance
+criteria; the existing integrator alone owns shared exports, styles, adapters,
+controller wiring and the coherent candidate. Do not split an unresolved shared
+visual or data decision into competing implementations. Source assembly may
+proceed while a build gate waits under `.claude/library/process/plan-first.md`;
+it does not pass that gate or authorize publication.
 
-### Component-First
-NEVER build from raw shapes or primitives when a component exists:
-- Search design system / component library first
-- Use instances/imports of existing components
-- Only create new when no match exists AND the pattern will be reused
+## Durable design constraints
 
-### Composition Over Creation
-Build screens by composing existing components, not by drawing new ones:
-- Assemble from component instances
-- Override props/slots/variants — don't recreate from scratch
-- If a component doesn't support what you need → extend it, don't bypass it
+### Tokens and components
 
-## 8-Phase Design Pipeline
+- Reuse the project's tokens, styles, and components when they fit. Do not
+  introduce one-off visual values when an appropriate token exists.
+- If the accepted change needs a value that has no token, add or request a
+  suitable token; avoid hiding a new design decision inside an unrelated
+  component.
+- Compose with existing components where practical. Create or extend a
+  component when the pattern or contract warrants it; raw shapes are not a
+  substitute for an available component.
+- Keep a useful dependency/composition trace for reusable components. The trace
+  should clarify relevant token, child-component, state, and responsive
+  dependencies, not become paperwork for a one-off adjustment.
 
-Every design task follows this pipeline. No phase may be skipped.
+### Product fit and subtraction
 
-| Phase | Name | What |
-|-------|------|------|
-| 0 | **CONTEXT** | User journey, design language, device/viewport |
-| 1 | **ANALYZE** | 5-lens: Art Direction, UX, UI, Flow, Behavior |
-| 2 | **REFERENCE** | Find gold-standard, deep-inspect structure |
-| 3 | **BOM** | Bill of Materials — list ALL component instances needed |
-| 4 | **DISCOVER** | Query available tokens, styles, components |
-| 5 | **COMPOSE** | Create from instances, bind all values to tokens |
-| 6 | **VALIDATE** | Screenshot + compare + self-audit gate |
-| 7 | **ITERATE** | Fix deviations, re-validate |
+Before adding a panel, control, persistent list, or layer, check whether it
+serves the current user job, duplicates another signal, belongs in this mode,
+or can be removed, collapsed, or moved to where it is actionable. Keep the
+primary action clear and do not imply incomplete behavior is production-ready.
 
-### Phase 1 Detail: 5-Lens Analysis
-1. **Art Direction** — brand guidelines match? Tone, mood, identity?
-2. **UX** — can user accomplish goal? No dead ends? Clear hierarchy?
-3. **UI** — all values from tokens? Consistent spacing? Systematic?
-4. **Flow** — where from → what they see → where they go?
-5. **Behavior** — all states covered? (see State Coverage below)
+### Full-screen structure
 
-## State Coverage (mandatory)
+For a new or materially reworked full screen, make its layout legible: root
+frame and base surface, any independent background composition, content frame,
+and overlays only when needed. Bounded cards/panels own their internal spacing;
+edge-to-edge sections align to the page grid rather than receiving fake card
+wrappers. A focused edit to an existing screen need only revisit the layers it
+affects.
 
-Every interactive element must have these states designed:
+### States, accessibility, and copy
 
-| State | When |
-|-------|------|
-| Default | Resting |
-| Hover | Mouse over |
-| Active/Pressed | Being clicked |
-| Focus | Keyboard navigation |
-| Disabled | Non-interactive |
-| Loading | Async in progress |
-| Error | Validation / error |
-| Empty | No data |
+- Cover the interactive states relevant to the control and user flow (such as
+  focus, disabled, loading, error, or empty); do not enumerate inapplicable
+  states just to complete a checklist.
+- Preserve keyboard access, visible focus, understandable labels, adequate
+  contrast, responsive text/layout, and reduced-motion behavior where relevant
+  to the surface. Validate against the project's accessibility target and
+  applicable platform guidance.
+- Apply the Public Copy Gate in
+  `.claude/library/technical/writing.md` to customer-facing UI, metadata, and
+  accessibility text. Verify the real action before presenting success.
 
-Not all states apply everywhere. But the designer must DECIDE which apply — not ignore them.
+## Choosing design depth
 
-## Self-Audit Gate (after every creation step)
+Use the mode that matches the request:
 
-```
-[ ] Every color bound to a token/variable? (no raw hex)
-[ ] Every text has a text style applied? (no raw font settings)
-[ ] Every border radius bound to a token? (all corners)
-[ ] Every spacing/padding bound to a token?
-[ ] Every effect uses an effect style?
-[ ] Every container has layout mode set?
-[ ] No fixed sizing where HUG/FILL is appropriate?
-[ ] No placeholder text? (real content or realistic data)
-[ ] Screenshot taken and visually verified?
-```
+- `shape`: resolve material uncertainty about user, job, scope, or visual lane.
+- `craft`: implement the accepted change using the existing system.
+- `audit` or `critique`: report material issues with impact and evidence.
+- `distill`: remove, collapse, or move UI before considering additions.
+- `harden`: exercise relevant data, state, localization, network, and motion
+  edge cases.
+- `polish`, `adapt`, `clarify`, or `typeset/layout`: make the corresponding
+  focused refinement.
 
-If ANY fails → fix before moving to next component.
+The command-mode reference describes the modes in more detail. A mode selects
+useful depth; it does not replace the user's scope or the project's quality bar.
 
-## Atomic Design Hierarchy
+## Evidence and verification
 
-```
-Tokens     → Color, typography, spacing, radius, shadows
-Atoms      → Icon, Logo, Avatar, Divider, Badge, Label
-Molecules  → Button, Input, Tag, Toggle, SearchBar
-Organisms  → Header, Footer, Card, Sidebar, Form
-Templates  → Page layouts (organisms in grid)
-Screens    → Templates + real data + navigation
-```
+Choose checks that can establish the claim for the changed surface. For visual
+or interactive work, use a rendered browser, Storybook, design-tool preview, or
+other appropriate view when available. Check the relevant viewports, content
+length, focus path, contrast, important control geometry, and states. For a
+small change, a focused visual or code check may be enough; for a broad or
+high-risk surface, expand coverage to likely failure paths.
 
-**Build order**: always Tokens → Screens. Never skip levels.
+If rendered evidence is unavailable, say what could not be checked and the
+resulting limitation. Do not call a surface production-ready on the strength of
+a mockup or source inspection alone. Report confidence or the main uncertainty
+only when it would help the reader judge a material decision.
 
-## Figma MCP Specifics (when available)
+Keep source review, semantic typing/tests, rendered visual acceptance, exact
+consumer integration, physical-device acceptance and production acceptance
+separate. Bind each result to its actual inputs and surface; a syntax transpile
+is not a typecheck, an unrun test is not a pass, and an emulator viewport is not
+a physical device. Use `domain-design-system.md`'s consumer-bound handoff and
+the design skill's `references/design-checks.md` for settled-motion/loading/
+scroll evidence. Local checks never authorize a release or downstream sync by
+themselves.
 
-### Two-Tool Workflow
-- **Figma MCP (`use_figma`)**: structure, instances, token binding, layout
-- **Chrome DevTools console**: font loading workarounds, text overrides
+## Design-system work
 
-### Key Rules
-- `importComponentByKeyAsync` fails on local components → use `figma.getNodeById(id).createInstance()`
-- Always discover tokens first (`getLocalVariablesAsync`, `getLocalTextStylesAsync`)
-- Use `textStyleId` to switch fonts without `loadFontAsync`
-- `clipsContent = false` on organizational frames, `true` on viewport screens
-- Validate with `get_screenshot` after every structural change
+Use `.claude/library/domain/domain-design-system.md` and
+`$codex-design-system-workflow` when creating a new broad system or substantially
+reworking its contract. A bounded change to an existing layer can use the
+focused checks relevant to that layer; it does not need to rebuild or document
+every layer. Add future-facing seams only when the accepted current change
+depends on that contract. See also `.claude/library/technical/atomic-reuse.md`
+and `_reference/tool-registry.md` when relevant.
 
-### Pre-Creation Gate
-Before creating ANY element in Figma:
-1. `search_design_system` — does this component already exist?
-2. TOKEN lookup — is there a token for this value?
-3. Text style lookup — is there a style for this size/weight?
-4. If YES → USE EXISTING. If NO → create AND register in tool-registry.
+## Further reading
 
-## Cross-References
-- `.claude/library/technical/atomic-reuse.md` — code-side reuse protocol (same philosophy)
-- `_reference/tool-registry.md` — Design Tokens section for component registry
-- `.claude/library/meta/analysis.md` — "Level 0 analysis is never acceptable" applies to design too
+For deeper review prompts, use only the relevant discipline in
+`.claude/skills/domain-design-review/references/design-failure-patterns.md`.
+The review skill also names foundational books for product, visual, and game
+design. These are optional context, not a checklist for every task.

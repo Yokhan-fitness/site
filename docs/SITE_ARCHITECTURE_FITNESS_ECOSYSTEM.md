@@ -107,7 +107,8 @@ Show the ecosystem as families, not random projects:
 | `/programs.html` | all programs by goal | program page |
 | `/method.html` | how Igor's method works | bot |
 | `/results.html` | proof, cases, progress snapshots | consultation |
-| `/about.html` | Igor and trust | bot / direct TG |
+| `/coach/` | Igor, background and personal trust | coaching offer |
+| `/about.html` | working principles and boundaries | method / coaching |
 | `/start.html` | all start options | bot / direct TG |
 | `/links.html` | all public surfaces | relevant link |
 
@@ -151,7 +152,6 @@ Show the ecosystem as families, not random projects:
 | `/safety.html` | first aid and medical boundaries | `YokhanFirstAid`, `YokhanMedKit` |
 | `/nutrition.html` | food/cart support | `WellnesCartApp` |
 | `/calls-access.html` | calls and secure client access | `YokhanCallService`, VPN/client projects |
-| `/photo.html` | photo/media direction if public | `YokhanPhoto` |
 
 ## Navigation
 
@@ -185,7 +185,7 @@ Footer is for ecosystem depth.
 1. Promise.
 2. User-world reason.
 3. Training mechanism.
-4. 4 / 8 / 12 session expectation.
+4. 2+DZ and 3/week coaching formats with fixed prices 26k/34k.
 5. Format and price.
 6. Safety boundary.
 7. CTA with source parameter.
@@ -216,3 +216,5 @@ The site can explain the ecosystem now, but trust still needs assets:
 - guide screenshots;
 - nutrition/cart screenshots;
 - call/access screenshots when ready.
+
+Generated editorial imagery may support explanation and atmosphere, but it cannot impersonate Igor, clients, testimonials or transformation proof. Codex uses `docs/image-orders/` and the built-in `$imagegen` workflow for approved raster slots; real proof still requires owned media and permission.

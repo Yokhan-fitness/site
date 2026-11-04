@@ -1,171 +1,216 @@
-# Plan-First Protocol — Architecture Before Code
+# Plan-First Protocol
 
-## The Rule
-For every task S+ size, the agent MUST produce a written plan with file structure and complexity estimate BEFORE writing any code.
-Plans are saved to `tasks/current.md` under `## Plan` and tracked alongside the work.
+Plan enough to choose and verify the next action. A direct answer or small,
+reversible, low-risk edit usually needs no written plan. Use a concise written
+plan when work spans modules, has meaningful uncertainty or risk, changes a
+public/data/security/release boundary, or needs coordination. Keep product,
+design, writing, and other domain quality standards in their relevant guides.
 
-Coding without a plan = bloated files, wrong structure, rework.
+Plans, audits, and reports use the language of the user's request.
 
-## When Planning is Mandatory
+## Useful plan contents
 
-| Task Size | Planning Required | Detail Level |
-|-----------|------------------|--------------|
-| **XS** | No | Just do it |
-| **S** | Brief | 3-5 lines: what files, what changes |
-| **M** | Standard | Full plan (see template below) |
-| **L** | Detailed | Full plan + user approval before coding |
-| **XL** | Decompose first | Break into M-tasks, plan each one |
+For substantial work, record only what helps execution and acceptance:
 
-## Plan Template (M+ tasks)
+- desired outcome and explicit scope/non-goals;
+- affected files, owners, direct consumers, and dependencies;
+- selected approach and material alternative, when the choice matters;
+- acceptance evidence and checks proportionate to risk;
+- reversibility, migration, or rollback needs;
+- next useful result, remaining uncertainty, and a replan trigger when work is
+  staged or long-running.
 
-Write this to `tasks/current.md` under `## Plan` BEFORE coding:
+For a substantial product effort with multiple implementation waves, structure
+three levels before execution. Agree the first two with the user; derive and
+record the detailed nearest-wave plan within that accepted scope:
 
-```markdown
-## Plan
+1. **End result:** audience, capability, acceptance, and constraints. Keep this
+   at outcome level; do not pre-plan every implementation detail.
+2. **Approximate product waves:** successive usable versions of the same
+   product toward that end result, and why each increase in resolution matters.
+   The number and contents may change as evidence arrives.
+3. **Nearest wave plan:** dependencies, ownership, files, responsibilities,
+   focused checks, broad acceptance owner/check, acceptance evidence, and any
+   bounded worker contracts needed to execute it.
 
-### Goal
-[1 sentence: what this achieves for the user]
+For the nearest wave, show planned and actual agent counts separately and list
+owners/roles, exact tasks and write scopes, independent concurrent lanes, real
+dependencies, shared resource limits, and the acceptance/integration owner.
+Mark planned, reserved, idle, completed, blocked and unverified separately;
+call a lane live only with current handles or accepted dispatch evidence. A
+reviewer or advisor is not an implementation lane. State when work is sequential
+and why; neither a fixed agent quota nor parallelism for its own sake is useful.
+Keep original goal and existing plan references visible in status and closeout.
 
-### Complexity Estimate
-- Size: [XS/S/M/L/XL]
-- Files to create: [count]
-- Files to modify: [count]
-- Estimated lines: [range]
-- Risk: [LOW/MEDIUM/HIGH/CRITICAL — classify per risk-classification.md]
+## Product wave semantics — source of truth
 
-### File Architecture
-[Directory tree of files to create/modify with purpose of each]
+A wave is a product-level increase in resolution: the same product serves its
+intended audience and purpose at a more useful, complete, reliable, or accessible
+level. Define versions from the agreed final result downward, then derive tasks
+for the nearest version. Never group convenient technical tasks first and
+invent a product story to justify the bundle afterward.
 
-```
-src/
-  features/
-    auth/
-      auth.service.ts    — [NEW] login/logout logic
-      auth.types.ts      — [NEW] AuthUser, AuthError types
-      auth.test.ts       — [NEW] unit tests
-      index.ts           — [MODIFY] add auth exports
-```
+Keep three levels distinct: **final product outcome -> successive product
+versions (waves) -> implementation tasks/checkpoints**. A technical vertical
+slice, internal end-to-end route, sprint, test batch, or swarm dispatch is not
+automatically a product wave. Even a real narrow user action must be related to
+the accepted version of the whole product; merely naming an actor is not enough.
 
-### Implementation Order
-1. [First file/step — why first]
-2. [Second — depends on #1 because...]
-3. [Third — ...]
+Before accepting a proposed wave, answer in the existing plan/context:
 
-### Boundaries
-- Max file size: 375 lines. If any file approaches limit → split plan now, not later.
-- Module boundary: [which module(s) this touches]
-- Public API changes: [yes/no — if yes, document contract]
+- Which agreed final outcome and product purpose does this version advance?
+- What can the intended user actually obtain now, compared with the previous
+  version, and how can they access it?
+- What remains from the same product, what becomes deeper/broader/more reliable,
+  and what is explicitly not offered yet?
+- What observation accepts this version, what would falsify it, and why is this the next version?
 
-### Risks & Mitigations
-- [Risk 1] → [Mitigation]
-- [Risk 2] → [Mitigation]
+The parent reviews these answers semantically for every proposed wave; a heading,
+filled field, or structural validator cannot establish their truth. A list of
+refactor, test and deployment steps remains enabling work even under a wave heading.
 
-### Plan B (mandatory for M+ tasks)
-If the primary approach fails at step [N], the fallback is:
-- [Alternative approach — what changes]
-- [What can be reused from Plan A]
-- [Signal to switch: what specific failure triggers Plan B]
+If these answers are unknown, restore the product plan or resolve the missing
+decision. Do not fabricate a player/customer goal or call an internal route a
+product route. Necessary technical work may proceed within authorized scope,
+but label it as enabling work and name the supported wave or unresolved link.
+Research and bounded experiments return knowledge/decisions, not delivered
+product versions; record them as checkpoints with a question and limit.
 
-For S tasks: mental Plan B is fine (no need to write it out).
-For L/XL tasks: Plan B must be written and approved by user alongside Plan A.
-```
+Example: one cafe website first tells visitors which cafe is opening soon;
+later it helps them decide to visit using location, hours and menu; later they
+can order, if ordering belongs to the agreed target. All are versions of the
+same cafe/customer relationship, not three unrelated products. The first version
+needs no fake order button, lead form, or complete future skeleton. It must
+honestly deliver its agreed announcement, not claim ordering is finished.
 
-## File Architecture Rules
+Counterexample: moving a game resident's equipment/hauling/returning fields to
+one owner while preserving gameplay is an internal migration. A complete
+resident route and passing save/load tests establish a technical contract, not
+a new game version. Explain which accepted player-facing wave this supports.
+A measured reliability improvement can be a product version when that user
+promise is explicitly accepted; tidier internals alone cannot establish it.
 
-### Before creating ANY file, answer:
-1. **Does a similar file already exist?** Search with Grep/Glob first. Extend > duplicate.
-2. **Will this file stay under 375 lines?** If not, split the responsibility NOW.
-3. **Does it belong in this directory?** Check architecture rules (vertical slices, dependency direction).
-4. **Is the naming consistent?** Match existing patterns in the project.
+Small fixes remain tasks; they do not need to become miniature waves. Choose
+proportionate checks and close the task without inventing a product roadmap.
+Once a wave is accepted, make routine implementation decisions autonomously
+within its outcome and constraints.
 
-### Splitting heuristic:
-- One concept = one file. If you're naming it `utils.ts` or `helpers.py`, you're avoiding the decision of WHERE it belongs.
-- If a planned file has 3+ unrelated functions → it's 2-3 files.
-- If a planned module has 5+ files → consider if it's actually 2 modules.
+Keep small fixes direct. Preserve an existing approved plan and project-owned
+task graph; update them only when evidence changes the accepted outcome,
+constraints, wave sequence, owner, or acceptance. AgentOS remains the planning
+source of truth when present.
 
-## Complexity Estimation
+Use the active project task artifact if one exists. Do not create or update
+`tasks/current.md`, a goal file, or a separate plan merely to satisfy this
+template when the project has no such workflow and the task does not need it.
+AgentOS or project-owned task graphs remain authoritative when present.
 
-### Count before you code:
-- **Files to touch**: 1-3 = safe, 4-7 = medium (plan carefully), 8+ = decompose
-- **New dependencies**: each new import/package = +1 complexity point
-- **Affected tests**: count tests that will need updating
-- **Cross-module changes**: each module boundary crossed = +2 complexity points
+## Useful work while a gate waits
 
-### Estimate accuracy rule:
-- Your first estimate is probably 50% too low (planning fallacy)
-- If estimate says "M" but you feel unsure → it's "L"
-- If touching shared/ or core/ → bump complexity one level
+Record the blocked gate, concrete cause, owner and evidence needed to resume in
+the existing task or graph. Block only work that depends on that gate. A build
+slot, device, package or external response can be unavailable while a settled,
+independent source/test/review task remains useful.
 
-## Plan Tracking
+Before advancing another lane, identify its useful deliverable, exact inputs,
+write scope, acceptance and integration owner. It must stay inside approved
+scope and remain valid regardless of the unresolved decision. Use disjoint
+files or an authorized isolated checkout; never duplicate a busy writer,
+restart their task, or fan out into unresolved shared architecture. Do not
+create filler agents, new graphs/Runs, speculative features or a fixed team
+merely to occupy waiting time or satisfy a quota. Respect explicit opt-out and
+actual host capabilities.
 
-### During implementation:
-- Check off completed steps in the plan
-- If the plan changes (new files needed, different structure) → UPDATE THE PLAN FIRST, then code
-- If complexity exceeds estimate by >50% → STOP, reassess, inform user
+Preserve shared resource ownership: at most one heavy local build/install on a
+shared host, one writer for each shared file/artifact/server configuration, and
+the granted checkout/device owner. Light independent inspection/source work and
+focused checks can overlap only within those constraints. An occupied heavy
+slot does not authorize an install elsewhere, a duplicate snapshot or a second
+server writer. A denied permission or protective gate is not a route-around
+opportunity.
 
-### After implementation:
-- Compare actual vs planned: files created, lines written, time spent
-- If estimate was off by >2x → log to lessons.md WHY (improves future estimates)
+At each blocked-gate boundary, choose one next action from the existing goal or
+task graph: continue the original gate when its evidence arrives, or advance a
+specific already-authorized independent result with named owner, disjoint write
+scope, inputs, acceptance, and integration owner. An acknowledgement, reminder,
+or timer is not a useful result. Do not wait on a stale turn/status when current
+activity or a completed tool result is available; check the live owner and
+evidence first. Keep the blocked dependency and its resume evidence explicit.
+Never duplicate a busy writer, shared graph, heavy build/install, or server
+mutation to make progress appear continuous.
 
-## Planning Quality Gate (M+ tasks — must pass before coding begins)
+## Iteration closure and release decision
 
-A plan is NOT ready for execution until ALL applicable criteria are met.
-If any criterion fails, refine the plan. Do not proceed to code.
+Use `.claude/library/process/product-goal-loop.md#closure-carryover-and-next-action`
+for the distinction between iteration closure, release acceptance, and product
+goal achievement, plus carryover and release rules. At each wave closure or
+newly material blocker, review findings, personas/jobs, journeys, state maps,
+backlog, and opportunities; select the next wave and record deferrals and why.
+For substantive work that needs a durable handoff, use the task-wave schema via
+`node scripts/codex-turn.js handoff`; retain accepted and shipped counts against
+the declared baseline separately. The handoff does not replace evidence or
+release authority.
 
-| # | Criterion | Check | Fail Signal |
-|---|-----------|-------|-------------|
-| 1 | **Goal clarity** | Can you state the user's goal in ONE sentence without jargon? | If you need 2+ sentences, you don't understand the goal yet |
-| 2 | **Scope boundary** | Are the files to modify/create explicitly listed? | "And maybe some others" = fail |
-| 3 | **Dependency map** | Are imports, consumers, and cross-module effects documented? | No blast-radius for MEDIUM+ risk = fail |
-| 4 | **Test scenarios** | Are happy path, edge cases, and error scenarios enumerated? | "Will add tests" without specifics = fail |
-| 5 | **Risk classification** | Is risk level stated with justification? | Missing risk level = fail |
-| 6 | **Size confidence** | Is estimate based on file count + line count, not gut feeling? | "Should be quick" = fail |
-| 7 | **Reversibility** | Can this be reverted with `git revert`? If not, is rollback plan documented? | Irreversible change without rollback plan = fail |
-| 8 | **Plan B exists** | Is there a concrete alternative if primary approach fails? | "We'll figure it out" = fail |
-| 9 | **No premature code** | Does the plan describe WHAT and WHY, not HOW in code? | Code snippets in plan = premature |
+Label AI-generated personas as hypotheses, retain unresolved findings, and
+prefer a delta audit unless the baseline was invalidated. For repeated
+infrastructure blockers, prepare measured alternatives and present the material
+cost/privacy/compatibility/rollback choice once; do not assume authority for
+paid use, uploads, deletes, or network changes.
 
-**Scoring**: 9/9 = proceed. 7-8/9 = proceed with noted gaps. <7/9 = refine before coding.
+Return the result with its exact inputs and limits, integrate through the
+existing owner, and resume the original gate when its required evidence arrives.
+Source preparation or a worker completion does not pass a blocked build,
+consumer, device or release gate. Apply the verification cadence below; avoid
+unchanged retry/poll loops and duplicated broad suites. This policy grants no
+automatic release, deployment or downstream sync.
 
-For L/XL tasks, add:
-- [ ] User has approved the plan
-- [ ] Decomposition into M-sized subtasks is complete
-- [ ] Each subtask passes criteria 1-9 independently
+## Change-strategy decision
 
-## Test Scenario Templates (required in plan for M+ tasks)
+Use `.claude/library/process/change-strategy-gate.md` before another patch when
+causal evidence shows a broken ownership/contract boundary, obsolete path,
+compatibility-only layer, architecture conflict, or after two failed repair
+approaches. Compare destination and transition separately, identify protected
+contracts, use evidence rather than line count as the reason, and ask the user
+only for a material tradeoff outside accepted scope.
 
-Before writing any code, enumerate test scenarios in the plan. This is NOT about writing test code — it's about THINKING about what could go wrong.
+## Files and modules
 
-For EACH implementation unit (service, component, endpoint), add to plan:
+Search for an existing equivalent before creating one. Follow the project's
+language and architecture conventions. File/function length, export count,
+and boolean-argument heuristics are prompts to inspect cohesion and call-site
+clarity, not universal limits. Split or refactor when the actual responsibility,
+change rate, coupling, or reviewability warrants it; do not fragment code to
+meet a number.
 
-```markdown
-### Test Scenarios: [unit name]
+## Test and verification design
 
-**Happy path:**
-- [ ] [Input] → [Expected output/behavior]
-- [ ] [Another normal case]
+Choose checks that can detect a failure relevant to the changed behavior.
+Before a material implementation, identify the important success path and the
+highest-value edge/error or regression case. Expand scenarios for risk and
+integration depth; do not require a fixed number of tests for every module.
+Plan evidence before making a completion claim, and distinguish a blocked or
+unavailable check from a pass.
 
-**Edge cases:**
-- [ ] Empty/null input → [expected behavior]
-- [ ] Maximum/boundary values → [expected behavior]
+Follow `.claude/library/process/self-verification.md` for cadence: check coherent
+batches narrowly inside the useful wave, then let the parent/integrator own its
+broad acceptance at the boundary. Do not redefine each patch as another wave.
+Record command/result/scope/tested state in existing task context; reuse that
+evidence only where later changes have not invalidated it. State a concrete
+reason before a broad repeat. A list of checks is not an instruction to rerun
+every contained check separately or after every internal step.
 
-**Error scenarios:**
-- [ ] [Specific failure condition] → [expected error + message]
-- [ ] Network/IO failure → [expected degradation]
+## Replan
 
-**Integration:**
-- [ ] [Component A] + [Component B] → [expected interaction]
-```
+When requirements, budget, deadline, audience, dependencies, or evidence change,
+reassess both the final target's feasibility and the remaining wave sequence.
+State what stays, what changes, why, and the impact on the nearest version and
+its tasks. Do not silently shrink the final promise to fit completed work.
+Propose material changes to target/constraints/wave meaning or order for owner
+approval; a new user instruction can supply that approval. Then update the one
+existing plan/AgentOS graph and dependent worker contracts, not a parallel plan.
 
-### Minimum requirements by risk:
-
-| Risk Level | Happy Path | Edge Cases | Errors | Integration |
-|------------|-----------|------------|--------|-------------|
-| LOW | 1 | 1 | 0 | 0 |
-| MEDIUM | 2 | 2 | 1 | 0 |
-| HIGH | 2 | 3 | 2 | 1 |
-| CRITICAL | 3 | 3 | 2 | 2 |
-
-### Rules:
-1. If you cannot enumerate edge cases, you don't understand the problem well enough. Go back to research.
-2. Scenarios written in plan are COMMITMENTS — implementation is not done until all have passing tests.
-3. Test scenarios become the TEST step's input — test-engineer implements tests from these scenarios.
+Update the active plan when a new fact changes scope, owner, approach, risk,
+acceptance, or the next dependency. After two failed attempts, stop repeating
+local variants and diagnose before choosing a new path. Surface material drift
+early; safe, reversible work inside the accepted scope may continue without an
+approval ritual.

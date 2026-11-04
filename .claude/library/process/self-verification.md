@@ -1,129 +1,139 @@
-# Self-Verification Protocol (MANDATORY)
+# Self-Verification Protocol
 
-This protocol is NOT optional. Skipping it is a system failure.
+Verification establishes the claim being made. Scale it to the changed
+behavior, risk, and blast radius; do not turn routine work into a checklist
+performance.
 
-## Graduated Verification (scales with task size)
+## Choose the check
 
-Gates are NOT one-size-fits-all. Match verification intensity to task risk:
+- Direct answers and no-change work need no implementation gate.
+- A focused edit needs a relevant check or a clear note explaining why no
+  executable check applies.
+- Broader, externally visible, or higher-risk work needs evidence that covers
+  the changed path and material regression risk. Use independent review when it
+  adds meaningful confidence, not just because the task crosses a size label.
+- Project-specific release, security, data, or product acceptance gates still
+  apply when relevant.
 
-| Task Size | Gates Required | Details |
-|-----------|---------------|---------|
-| **XS** | Gate 0 only | Typecheck/lint pass. No manual gates. |
-| **S** | Gate 1 | Intent check: "Does this match the request?" |
-| **M** | Gate 1 + Gate 2 | Intent check + Red-team own code. Confidence declaration. |
-| **L** | All 4 gates | Full Doubt Protocol. User checkpoint at mid-build. |
-| **XL** | All 4 gates + pre-mortem | Plus: reviewer agent mandatory. User approval at 3 checkpoints. |
+## Verification cadence — one useful wave, one broad owner
 
-**Risk-based overrides** (see `.claude/library/process/risk-classification.md` for full protocol):
-- **HIGH risk** → all 4 gates mandatory, regardless of task size
-- **CRITICAL risk** → all 4 gates + external reviewer + user approval of diff
-- Risk classification drives gates, not just task size. A one-line auth fix (XS) at HIGH risk gets full 4 gates.
+This is the shared source of truth for verification cadence, including worker
+contracts and template closeout. Product waves follow
+`.claude/library/process/plan-first.md#product-wave-semantics--source-of-truth`:
+successive versions of one product, not technical batches or experiments.
+A local fix is a task, not a miniature wave. It gets proportionate task-level
+checks without a new roadmap. Integration, safety, or release checkpoints may
+need broader checks before a long product wave ends; name their concrete risk,
+do not rename them product waves or defer necessary verification for weeks.
 
-**Does NOT trigger** (no gates needed):
-- Answering questions without code changes
-- Single-file typo/formatting fixes (XS with no risk override)
-- Adding tests without changing production code
-- Documentation-only changes
+Before implementation, the wave owner selects focused checks for the affected
+paths and the broad acceptance check, if needed. During the wave, run the
+smallest relevant tests, typecheck, lint, or manual check after a coherent batch
+of changes. Do not unconditionally run the full suite after every edit. Expand
+coverage when the actual blast radius or failure evidence warrants it.
 
-## The Doubt Protocol (3 mandatory steps)
+The parent/integrator is the sole owner of broad integration verification at
+the wave boundary, after worker changes are integrated. Workers run only their
+assigned focused checks and return evidence; they must not independently
+repeat the parent's full suite. Do not start simultaneous duplicate broad
+runs. If an aggregate already includes a leaf check, do not run that leaf again
+merely to satisfy an additive checklist.
 
-### Step 1: Devil's Advocate (Attack your own solution)
+Retain compact evidence in the existing task context: command, result, covered
+scope, tested worktree/content state, and relevant inputs/toolchain. A commit
+SHA alone does not identify dirty worktree content. Before reuse, compare later
+changes with that evidence's scope; no new ledger or whole-repository hashing
+ritual is required. A documentation-only edit unrelated to tested behavior
+does not invalidate every test. Report an earlier full pass as a baseline plus
+the checks covering the delta; never call it a full pass of the current tree.
+For supervised runs, include elapsed time when available and distinguish the
+child command's raw exit/result from wrapper, cleanup, or bookkeeping status.
+Inspect the immutable receipt when those statuses disagree; a wrapper error is
+not by itself proof that the command failed, and a successful child command is
+not by itself proof that cleanup or the broader gate passed.
 
-Before presenting ANY implementation, explicitly answer:
-1. "What is the WEAKEST part of this solution?"
-2. "If I were reviewing this as a SKEPTIC, what would I challenge?"
-3. "What assumption am I making that could be WRONG?"
-4. "Is there a SIMPLER approach I dismissed too quickly? Why did I dismiss it?"
+Repeat a broad check only after a concrete invalidation, and state the reason
+before launching it:
 
-If you cannot answer #1 — you haven't thought hard enough. EVERY non-trivial solution has a weak point. "None" is never an acceptable answer.
+- a cross-cutting change or demonstrated integration risk outside prior coverage;
+- changed dependencies, build/runtime configuration, or relevant test inputs or
+  toolchain;
+- an unresolved failure whose diagnosed cause or reproduction conditions changed;
+- a mandatory CI, security, release, or artifact-bound gate at its required
+  boundary;
+- an explicit user request for a repeat.
 
-### Step 2: Commander's Intent Re-check
+A local patch, a failed check alone, a worker finishing, compaction, or a desire
+for reassurance is not sufficient reason to restart the full suite. Reproduce
+a failure narrowly, diagnose and fix it, rerun the affected check, then widen
+only when evidence requires it. A broad pass on the final integrated state may
+still be required for acceptance; do not replace mandatory gates with stale
+evidence, fabricated passes, or skipped tests.
 
-- Re-read the ORIGINAL request (not your plan, not your interpretation — the user's actual words)
-- State: "The user's actual goal is: [X]"
-- State: "My solution achieves this by: [Y]"
-- State: "My solution could FAIL to achieve this if: [Z]"
-- If Z is plausible → STOP. Reconsider before presenting.
+These are agent workflow instructions, not a universal host-enforced command
+ban. Static validation can protect their presence and consistency; observed
+execution is needed to establish that a particular run followed them.
 
-### Step 3: Confidence Declaration (REQUIRED in output)
+Before reporting, compare the original request with the result, inspect the
+diff, and distinguish verified behavior from inference or unknowns. Do not
+state a confidence label, doubt formula, alternative, or risk paragraph unless
+it helps the user understand a material decision.
 
-Every non-trivial response MUST end with:
+## Adversarial check when it matters
 
-```
-VERIFICATION:
-- Approach: [1-sentence summary of what I did]
-- Confidence: [HIGH / MEDIUM / LOW]
-- Doubt: [what I'm least sure about — NEVER "none"]
-- Alternative considered: [what else I could have done]
-- Risk: [what could go wrong with this approach]
-```
+For consequential or ambiguous decisions, consider the most plausible failure,
+the key assumption, a simpler viable alternative, and the evidence that would
+falsify the chosen approach. Surface the result when it changes acceptance or
+residual risk; do not invent a weakness solely to satisfy a template.
 
-Interpretation:
-- **LOW** → Do NOT implement. Present 2-3 options with trade-offs. Let user decide.
-- **MEDIUM** → Implement, but FLAG uncertainty explicitly. "I chose X but Y might be better because..."
-- **HIGH** → Proceed. But: if you're HIGH on everything, you're not doubting enough.
+## Tie evidence to the promised outcome
 
-Calibration rule: if you haven't explicitly considered and rejected at least one alternative, your confidence is MEDIUM at best, never HIGH.
+For product or release claims, name the original user scenario and expected
+after-state before choosing checks. Preserve the product facts and constraints
+that define the promise. Identify the exact surface and environment: a Storybook
+component check does not establish the served site, and a desktop browser check
+does not establish native-device behavior. Exercise first-time and repeat paths
+when they carry different state or expectations.
 
-## The Sunk Cost Test
+Separate evidence for source, built files, rendered target, installed package,
+and active runtime. File fingerprints establish which bytes were inspected;
+they do not establish publication, activation, semantic quality or user success.
+Use fresh browser/device/native observations for the corresponding surface and
+record gaps as unknown or partial handoff when evidence is unavailable. The
+optional `codex-turn.js record-outcome` ledger can preserve those references and
+recompute stale fingerprints; it is not a universal approval gate. Tiny edits,
+no-change answers and narrow direct tasks still receive only proportionate
+checks.
 
-Before EVERY response where you've already started implementing:
+If evidence is missing, say exactly what was not verified and what check would
+close the gap. Do not present uncertain work as complete. Uncertainty alone is
+not a reason to stop safe, reversible work already inside the user's scope.
+Ask only when the unresolved choice materially changes the outcome, permission,
+data, security, scope, or irreversible state.
 
-> "If I had NOT already written this code, would I choose this exact approach?"
+For closure labels, carryover fields, release boundaries, and next-wave
+selection, follow
+`.claude/library/process/product-goal-loop.md#closure-carryover-and-next-action`.
+When waiting on a blocked gate, select an authorized independent next action
+from the existing goal/task graph; an acknowledgement, timer, or stale turn
+state is not progress. Recheck current owner activity/evidence and preserve
+shared writers and heavy-resource ownership.
 
-- YES → Continue.
-- NO or PROBABLY NOT → STOP. Discard what you wrote. Restart with the approach you'd actually choose.
+## Failed approaches
 
-The code you've already written has ZERO value if it's the wrong approach. Throwing it away is free. Defending it is expensive.
+After two failed attempts, stop repeating local variants. Revisit the cause,
+affected path and consumers, ownership/contract boundaries, and available
+approaches. Use `.claude/library/process/change-strategy-gate.md` when evidence
+shows a systemic mismatch or the repair-versus-replace decision is material.
+Report a blocker only when progress requires user input or external state; do
+not ask the user to choose implementation details that remain within accepted
+scope.
 
-## Sycophancy Circuit Breaker
+## Reusable learning
 
-When the user points out a flaw and your reaction is "you're right!":
-1. That means you ALREADY KNEW but didn't surface it
-2. This is an ATTENTION FAILURE, not a knowledge gap
-3. Log to tasks/lessons.md: what the flaw was, why you didn't catch it, what verification step would have caught it
-4. Next time: the same category of flaw must be caught by YOUR verification, not the user's
+Record a lesson when a failure or correction is likely to recur and the project
+has a maintained lessons workflow. Capture the cause and the guard that would
+have caught it; do not log every ordinary edit or judgment difference.
 
-Goal: zero "you're right!" moments. Every flaw should be surfaced by the agent BEFORE the user has to point it out.
-
-## Error Recovery Protocol ("I'm stuck")
-
-When confidence is LOW or you're blocked after 2+ attempts:
-
-1. **STOP coding**. Do not retry the same approach.
-2. **State what you know**: "I attempted X. It failed because Y. I've tried Z alternatives."
-3. **State what you don't know**: "I'm uncertain about [specific gap]."
-4. **Present options** (max 3): each with effort estimate and risk level
-5. **Ask the user** to choose — or suggest what information would unblock you
-6. **Log to tasks/lessons.md** after resolution: what was the block, what resolved it
-
-Never spin silently. The user seeing "I'm stuck on X, here are my options" is 100x better than the agent producing wrong code on attempt #4.
-
-See also: `.claude/library/conflict/conflict-resolution.md` — Escalation Protocol, Confidence-Based Escalation.
-
-## Reuse Gate (M+ tasks, in addition to Doubt Protocol)
-
-Before presenting implementation:
-- [ ] Did I search for existing utilities before creating new ones? (grep + tool-registry)
-- [ ] Are there similar functions elsewhere I should consolidate?
-- [ ] New shared utilities registered in `_reference/tool-registry.md`?
-- [ ] If I created a helper — is it genuinely needed in 2+ places, or should it be inline?
-
-If any answer is "no" or "didn't check" → go back and check before presenting.
-
-## Anti-Patterns This Prevents
-
-| Bias | How it manifests | How this protocol stops it |
-|------|-----------------|---------------------------|
-| Commitment bias | Defending approach A after choosing it | Sunk Cost Test forces re-evaluation |
-| Completion bias | Rushing to "done" | Verification gate sits between done and output |
-| Self-sycophancy | Agreeing with own previous output | Devil's Advocate forces attack on own solution |
-| Tunnel vision | Not considering alternatives | Confidence requires rejected alternative |
-| Authority bias | "Best practice says..." | Critical-thinking.md evidence hierarchy |
-
-## References
-- `.claude/library/meta/critical-thinking.md` — evidence hierarchy, red flags
-- `.claude/library/meta/strategic-thinking.md` — OODA loop, Commander's Intent
-- `.claude/library/conflict/conflict-resolution.md` — confidence-based escalation
-- `.claude/library/process/self-improvement.md` — sycophancy failure tracking (must align with circuit breaker above)
-- `.claude/library/meta/critical-thinking.md` — evidence hierarchy prevents overconfident recommendations
+See `.claude/library/meta/critical-thinking.md` for evidence hierarchy and
+`.claude/library/process/change-strategy-gate.md` for systemic repair decisions.

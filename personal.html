@@ -3,29 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Личное ведение BUFF IT — план, прогресс, корректировки</title>
+  <title>План занятий, который учитывает вашу неделю — BUFF IT</title>
   <meta name="description" content="Личное ведение BUFF IT помогает видеть план, прогресс, нагрузку и корректировки между тренировками.">
-  <meta property="og:title" content="Личное ведение BUFF IT — план, прогресс, корректировки">
+  <meta property="og:title" content="План занятий, который учитывает вашу неделю — BUFF IT">
   <meta property="og:description" content="Личное ведение BUFF IT помогает видеть план, прогресс, нагрузку и корректировки между тренировками.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://buffit.fit">
   <link rel="preload" href="fonts/Unbounded-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/GolosText-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/tokens.css?v=20260722-ceramic-media-v4">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/hero.css?v=20260610-auth-hero">
   <link rel="stylesheet" href="css/programs.css">
   <link rel="stylesheet" href="css/sales.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/ecosystem.css">
-    <link rel="stylesheet" href="css/page-components.css">
+    <link rel="stylesheet" href="css/page-components.css?v=20260722-audience-media-v2">
   <link rel="stylesheet" href="css/cta.css">
   <link rel="stylesheet" href="css/hero-shell-system.css">
-    <link rel="stylesheet" href="css/nav-dropdown-system.css">
+    <link rel="stylesheet" href="css/nav-dropdown-system.css?v=20260722-ceramic-media-v3">
     <link rel="stylesheet" href="css/interaction-system.css">
   <link rel="stylesheet" href="css/header-system.css">
+  <link rel="stylesheet" href="css/account-system.css?v=20260610-auth-cta-reset">
 </head>
-<body>
+<body class="audience-hero-page audience-calls">
   <a class="promo-bar" href="personal.html">BUFF IT PERSONAL: прогресс между тренировками</a>
     <nav class="nav" aria-label="Основная навигация">
     <div class="nav__inner">
@@ -75,7 +76,7 @@
                   <a href="program-entry-fitness.html">Вход в фитнес</a>
                   <a href="program-healthy-back.html">Спина и шея</a>
                   <a href="health.html">Ограничения</a>
-                  <a href="safety.html">Первая помощь</a>
+                  <a href="/health/first-aid/docs/">Первая помощь</a>
                 </div>
               </section>
             </div>
@@ -120,8 +121,8 @@
                 <small>Еда, корзина, восстановление и привычки вокруг нагрузки.</small>
                 <div class="nav__quicklinks" aria-label="Питание и ритм">
                   <a href="nutrition.html">Питание</a>
-                  <a href="app.html#dayflow">DAYFLOW скоро</a>
-                  <a href="guide.html">Гайд новичка</a>
+                  <a href="https://yokhanfitness.ru/dayflow/">DAY FLOW</a>
+                  <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд новичка</a>
                 </div>
               </section>
             </div>
@@ -135,7 +136,7 @@
               <strong>Понять, с чего начать безопасно</strong>
               <small>Материалы для первого шага: новичку, при боли, ограничениях и тревоге.</small>
               <div class="nav__quicklinks" aria-label="Материалы для старта">
-                <a href="guide.html">Гайд новичка</a>
+                <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд новичка</a>
                 <a href="start.html">Подобрать старт</a>
               </div>
             </article>
@@ -145,7 +146,7 @@
                 <strong>Без стыда и перегруза</strong>
                 <small>Как войти в тренировки спокойно и не бросить через две недели.</small>
                 <div class="nav__quicklinks" aria-label="Новичку">
-                  <a href="guide.html">Гайд</a>
+                  <a href="https://guide.yokhanfitness.ru/WarmingUp/about-guide/">Гайд</a>
                   <a href="program-entry-fitness.html">Вход в фитнес</a>
                   <a href="programs.html">Цели</a>
                 </div>
@@ -155,7 +156,7 @@
                 <strong>Боль, аптечка и ограничения</strong>
                 <small>Когда тело сигналит болью или есть ограничения по нагрузке.</small>
                 <div class="nav__quicklinks" aria-label="Риски и безопасность">
-                  <a href="safety.html">Первая помощь</a>
+                  <a href="/health/first-aid/docs/">Первая помощь</a>
                   <a href="health.html">Безопасный старт</a>
                   <a href="program-healthy-back.html">Спина</a>
                 </div>
@@ -220,16 +221,18 @@
           </div>
         </div>
       </div>
-      <a href="start.html" class="btn btn--primary nav__cta">Начать</a>
-      <button class="nav__mobile-toggle" type="button" aria-label="Menu" aria-expanded="false">
+      <div class="nav__actions">
+        <a href="https://app.yokhanfitness.ru/auth?mode=login&amp;returnTo=/home" class="nav__cta nav__cta--secondary">Войти</a>
+        <a href="https://app.yokhanfitness.ru/auth?mode=register&amp;returnTo=/home" class="nav__cta nav__cta--primary">Начать</a>
+      </div>      <button class="nav__mobile-toggle" type="button" aria-label="Menu" aria-expanded="false">
         <span></span>
         <span></span>
       </button>
     </div>
   </nav>
   <main>
-    <section class="hero"><div class="hero__stage"><div class="hero__inner"><div class="hero__content"><p class="eyebrow">BUFF IT PERSONAL</p><h1 class="heading hero__title">Когда прогресс должен быть виден, а не только ощущаться</h1><p class="hero__subtitle">Для работы с тренером важны план, факт тренировки, самочувствие и корректировки. Ты понимаешь, что сделал, что изменилось и куда двигаться дальше.</p><div class="hero__actions"><a href="coaching.html" class="btn btn--primary">Смотреть ведение</a><a href="https://t.me/YokhanGym_bot?start=buffit_coach" target="_blank" rel="noopener" class="btn btn--secondary">Пройти подбор</a></div></div><aside class="hero__panel surface-card"><div class="hero__panel-top"><span class="status-dot" aria-hidden="true"></span><span>В работе</span></div><ul class="stack-list"><li>План и факт.</li><li>Самочувствие и нагрузка.</li><li>Корректировки под жизнь.</li></ul></aside></div></div></section>
-    <section class="section section--cream"><div class="container"><div class="section-heading"><p class="eyebrow">Зачем это клиенту</p><h2 class="heading section-title">Меньше хаоса между тренировками</h2></div><div class="benefit-grid"><article class="benefit-card"><span>ясность</span><h3>Понимать, что делать сегодня</h3><p>Не искать программу каждый раз заново.</p></article><article class="benefit-card"><span>контроль</span><h3>Видеть, что меняется</h3><p>Вес, нагрузка, техника, самочувствие и регулярность.</p></article><article class="benefit-card"><span>гибкость</span><h3>Менять план, когда жизнь вмешалась</h3><p>Работа, сон и усталость учитываются, а не игнорируются.</p></article></div></div></section>
+    <section class="hero"><div class="hero__stage"><div class="hero__inner"><div class="hero__content"><p class="eyebrow">BUFF IT PERSONAL</p><h1 class="heading hero__title">План занятий, который учитывает вашу неделю</h1><p class="hero__subtitle">Откройте план, отметьте выполненную тренировку и обсудите изменения с тренером. Самочувствие и результаты помогают понять, что корректировать дальше.</p><div class="hero__actions"><a href="coaching.html" class="btn btn--primary">Смотреть ведение</a><a href="https://t.me/YokhanGym_bot?start=buffit_coach" target="_blank" rel="noopener" class="btn btn--secondary">Выбрать программу</a></div></div><aside class="hero__panel surface-card"><div class="hero__panel-top"><span class="status-dot" aria-hidden="true"></span><span>В работе</span></div><ul class="stack-list"><li>План и факт.</li><li>Самочувствие и нагрузка.</li><li>Корректировки под жизнь.</li></ul></aside></div></div></section>
+    <section class="section section--cream"><div class="container"><div class="section-heading"><p class="eyebrow">Зачем это клиенту</p><h2 class="heading section-title">Меньше хаоса между тренировками</h2></div><div class="benefit-grid"><article class="benefit-card"><span>ясность</span><h3>Открыть занятие</h3><p>Откройте упражнения и назначенную нагрузку на ближайшее занятие.</p></article><article class="benefit-card"><span>контроль</span><h3>Видеть, что меняется</h3><p>Фиксируйте тренировку и самочувствие, чтобы видеть, что получилось выполнить.</p></article><article class="benefit-card"><span>гибкость</span><h3>Обсудить корректировку</h3><p>Работа, сон и усталость учитываются, а не игнорируются.</p></article></div></div></section>
   </main>
   <footer class="footer">
     <div class="container footer__inner">
@@ -239,6 +242,7 @@
         <a href="health.html">BUFF IT HEALTH</a>
         <a href="programs.html">Программы</a>
         <a href="calls-access.html">BUFF IT CALLS</a>
+        <a href="https://app.yokhanfitness.ru/auth?mode=login&amp;returnTo=/home">Войти</a>
         <a href="links.html">Все входы</a>
       </div>
     </div>

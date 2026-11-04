@@ -12,6 +12,7 @@
   let closeMotionTimerId;
   let closeTimerId;
   let switchTimerId;
+  let openedByPointer = null;
 
   const getTrigger = (group) => group.querySelector(".nav__trigger");
 
@@ -88,7 +89,15 @@
 
     if (mobileToggle) {
       mobileToggle.setAttribute("aria-expanded", String(isOpen));
+      mobileToggle.setAttribute("aria-label", isOpen ? "Закрыть основное меню" : "Открыть основное меню");
+      const label = mobileToggle.querySelector(".nav__mobile-label");
+      if (label) label.textContent = isOpen ? "Закрыть" : "Меню";
     }
+  };
+
+  const focusFirstMobileControl = () => {
+    const firstTrigger = groups.map(getTrigger).find(Boolean);
+    firstTrigger?.focus({ preventScroll: true });
   };
 
   const setControlId = (group, index) => {
@@ -113,6 +122,7 @@
   };
 
   const closeGroups = () => {
+    openedByPointer = null;
     const shouldHoldClosingContext =
       hasOpenGroup() && !document.body.classList.contains("is-nav-mobile-open");
 
@@ -167,13 +177,16 @@
       return;
     }
 
+    const wasMobileOpen = document.body.classList.contains("is-nav-mobile-open");
     const openGroupItem = groups.find((group) => group.classList.contains("is-open"));
     const trigger = openGroupItem ? getTrigger(openGroupItem) : null;
 
     closeGroups();
     setMobileState(false);
 
-    if (trigger) {
+    if (wasMobileOpen && mobileToggle) {
+      mobileToggle.focus({ preventScroll: true });
+    } else if (trigger) {
       trigger.focus();
     }
   };
@@ -189,11 +202,19 @@
 
     trigger.addEventListener("click", (event) => {
       event.preventDefault();
-      toggleGroup(group);
+      // A mouse can enter (and open) the group immediately before its click.
+      // Keep that first click open; keyboard and subsequent clicks toggle it.
+      if (openedByPointer === group && event.detail > 0) {
+        openedByPointer = null;
+        openGroup(group);
+      } else {
+        toggleGroup(group);
+      }
     });
 
     group.addEventListener("pointerenter", () => {
       if (hoverQuery.matches) {
+        if (!group.classList.contains("is-open")) openedByPointer = group;
         openGroup(group);
       }
     });
@@ -228,7 +249,9 @@
       const shouldOpen = !document.body.classList.contains("is-nav-mobile-open");
       setMobileState(shouldOpen);
 
-      if (!shouldOpen) {
+      if (shouldOpen) {
+        window.requestAnimationFrame(focusFirstMobileControl);
+      } else {
         closeGroups();
       }
     });

@@ -14,9 +14,17 @@ Local Yokhan constraints:
 - Telegram bot is the current receiver;
 - no stock-looking photo assets in repo yet, so the first pass uses a structured product surface instead of fake imagery.
 
+## Consumer Contract
+
+Shared header geometry, auth action, dropdown controls, tokens and rendered gates are owned by `BuffItDesignSystem`. This repository owns public copy, routes, homepage composition and static adapters.
+
+The executable adoption record is `contracts/design-system-consumer.json`. It pins the design-system package version and SHA-256 of every canonical source consumed by the landing. Run `$env:BUFFIT_DS_ROOT='<path-to-BuffItDesignSystem>'; node scripts/check-home-layout.mjs` to verify source drift, six real-page viewports, closed/open navigation, touch targets, focus entry/return, first-screen CTA, route density and responsive media.
+
+The integration is intentionally `pinned-static-adapter`, not a runtime package import: the design-system package is private, exports raw source and does not yet publish a production CSS bundle.
+
 ## Tokens
 
-Source of truth: `css/tokens.css`.
+Shared source of truth: `BuffItDesignSystem/src/css/tokens.css`. Landing-specific aliases and composition tokens live in `css/tokens.css` and must not redefine shared semantics silently.
 
 Token groups:
 - typography: `--font-display`, `--font-body`, `--text-*`, `--line-*`;
@@ -35,28 +43,32 @@ Rules:
 ## Components
 
 CSS component files:
-- `css/nav.css` — sticky navigation and active state;
-- `css/hero.css` — hero layout, program preview, metric tiles;
-- `css/programs.css` — program cards, section grids, choice steps, health note;
-- `css/cta.css` — final CTA, offer strip, footer;
-- `css/base.css` — reset, page layout, headings, buttons, surface card.
+- `css/header-system.css` — fixed Oura-like header shell, solid/open/closing states, mobile toggle.
+- `css/account-system.css` — auth-entry appearance only; it must not redefine responsive header geometry.
+- `css/home-flow.css` — homepage-only composition, responsive media and density adapters.
+- `css/nav-dropdown-system.css` — top dropdown panel, product cards, quick links, mobile submenu.
+- `css/hero-shell-system.css` — shared hero frame geometry, including mobile hero padding/width constraints.
+- `css/hero.css` — hero content, product preview, metric tiles.
+- `css/programs.css` — program catalog, route cards, support/service blocks, offer formats.
+- `css/program-detail.css` — program detail grids, outcomes, phases, related routes.
+- `css/components.css` and `css/page-components.css` — reusable cards, service/link surfaces, Oura-like media sections and page-level composition.
+- `css/sales.css`, `css/cta.css`, `css/ecosystem.css` — sales blocks, CTA/footer, ecosystem/service layouts.
 
 Core components and states:
 - Button: default, hover, active, focus, disabled via `aria-disabled`.
-- Nav link: default, hover, active, focus.
+- Header trigger/dropdown: default, hover/open, switching, closing, scrolled, mobile open.
 - Program card: default and featured variants.
-- Program preview item: default, hover, focus.
-- Step card: default state.
-- Health note: informational boundary for medical red flags.
-
+- Route/support/service/link card: default, hover, focus.
+- Program detail outcome/phase/related card: default, hover/focus for links.
+- Safety note: informational boundary for medical red flags.
 ## Content Model
 
 Current page structure:
-1. Hero: "Подготовь тело к новому образу" and Telegram bot selection.
-2. Men: seven programs from `YokhanGymBot/data/training_programs.json`.
-3. Women: five programs from the same bot catalog.
-4. Choice: bot -> personal review -> training corrections.
-5. Start: final CTA, pricing, channel link, direct contact.
+1. `index.html` / `start.html`: premium ecosystem entry and decision bridge before bot/direct contact.
+2. `programs.html`, `men.html`, `women.html`, `program-*.html`: goal-specific 12-week routes.
+3. `training.html`, `coaching.html`, `app.html`: current paid coach-led delivery and support tooling.
+4. `self-training.html`: current low-ticket lane for a one-time 5–8k consultation, not a full coaching subscription.
+5. `guide.html`, `health.html`, `safety.html`, `calls-access.html`, `links.html`, `bot.html`: not-ready, safety, call, and routing surfaces.
 
 Claims are intentionally bounded:
 - no promise to cure medical conditions;
@@ -75,6 +87,7 @@ For the next visual-quality pass, add:
 
 - `docs/DESIGN_TOKENS_TABLE.md` - full token table by section.
 - `docs/CONTENT_ASSET_PLAN.md` - content and asset needs by funnel section.
+- `docs/CTA_SOURCE_PARAM_MAP_20260528.md` - CTA, Telegram start-param and post-bot route map.
 - `docs/OURA_DESIGN_SYSTEM_STUDY.md` - Oura design-system and sales-architecture study.
 
 ## Applied Oura Pattern
@@ -103,5 +116,5 @@ Applied after the Oura PDP review:
 - `method.html` — method, friction removal, package specs, safety boundaries.
 - `start.html` — bot/channel/direct-contact start routes, pricing, FAQ.
 
-Navigation uses real pages instead of one-page anchors. Current page state is marked with `aria-current="page"` and styled in `css/nav.css`.
+Navigation uses real pages instead of one-page anchors. Header state is controlled by `js/nav-menu.js`, `js/nav-state.js`, `css/header-system.css`, and `css/nav-dropdown-system.css`; page-local header drift is not allowed.
 - docs/PHOTO_SHOT_LIST.md - photo tasks and capture checklist for the next visual pass.

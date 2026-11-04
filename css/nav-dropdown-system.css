@@ -140,10 +140,27 @@ body.is-nav-switching .nav__group.is-open .nav__dropdown {
   padding: var(--space-1-5);
   background:
     var(--nav-dropdown-lead-overlay),
+    var(--nav-lead-media, var(--image-fitness)) center / cover,
     var(--nav-dropdown-lead-surface);
   border-radius: var(--radius-hero);
   box-shadow: var(--shadow-card);
   color: var(--text-inverse);
+}
+
+.nav__group:nth-child(1) {
+  --nav-lead-media: var(--image-women);
+}
+
+.nav__group:nth-child(2) {
+  --nav-lead-media: var(--image-calls);
+}
+
+.nav__group:nth-child(3) {
+  --nav-lead-media: var(--image-guide);
+}
+
+.nav__group:nth-child(4) {
+  --nav-lead-media: var(--image-health);
 }
 
 .nav__drop-card span,
@@ -244,13 +261,13 @@ body.is-nav-switching .nav__group.is-open .nav__dropdown {
   }
 }
 
-@media (max-width: 64rem) and (min-width: 48.8125rem) {
+@media (max-width: 90rem) and (min-width: 80.0625rem) {
   .nav__drop-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 48.75rem) {
+@media (max-width: 80rem) {
   .nav::before {
     display: none;
   }
@@ -327,8 +344,21 @@ body.is-nav-switching .nav__group.is-open .nav__dropdown {
   }
 
   .nav__quicklinks a {
-    min-height: auto;
+    min-height: var(--button-min-height);
     padding: var(--space-min) var(--space-half);
     font-size: var(--text-xs);
+  }
+}
+
+@media (min-width: 48.8125rem) and (max-width: 80rem) {
+  .nav__drop-card--lead {
+    min-height: var(--nav-menu-feature-min);
+    align-content: end;
+    padding: var(--space-base);
+    background:
+      var(--nav-dropdown-lead-overlay),
+      var(--nav-lead-media, var(--image-fitness)) center / cover,
+      var(--nav-dropdown-lead-surface);
+    border-radius: var(--radius-lg);
   }
 }

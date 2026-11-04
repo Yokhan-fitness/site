@@ -4,27 +4,616 @@
 
 set -euo pipefail
 
+normalize_drive_path() {
+  local path="$1"
+  case "$path" in
+    /[A-Z]/*)
+      printf '/%s%s\n' "$(printf '%s' "${path:1:1}" | tr 'A-Z' 'a-z')" "${path:2}"
+      ;;
+    *)
+      printf '%s\n' "$path"
+      ;;
+  esac
+}
+
 ERRORS=0
 CHECKS=0
-TEMPLATE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+TEMPLATE_DIR="$(normalize_drive_path "$(cd "$(dirname "$0")/.." && pwd)")"
 cd "$TEMPLATE_DIR"
+
+[ -f "$TEMPLATE_DIR/scripts/lib/platform.sh" ] && source "$TEMPLATE_DIR/scripts/lib/platform.sh"
+
+# The runner isolates inherited OS temporary paths even when a leaf test crashes.
+if [ -z "${AGENT_MANAGED_TEMP:-}" ]; then
+  case "$(_detect_os)" in
+    windows) exec node "$TEMPLATE_DIR/scripts/managed-temp.js" run -- bash "$0" "$@" ;;
+    *) exec node "$TEMPLATE_DIR/scripts/managed-temp.js" run --process-contract foreground -- bash "$0" "$@" ;;
+  esac
+fi
 
 pass() { echo "  PASS: $1"; CHECKS=$((CHECKS+1)); }
 fail() { echo "  FAIL: $1"; ERRORS=$((ERRORS+1)); CHECKS=$((CHECKS+1)); }
-check() { local d="$1"; shift; if "$@" &>/dev/null; then pass "$d"; else fail "$d"; fi; }
+skip() { echo "  SKIP: $1"; CHECKS=$((CHECKS+1)); }
+check() {
+  local description="$1"
+  local output
+  local started=$SECONDS
+  shift
+  if output="$("$@" 2>&1)"; then
+    pass "$description ($((SECONDS - started))s)"
+    return
+  fi
+  [ -n "$output" ] && printf '%s\n' "$output"
+  fail "$description ($((SECONDS - started))s)"
+}
+is_template_source_repo() { grep -Eq '^- Name: agent-project-template$' PROJECT_SPEC.md 2>/dev/null; }
+source_only_check() {
+  local description="$1"
+  shift
+  if is_template_source_repo; then
+    check "$description" "$@"
+  else
+    skip "$description (template source repo only)"
+  fi
+}
+# BEGIN template setup bootstrap order check
+validate_template_setup_bootstrap_order() {
+  node <<'NODE'
+const fs = require("node:fs");
+
+const shellPath = "setup.sh";
+const batchPath = "setup.bat";
+if (!fs.existsSync(shellPath) || !fs.existsSync(batchPath)) {
+  throw new Error("Template setup.sh and setup.bat are required");
+}
+
+const shell = fs.readFileSync(shellPath, "utf8");
+const shellGuard = shell.indexOf('node "$SCRIPT_DIR/scripts/lib/codex-runtime.js"');
+const shellPrompt = shell.indexOf("# Get project name");
+if (shellGuard < 0) throw new Error("setup.sh is missing its Codex runtime guard");
+if (shellPrompt < 0) throw new Error("setup.sh is missing its project-name prompt marker");
+if (shellGuard >= shellPrompt) throw new Error("setup.sh must check runtime before prompting");
+
+const batch = fs.readFileSync(batchPath, "utf8");
+const batchGuard = batch.indexOf(String.raw`node "%~dp0scripts\lib\codex-runtime.js"`);
+const batchPrompt = batch.indexOf(":: Ask for project name");
+const batchCreate = batch.indexOf('mkdir "%PROJECT_DIR%"');
+if (batchGuard < 0) throw new Error("setup.bat is missing its Codex runtime guard");
+if (batchPrompt < 0) throw new Error("setup.bat is missing its project-name prompt marker");
+if (batchCreate < 0) throw new Error("setup.bat is missing its project-directory creation marker");
+if (batchGuard >= batchPrompt) throw new Error("setup.bat must check runtime before prompting");
+if (batchPrompt >= batchCreate) throw new Error("setup.bat must prompt and validate before creating project files");
+NODE
+}
+# END template setup bootstrap order check
+validate_text_policy_rejects_mojibake() {
+  local fixture
+  fixture="$(_temp_file text-policy-fixture)"
+  node -e "require('fs').writeFileSync(process.argv[1], 'Broken: \\u0432\\u0402\\u201D\\n', 'utf8')" "$fixture"
+  if node scripts/validate-text-policy.js --path "$fixture" >/dev/null 2>&1; then
+    rm -f "$fixture"
+    return 1
+  fi
+  rm -f "$fixture"
+  return 0
+}
+validate_progressive_status_rejects_stale_header() {
+  local fixture_repo
+  local script_path
+  fixture_repo="$(_temp_dir progressive-status-fixture)"
+  script_path="$TEMPLATE_DIR/scripts/progressive-status.js"
+
+  (
+    cd "$fixture_repo"
+    git init -q
+    git config user.email "template-smoke@example.invalid"
+    git config user.name "Template Smoke"
+    cat > work.md <<'EOF'
+<!-- PROGRESSIVE_STATUS
+id: fixture-work
+status: active
+updated: 2026-07-06
+readiness: 10
+plan: 10
+inventory: 10
+production: 10
+cleanup: 10
+tags: progressive-jpeg,fixture
+next: first check
+-->
+
+# Work
+
+Initial body.
+EOF
+    git add work.md
+    git commit -q -m "fixture"
+    printf '%s\n' "" "Changed body without status header update." >> work.md
+    if node "$script_path" --check --path work.md >/dev/null 2>&1; then
+      exit 1
+    fi
+  )
+  local status=$?
+  rm -rf "$fixture_repo"
+  return "$status"
+}
+github_workflows_use_node24_actions() {
+  ! grep -R -E 'actions/(checkout|setup-node)@v4' .github &&
+    ! grep -R -E "node-version:[[:space:]]*['\"]?20" .github
+}
+validate_release_facing_doc_counts() {
+  node <<'NODE'
+const fs = require("fs");
+const { execFileSync } = require("child_process");
+
+const countDirs = (directory) =>
+  fs.readdirSync(directory, { withFileTypes: true }).filter((entry) => entry.isDirectory()).length;
+const countFiles = (directory, extension) =>
+  fs.readdirSync(directory).filter((entry) => entry.endsWith(extension)).length;
+const countFilesRecursive = (directory, extension) =>
+  fs.readdirSync(directory, { withFileTypes: true }).reduce((total, entry) => {
+    const fullPath = `${directory}/${entry.name}`;
+    if (entry.isDirectory()) return total + countFilesRecursive(fullPath, extension);
+    return total + (entry.name.endsWith(extension) ? 1 : 0);
+  }, 0);
+const countTrackedSkillDirs = (directory) => {
+  try {
+    const files = execFileSync("git", ["ls-files", `${directory}/*/SKILL.md`], { encoding: "utf8" })
+      .trim()
+      .split(/\r?\n/)
+      .filter(Boolean);
+    return new Set(files.map((file) => file.split("/").slice(0, 3).join("/"))).size;
+  } catch {
+    return countDirs(directory);
+  }
+};
+
+const readme = fs.readFileSync("README.md", "utf8");
+const claude = fs.readFileSync("CLAUDE.md", "utf8");
+const counts = new Map([
+  ["Rules", countFiles(".claude/rules", ".md") + countFilesRecursive(".claude/library", ".md")],
+  ["Hooks", countFiles(".claude/hooks", ".sh")],
+  ["Claude Skills", countTrackedSkillDirs(".claude/skills")],
+  ["Codex Skills", countTrackedSkillDirs(".agents/skills")],
+  ["Codex Subagents", countFiles(".codex/agents", ".toml")],
+  ["Agents", countFiles(".claude/agents", ".md")],
+  ["Commands", countFiles(".claude/commands", ".md")],
+  ["Scripts", fs.readdirSync("scripts").filter((entry) => fs.statSync(`scripts/${entry}`).isFile()).length],
+]);
+
+if (!readme.startsWith("# Agent Project Template v6")) {
+  throw new Error("README title must use the current major version");
+}
+
+for (const [label, count] of counts) {
+  const expected = `| **${label}** | ${count} |`;
+  if (!readme.includes(expected)) {
+    throw new Error(`README count mismatch for ${label}; expected row prefix: ${expected}`);
+  }
+}
+
+const commandNames = fs.readdirSync(".claude/commands")
+  .filter((entry) => entry.endsWith(".md"))
+  .map((entry) => entry.replace(/\.md$/, ""))
+  .sort();
+const commandSectionMatch = claude.match(/## Commands \((\d+)\)\n([\s\S]*?)\n\n## /);
+if (!commandSectionMatch) {
+  throw new Error("CLAUDE.md command section not found");
+}
+const headingCount = Number(commandSectionMatch[1]);
+if (headingCount !== commandNames.length) {
+  throw new Error(`CLAUDE.md command count ${headingCount} != ${commandNames.length}`);
+}
+const listed = Array.from(commandSectionMatch[2].matchAll(/\/[a-z0-9-]+/g))
+  .map((match) => match[0].slice(1))
+  .sort();
+const missing = commandNames.filter((name) => !listed.includes(name));
+const extra = listed.filter((name) => !commandNames.includes(name));
+if (missing.length > 0 || extra.length > 0) {
+  throw new Error(`CLAUDE.md commands mismatch; missing=${missing.join(",")} extra=${extra.join(",")}`);
+}
+NODE
+}
+validate_agent_safe_github_entrypoint() {
+  node <<'NODE'
+const fs = require("fs");
+
+const read = (file) => fs.readFileSync(file, "utf8");
+const readme = read("README.md");
+const setupGuide = read("SETUP_GUIDE.md");
+const releases = read("docs/TEMPLATE_RELEASES.md");
+const agents = read("AGENTS.md");
+const claude = read("CLAUDE.md");
+const updateCommand = read(".claude/commands/update-template.md");
+const syncSkill = read(".agents/skills/codex-template-sync/SKILL.md");
+const allReleaseDocs = `${readme}\n${setupGuide}\n${releases}`;
+
+const badgeMatch = readme.match(/template-v([0-9]+\.[0-9]+\.[0-9]+)-blue/);
+if (!badgeMatch) {
+  throw new Error("README template version badge not found");
+}
+
+const snapshot = readme.match(/Release snapshot: `v([0-9]+\.[0-9]+\.[0-9]+)`/);
+if (!snapshot) throw new Error("README pinned consumption snapshot missing");
+const tag = `v${snapshot[1]}`;
+if (snapshot[1] !== badgeMatch[1]) {
+  if (!readme.includes(`Source candidate: **${badgeMatch[1]} — unreleased**`) ||
+      !readme.includes("do not consume a nonexistent candidate tag") ||
+      !fs.existsSync("docs/GPT6_MIGRATION_CANDIDATE.md")) {
+    throw new Error("Version differs from consumption snapshot without an explicit unreleased candidate boundary");
+  }
+}
+const required = [
+  ["README latest release link", readme, "https://github.com/Yokhan/agent-project-template/releases/latest"],
+  ["README release snapshot", readme, `Release snapshot: \`${tag}\``],
+  ["README pinned clone", readme, `git clone --branch ${tag} --depth 1 https://github.com/Yokhan/agent-project-template.git agent-project-template`],
+  ["README pinned sync preview", readme, `node scripts/sync-template.js --from-git --ref ${tag} --plan-file`],
+  ["README pinned sync apply", readme, `--plan-file ../agent-template-${tag}.plan.json --apply`],
+  ["README main warning", readme, "`main` is for template development and explicit canary rollout only"],
+  ["README explicit canary", readme, "node scripts/sync-template.js --from-git --canary --ref main --plan-file"],
+  ["SETUP_GUIDE latest release link", setupGuide, "https://github.com/Yokhan/agent-project-template/releases/latest"],
+  ["SETUP_GUIDE release snapshot", setupGuide, `Целевой release snapshot: \`${tag}\``],
+  ["SETUP_GUIDE pinned clone", setupGuide, `git clone --branch ${tag} --depth 1 https://github.com/Yokhan/agent-project-template.git agent-project-template`],
+  ["SETUP_GUIDE pinned sync preview", setupGuide, `node scripts/sync-template.js --from-git --ref ${tag} --plan-file`],
+  ["SETUP_GUIDE main warning", setupGuide, "`main` используйте только для разработки шаблона или явного canary-роллаута"],
+  ["TEMPLATE_RELEASES latest release link", releases, "https://github.com/Yokhan/agent-project-template/releases/latest"],
+  ["TEMPLATE_RELEASES release snapshot", releases, `Release snapshot: \`${tag}\``],
+  ["TEMPLATE_RELEASES pinned sync preview", releases, `node scripts/sync-template.js --from-git --ref ${tag} --plan-file`],
+  ["TEMPLATE_RELEASES main warning", releases, "Use `main` only for template development, explicit canary rollout"],
+  ["TEMPLATE_RELEASES explicit canary", releases, "node scripts/sync-template.js --from-git --canary --ref main --plan-file"],
+  ["Release SOT workspace classification", releases, "### 1. Classify The Workspace"],
+  ["Release SOT installed version", releases, ".template-manifest.json.template_version"],
+  ["Release SOT remote verification", releases, "git remote get-url template"],
+  ["Release SOT bound apply", releases, "compares the whole plan digest"],
+  ["Release SOT legacy fallback", releases, "target release checkout's script against the project"],
+  ["Release SOT honest status", releases, "authoritative GitHub Release/workflow state"],
+  ["AGENTS hot update protocol", agents, "docs/TEMPLATE_RELEASES.md#canonical-agent-update-protocol"],
+  ["CLAUDE hot update protocol", claude, "## Template Update Protocol"],
+  ["Claude update command installed version", updateCommand, "Read the installed version from `.template-manifest.json`"],
+  ["Claude update command same plan", updateCommand, "exact plan file accepted during preview"],
+  ["Codex sync skill release SOT", syncSkill, "#canonical-agent-update-protocol"],
+  ["Codex sync skill post-sync verification", syncSkill, "before claiming success"],
+  ["SETUP_GUIDE project-owned CLAUDE", setupGuide, "Сохраняет как project-owned: `CLAUDE.md`"],
+  ["README exact checkout updater", readme, 'node "$RELEASE_CHECKOUT/scripts/sync-template.js" "$RELEASE_CHECKOUT" "$PROJECT" --plan-file "$PLAN"'],
+  ["SETUP_GUIDE exact checkout updater", setupGuide, 'node "$RELEASE_CHECKOUT/scripts/sync-template.js" "$RELEASE_CHECKOUT" "$PROJECT" --plan-file "$PLAN"'],
+  ["README external library", readme, "AGENT_WRITING_LIBRARY"],
+  ["SETUP_GUIDE external library", setupGuide, "AGENT_WRITING_LIBRARY"],
+  ["v5 migration guidance", read("docs/MIGRATION_V5.md"), "semantically merge the v5 active"],
+];
+
+const missing = required.filter(([, text, expected]) => !text.includes(expected));
+if (missing.length > 0) {
+  throw new Error(`Agent-safe GitHub entrypoint missing: ${missing.map(([label]) => label).join(", ")}`);
+}
+
+if (/v3\.8\.0/.test(allReleaseDocs)) {
+  throw new Error("Release-facing docs still contain stale v3.8.0 examples");
+}
+
+if (/Release candidate tag:|Целевой release candidate:|Current Stable Flow/.test(allReleaseDocs)) {
+  throw new Error("Release-facing docs still assert the pre-publication v4.9.0 candidate model");
+}
+
+if (/git clone https:\/\/github\.com\/Yokhan\/agent-project-template\.git agent-project-template/.test(readme)) {
+  throw new Error("README contains branchless clone command; use a pinned release tag");
+}
+
+if (/git clone https:\/\/github\.com\/Yokhan\/agent-project-template\.git agent-project-template/.test(setupGuide)) {
+  throw new Error("SETUP_GUIDE contains branchless clone command; use a pinned release tag");
+}
+
+if (/bash scripts\/sync-all\.sh/.test(setupGuide)) {
+  throw new Error("SETUP_GUIDE contains batch apply without a preview gate");
+}
+
+if (/sync-template\.sh --from-git(?:\s+--dry-run)?\s*(?:#.*)?$/m.test(updateCommand)) {
+  throw new Error("update-template command contains branchless normal-update instructions");
+}
+
+for (const [name, content] of [["README", readme], ["TEMPLATE_RELEASES", releases]]) {
+  if (/sync-template\.sh --from-git(?:\s+--dry-run)?\s*(?:#.*)?$/m.test(content)) {
+    throw new Error(`${name} contains an implicit branch update without --canary and --ref`);
+  }
+}
+NODE
+}
+validate_release_workflow_boundary() {
+  node <<'NODE'
+const fs = require("fs");
+const workflow = fs.readFileSync(".github/workflows/release-template.yml", "utf8").replace(/\r\n/g, "\n");
+const section = (name, next) => {
+  const start = workflow.indexOf(`  ${name}:\n`);
+  const end = next ? workflow.indexOf(`  ${next}:\n`, start + 1) : workflow.length;
+  if (start < 0 || end < 0) throw new Error(`Missing workflow job: ${name}`);
+  return workflow.slice(start, end);
+};
+const validate = section("validate", "package");
+const pack = section("package", "publish");
+const publish = section("publish");
+const requireText = (label, text, pattern) => {
+  if (!pattern.test(text)) throw new Error(`Release workflow boundary missing: ${label}`);
+};
+
+requireText("deny-by-default top-level permissions", workflow, /^permissions: \{\}$/m);
+requireText("validate read-only token", validate, /permissions:\n\s+contents: read/);
+requireText("package read-only token", pack, /permissions:\n\s+contents: read/);
+requireText("publish write token", publish, /permissions:\n\s+contents: write/);
+requireText("validation owns third-party installation", validate, /Install and health-check release toolchain/);
+requireText("package consumes Linux and Windows validation", pack, /needs: \[validate, validate-windows\]/);
+requireText("package uploads immutable bundle", pack, /actions\/upload-artifact@[0-9a-f]{40} # v7/);
+requireText("publish consumes both prior jobs", publish, /needs: \[validate, package\]/);
+requireText("publish downloads same-run bundle", publish, /actions\/download-artifact@[0-9a-f]{40} # v8/);
+requireText("publish verifies bundle checksum", publish, /sha256sum -c SHA256SUMS/);
+requireText("publish verifies remote tag", publish, /gh api .*commits\/\$RELEASE_TAG/);
+requireText("publish refuses replacement", publish, /already exists; refusing to replace/);
+requireText("publish verifies tag on release", publish, /gh release create[\s\S]*--verify-tag/);
+requireText("publish binds repository without checkout", publish, /GH_REPO:\s*\$\{\{ github\.repository \}\}/);
+
+if (/npm install|bootstrap-mcp\.sh --install|code-intelligence-tools\.js install/.test(publish)) {
+  throw new Error("Publish job must not install or execute third-party tools");
+}
+if (/actions\/checkout/.test(publish)) {
+  throw new Error("Publish job must use the verified artifact, not a mutable checkout");
+}
+if (/GH_TOKEN:/.test(`${validate}\n${pack}`)) {
+  throw new Error("Write-capable GitHub token must be scoped to publish only");
+}
+NODE
+}
+validate_mcp_dry_run_redacts_existing_secrets() {
+  local fixture output before secret
+  fixture="$(_temp_dir mcp-redaction-fixture)"
+  output="$fixture.out"
+  secret="MCP_SENTINEL_$RANDOM$RANDOM"
+  mkdir -p "$fixture/scripts/lib" "$fixture/_reference" "$fixture/.codex"
+  cp scripts/bootstrap-mcp.sh scripts/configure-codex-mcp.js "$fixture/scripts/"
+  cp scripts/lib/platform.sh scripts/lib/safe-config-write.js "$fixture/scripts/lib/"
+  cp _reference/code-intelligence-tools.json _reference/codex-mcp-config.toml "$fixture/_reference/"
+  cp .codex/config.toml "$fixture/.codex/config.toml"
+  node -e 'const fs=require("fs");const [p,s]=process.argv.slice(1);fs.writeFileSync(p,JSON.stringify({mcpServers:{private:{command:"secret-command",args:[s],env:{TOKEN:s}}}},null,2)+"\n")' "$fixture/.mcp.json" "$secret"
+  before="$(_get_hash "$fixture/.mcp.json")"
+  if ! (cd "$fixture" && bash scripts/bootstrap-mcp.sh --dry-run --zed) > "$output" 2>&1; then
+    cat "$output"
+    rm -rf "$fixture" "$output"
+    return 1
+  fi
+  ! grep -Fq "$secret" "$output" || return 1
+  ! grep -Fq "secret-command" "$output" || return 1
+  grep -q "args, URLs, and env values are redacted" "$output" || return 1
+  [ "$before" = "$(_get_hash "$fixture/.mcp.json")" ] || return 1
+  [ ! -e "$fixture/.mcp.json.bak" ] || return 1
+  rm -rf "$fixture" "$output"
+}
+validate_screen_anatomy_contract() {
+  node <<'NODE'
+const fs = require("fs");
+
+const required = new Map([
+  [".claude/library/domain/domain-design-pipeline.md", [
+    "### Full-screen structure",
+    "For a new or materially reworked full screen",
+    "frame and base surface",
+    "background composition",
+    "content frame",
+    "overlays only when needed",
+    "Bounded cards/panels",
+    "edge-to-edge",
+    "A focused edit to an existing screen need only revisit the layers it"
+  ]],
+  [".claude/library/domain/domain-design-system.md", [
+    "## Screen Anatomy Contract",
+    "Root frame:",
+    "Base background:",
+    "Background composition:",
+    "Content frame:",
+    "Overlay layer:",
+    "Atomic stories show the atom itself"
+  ]],
+  [".agents/skills/codex-design-workflow/SKILL.md", [
+    "## Screen Anatomy Gate",
+    "For a new or materially reworked full screen",
+    "root frame",
+    "background composition",
+    "content frame",
+    "overlay layer"
+  ]],
+  [".agents/skills/codex-design-system-workflow/SKILL.md", [
+    "## Screen Anatomy Contract",
+    "Atom isolation",
+    "root frame",
+    "base background",
+    "background composition",
+    "content frame",
+    "overlay layer"
+  ]],
+  [".agents/skills/codex-design-workflow/references/design-command-modes.md", [
+    "For full screens, name the root frame",
+    "root frame",
+    "base background",
+    "background composition",
+    "content frame",
+    "overlay policy"
+  ]],
+]);
+
+for (const [file, terms] of required) {
+  const text = fs.readFileSync(file, "utf8");
+  const missing = terms.filter((term) => !text.includes(term));
+  if (missing.length > 0) {
+    throw new Error(`${file} missing design screen anatomy terms: ${missing.join(", ")}`);
+  }
+}
+NODE
+}
 
 echo "=== Template Smoke Test: $TEMPLATE_DIR ==="
 echo ""
 
 echo "Required files:"
 check "CLAUDE.md" test -f CLAUDE.md
+check "AGENTS.md" test -f AGENTS.md
 check "README.md" test -f README.md
-check "setup.bat" test -f setup.bat
+check "SETUP_GUIDE.md" test -f SETUP_GUIDE.md
+check "PROJECT_SPEC.md" test -f PROJECT_SPEC.md
+check "ecosystem.md" test -f ecosystem.md
+check "docs/PRODUCT_BOUNDARY.md" test -f docs/PRODUCT_BOUNDARY.md
+check "docs/SAFE_DEFAULTS.md" test -f docs/SAFE_DEFAULTS.md
+check "docs/SUPPORTED_ENVIRONMENTS.md" test -f docs/SUPPORTED_ENVIRONMENTS.md
+check "docs/TEMPLATE_RELEASES.md" test -f docs/TEMPLATE_RELEASES.md
+check ".claude/library/product/production-product-standard.md" test -f .claude/library/product/production-product-standard.md
+check ".claude/library/process/product-goal-loop.md" test -f .claude/library/process/product-goal-loop.md
+check ".claude/library/process/client-executor-contract.md" test -f .claude/library/process/client-executor-contract.md
+check ".claude/library/domain/domain-design-system.md" test -f .claude/library/domain/domain-design-system.md
+check "docs/AGENT_PIPELINES.md" test -f docs/AGENT_PIPELINES.md
+check "docs/AGENT_CONTEXT_SOT.md" test -f docs/AGENT_CONTEXT_SOT.md
+check "docs/CODEX_FANOUT_PATTERNS.md" test -f docs/CODEX_FANOUT_PATTERNS.md
+check "docs/CODEX_SKILLS_AUDIT.md" test -f docs/CODEX_SKILLS_AUDIT.md
+check "docs/CODEX_SUBAGENTS_AUDIT.md" test -f docs/CODEX_SUBAGENTS_AUDIT.md
+check "docs/CODE_INTELLIGENCE_TOOLCHAIN.md" test -f docs/CODE_INTELLIGENCE_TOOLCHAIN.md
+check "docs/OPENAI_MODEL_GUIDANCE.md" test -f docs/OPENAI_MODEL_GUIDANCE.md
+check "_reference/code-intelligence-tools.json" test -f _reference/code-intelligence-tools.json
+check "code-intelligence catalog" node scripts/code-intelligence-tools.js validate
+check "code-intelligence selection tests" node scripts/test-code-intelligence-tools.js
+check "_reference/codex-mcp-config.toml" test -f _reference/codex-mcp-config.toml
+check "Codex MCP config merge tests" node scripts/test-codex-mcp-config.js
+check "Codex MCP config current" node scripts/configure-codex-mcp.js --check
+check "sync merges Codex MCP block" grep -q 'mergeCodexConfig' scripts/lib/sync-template-core.js
+check "sync excludes source-only payload" grep -q 'isSourceOnlyPath' scripts/lib/sync-template-core.js
+check "integrations/spec-kit/README.md" test -f integrations/spec-kit/README.md
+source_only_check "setup.sh" test -f setup.sh
+source_only_check "setup.bat" test -f setup.bat
+source_only_check "setup bootstrap runtime guards and prompt order" validate_template_setup_bootstrap_order
+check ".codex/config.toml" test -f .codex/config.toml
+check ".codex/hooks.json" test -f .codex/hooks.json
+check ".codex/hooks.json valid JSON" node -e "const h=JSON.parse(require('fs').readFileSync('.codex/hooks.json','utf8')); if(!h.hooks?.PreToolUse?.[0]?.hooks?.[0]?.command) process.exit(1)"
 check ".gitignore" test -f .gitignore
+check ".gitattributes" test -f .gitattributes
 check ".env.example" test -f .env.example
+source_only_check ".github/workflows/release-template.yml" test -f .github/workflows/release-template.yml
 check "tasks/lessons.md" test -f tasks/lessons.md
 check "tasks/current.md" test -f tasks/current.md
+check "tasks/goal.md" test -f tasks/goal.md
+source_only_check "starter tasks/current.md" test -f templates/project-starter/tasks/current.md
+source_only_check "starter tasks/goal.md" test -f templates/project-starter/tasks/goal.md
+source_only_check "starter DESIGN.md" test -f templates/project-starter/DESIGN.md
+source_only_check "starter design-policy.ignore" test -f templates/project-starter/design-policy.ignore
+source_only_check "starter .research-cache.md" test -f templates/project-starter/tasks/.research-cache.md
+source_only_check "starter lessons.md" test -f templates/project-starter/tasks/lessons.md
+source_only_check "starter tasks/audit/.gitkeep" test -f templates/project-starter/tasks/audit/.gitkeep
+source_only_check "starter brain/01-daily/.gitkeep" test -f templates/project-starter/brain/01-daily/.gitkeep
 check "scripts/check-drift.sh" test -f scripts/check-drift.sh
+check "scripts/downstream-census.sh" test -f scripts/downstream-census.sh
+check "scripts/generate-project-spec.sh" test -f scripts/generate-project-spec.sh
+check "scripts/task-brief.sh" test -f scripts/task-brief.sh
+check "scripts/validate-codex-agents.js" test -f scripts/validate-codex-agents.js
+check "scripts/validate-codex-skills.js" test -f scripts/validate-codex-skills.js
+check "scripts/validate-agent-sot.js" test -f scripts/validate-agent-sot.js
+check "scripts/validate-production-standard.js" test -f scripts/validate-production-standard.js
+check "scripts/validate-design-policy.js" test -f scripts/validate-design-policy.js
+check "scripts/test-design-policy.js" test -f scripts/test-design-policy.js
+check "scripts/validate-spec-kit.js" test -f scripts/validate-spec-kit.js
+check "scripts/validate-text-policy.js" test -f scripts/validate-text-policy.js
+check "scripts/progressive-status.js" test -f scripts/progressive-status.js
+check "scripts/validate-progressive-plan.js" test -f scripts/validate-progressive-plan.js
+check "scripts/test-progressive-plan.js" test -f scripts/test-progressive-plan.js
+check "scripts/validate-change-strategy.js" test -f scripts/validate-change-strategy.js
+check "scripts/lib/change-strategy-policy.js" test -f scripts/lib/change-strategy-policy.js
+check "scripts/test-change-strategy.js" test -f scripts/test-change-strategy.js
+check "scripts/validate-subagent-trace.js" test -f scripts/validate-subagent-trace.js
+check "scripts/test-subagent-trace.js" test -f scripts/test-subagent-trace.js
+check "scripts/sync-spec-kit.sh" test -f scripts/sync-spec-kit.sh
+check "scripts/init-spec-kit.sh" test -f scripts/init-spec-kit.sh
+check "scripts/codex-agent-policy.js" test -f scripts/codex-agent-policy.js
+check "scripts/codex-routing-cases-a.js" test -f scripts/codex-routing-cases-a.js
+check "scripts/codex-routing-cases-b.js" test -f scripts/codex-routing-cases-b.js
+check "scripts/codex-route-config.js" test -f scripts/codex-route-config.js
+check "scripts/codex-route-task.js" test -f scripts/codex-route-task.js
+check "scripts/lib/codex-route-summary.js" test -f scripts/lib/codex-route-summary.js
+check "scripts/lib/codex-route-cli.js" test -f scripts/lib/codex-route-cli.js
+check "scripts/lib/codex-discovery-reroute.js" test -f scripts/lib/codex-discovery-reroute.js
+check "change strategy discovery fixture" test -f tests/fixtures/change-strategy/discovery-architecture-mismatch.json
+check "scripts/test-codex-routing.js" test -f scripts/test-codex-routing.js
+check "scripts/test-codex-agent-policy.js" test -f scripts/test-codex-agent-policy.js
+check "scripts/test-codex-subagents-live.sh" test -f scripts/test-codex-subagents-live.sh
+
+echo ""
+echo "Codex skills:"
+check ">=42 Codex skill dirs" bash -c '[ $(ls -d .agents/skills/*/ 2>/dev/null | wc -l) -ge 42 ]'
+check "progressive JPEG planner skill" test -f .agents/skills/codex-progressive-jpeg-planner/SKILL.md
+check "change strategy skill" test -f .agents/skills/codex-change-strategy/SKILL.md
+check "four-mode writing workflow skill" test -f .agents/skills/codex-writing-workflow/SKILL.md
+check "technical writing skill" test -f .agents/skills/codex-technical-writing/SKILL.md
+check "technical writing review skill" test -f .agents/skills/codex-technical-writing-review/SKILL.md
+check "writing intent classifier" node scripts/test-writing-intent.js
+check "shared writing library import/grounding/binding" node scripts/test-writing-library.js
+check "pinned private writing library provisioning" node scripts/test-writing-library-provision.js
+check "task-directed writing section map" node scripts/test-writing-reading-plan.js
+check "local literal contents and source examples" node scripts/test-writing-library-index.js
+check "exact-draft independent editorial contract" node scripts/test-writing-editorial-review.js
+check "native current-request workflow evidence" node scripts/test-codex-hooks.js
+check "Orca setup readiness and preserved custom setup" node scripts/test-orca-setup.js
+check "real-process request-scoped Stop cleanup" node scripts/test-managed-stop-scope-live.js
+check "measured Luna dispatch and integration coverage" node scripts/test-codex-delegation-report.js
+check "storage operation concurrency and preservation" node scripts/test-storage-operation-registry.js
+check "storage operation native hook ownership" node scripts/test-storage-operation-hooks.js
+check "shared physical-volume admission" node scripts/test-storage-volume-registry.js
+check "real cross-project volume admission and crash recovery" node scripts/test-storage-volume-live.js
+check "request-bound outcome evidence" node scripts/test-outcome-acceptance.js
+check "bounded task-wave handoff contract" node scripts/test-outcome-acceptance.js --handoff-only
+check "task-wave closeout intent" node scripts/test-outcome-acceptance.js --handoff-intent-only
+check "task-wave handoff reference boundaries" node scripts/test-outcome-acceptance.js --handoff-boundary-only
+check "owned carryover without a delivery denominator" node scripts/test-outcome-acceptance.js --handoff-no-denominator-only
+check "Stop handoff diagnostics and mailbox proportionality" node scripts/test-codex-hooks.js --handoff-only
+check "bounded project lesson navigation" node scripts/test-lesson-index.js
+check "managed test scratch ownership and cleanup" node scripts/test-managed-temp.js
+check "owned process family supervisor" node scripts/test-managed-process.js
+check "owned reusable cache budget and leases" node scripts/test-managed-cache.js
+check "owned resource command integration" node scripts/test-managed-run.js
+check "required Node runtime and SQLite preflight" node scripts/test-codex-runtime.js
+check "native service-chat request recovery" node scripts/test-codex-request-recovery.js
+check "native citation metadata carrier" node scripts/test-codex-final-carrier.js
+check "lesson lifecycle regression" node scripts/test-lessons.js
+check "exact privacy transfer allowlist" node scripts/test-transfer-allowlist.js
+check "writing reference policy" node scripts/test-writing-references.js
+check "writing reference registry" node scripts/validate-writing-references.js
+check "core Codex design skill" test -f .agents/skills/codex-design-workflow/SKILL.md
+check "core Codex design command modes reference" test -f .agents/skills/codex-design-workflow/references/design-command-modes.md
+check "core Codex design review skill" test -f .agents/skills/codex-domain-design-review/SKILL.md
+check "core Codex Figma skill" test -f .agents/skills/codex-figma-workflow/SKILL.md
+check "core Codex pipeline skill" test -f .agents/skills/codex-pipeline-workflow/SKILL.md
+check "core Codex Mermaid board skill" test -f .agents/skills/codex-mermaid-board-workflow/SKILL.md
+check "core Codex model guidance skill" test -f .agents/skills/codex-openai-model-guidance/SKILL.md
+check "validate-codex-skills" node scripts/validate-codex-skills.js
+check "skill local-link guard fixtures" node scripts/test-skill-links.js
+check "test-codex-agent-policy" node scripts/test-codex-agent-policy.js
+check "test-progressive-plan" node scripts/test-progressive-plan.js
+check "test-change-strategy" node scripts/test-change-strategy.js
+check "test-subagent-trace" node scripts/test-subagent-trace.js
+check "live-subagent launcher offline regressions" bash scripts/test-codex-subagents-live-launcher.sh
+check "test-codex-routing" node scripts/test-codex-routing.js
+check "validate-production-standard" node scripts/validate-production-standard.js
+check "focused verification regression" node scripts/test-verify-check.js
+check "test-design-policy" node scripts/test-design-policy.js
+check "screen anatomy contract is enforced in design rules and skills" validate_screen_anatomy_contract
+check "validate-agent-sot" node scripts/validate-agent-sot.js
+check "validate-spec-kit" node scripts/validate-spec-kit.js
+check "validate-text-policy" node scripts/validate-text-policy.js
+check "validate-text-policy rejects mojibake" validate_text_policy_rejects_mojibake
+check "progressive-status validates headers" node scripts/progressive-status.js --check
+check "progressive-status rejects stale headers" validate_progressive_status_rejects_stale_header
+
+echo ""
+echo "Codex subagents:"
+check ">=12 Codex agent files" bash -c '[ $(ls .codex/agents/*.toml 2>/dev/null | wc -l) -ge 12 ]'
+check "Codex Luna scout agent" test -f .codex/agents/scout.toml
+check "Codex Luna log analyst agent" test -f .codex/agents/log-analyst.toml
+check "Codex Luna summarizer agent" test -f .codex/agents/summarizer.toml
+check "Codex pr_explorer agent" test -f .codex/agents/pr-explorer.toml
+check "Codex reviewer agent" test -f .codex/agents/reviewer.toml
+check "Codex implementer agent" test -f .codex/agents/implementer.toml
+check "Codex product reviewer agent" test -f .codex/agents/product-reviewer.toml
+check "Codex systems reviewer agent" test -f .codex/agents/systems-reviewer.toml
+check "validate-codex-agents" node scripts/validate-codex-agents.js
 
 echo ""
 echo "Claude config:"
@@ -40,17 +629,983 @@ check ">=7 hook files" bash -c '[ $(ls .claude/hooks/*.sh 2>/dev/null | wc -l) -
 check "scripts/test-hooks.sh" test -f scripts/test-hooks.sh
 
 echo ""
+echo "Agent SOT:"
+check "_reference/agent-sot/README.md" test -f _reference/agent-sot/README.md
+check "_reference/agent-sot/sources.json" test -f _reference/agent-sot/sources.json
+check "_reference/agent-sot/top-works.md" test -f _reference/agent-sot/top-works.md
+check "local ai-agent spec original" test -f _reference/agent-sot/originals/ai-agent-spec-v3-final.md
+check "Agent SOT has >=20 top works" bash -c '[ $(grep -c "^## TW-" _reference/agent-sot/top-works.md) -ge 20 ]'
+check "AGENTS links Agent SOT" bash -c "grep -q 'docs/AGENT_CONTEXT_SOT.md' AGENTS.md"
+check "AGENTS names canonical template source without downstream self-ownership" bash -c "grep -q 'agent-project-template.*canonical template source' AGENTS.md && ! grep -q 'Template releases belong to this repository' AGENTS.md"
+check "CLAUDE links Agent SOT" bash -c "grep -q 'docs/AGENT_CONTEXT_SOT.md' CLAUDE.md"
+check "ownership SOT distinguishes new and declared project AGENTS" bash -c "grep -q 'Newly bootstrapped .*AGENTS.md.*template-owned' docs/PRODUCT_BOUNDARY.md && grep -q 'that declared' docs/PRODUCT_BOUNDARY.md && grep -q 'ownership is authoritative' docs/PRODUCT_BOUNDARY.md && grep -q 'explicitly marks .*AGENTS.md.*project' README.md && grep -q 'project-owned' scripts/lib/sync-template-core.js"
+
+echo ""
+echo "Spec Kit snapshot:"
+check "_reference/spec-kit/README.md" test -f _reference/spec-kit/README.md
+check "_reference/spec-kit/manifest.json" test -f _reference/spec-kit/manifest.json
+check "Spec Kit command templates" test -f _reference/spec-kit/upstream/templates/commands/specify.md
+check "Spec Kit plan template" test -f _reference/spec-kit/upstream/templates/plan-template.md
+check "Spec Kit bash helper" test -f _reference/spec-kit/upstream/scripts/bash/check-prerequisites.sh
+check "Spec Kit PowerShell helper" test -f _reference/spec-kit/upstream/scripts/powershell/check-prerequisites.ps1
+
+echo ""
 echo "Brain vault:"
 check "brain/00-inbox" test -d brain/00-inbox
 check "brain/01-daily" test -d brain/01-daily
 check "brain/02-projects" test -d brain/02-projects
 check "brain/03-knowledge" test -d brain/03-knowledge
 check "brain/04-decisions" test -d brain/04-decisions
+source_only_check "starter research/.gitkeep" test -f templates/project-starter/brain/03-knowledge/research/.gitkeep
+source_only_check "starter audits/.gitkeep" test -f templates/project-starter/brain/03-knowledge/audits/.gitkeep
 check ">=3 brain templates" bash -c '[ $(ls brain/templates/*.md 2>/dev/null | wc -l) -ge 3 ]'
 
 echo ""
 echo "File sizes:"
 check "CLAUDE.md <=300 lines" bash -c '[ $(wc -l < CLAUDE.md) -le 300 ]'
+check "AGENTS.md <=32KB" bash -c '[ $(wc -c < AGENTS.md) -le 32768 ]'
+check "README and CLAUDE release-facing counts match filesystem" validate_release_facing_doc_counts
+
+echo ""
+echo "Entry points:"
+check "README has no start.sh references" bash -c "! grep -q 'start\\.sh' README.md"
+check "README has no start.bat references" bash -c "! grep -q 'start\\.bat' README.md"
+check "README has no localhost:3333 references" bash -c "! grep -q 'localhost:3333' README.md"
+check "README has no Command Center section" bash -c "! grep -q '## Command Center' README.md"
+check "README/SETUP_GUIDE release entrypoint is agent-safe" validate_agent_safe_github_entrypoint
+check "SETUP_GUIDE has no legacy --from sync syntax" bash -c "! grep -q 'sync-template\\.sh --from ' SETUP_GUIDE.md"
+check "SETUP_GUIDE has no Python 3 bootstrap prerequisite" bash -c "! grep -q 'Python 3' SETUP_GUIDE.md"
+check "GitHub workflows use Node24-compatible actions" github_workflows_use_node24_actions
+check "Codex CI trust uses canonical user config" bash -c 'grep -q realpathSync .github/workflows/validate-template.yml && grep -q realpathSync .github/workflows/release-template.yml && ! grep -q project_key .github/workflows/validate-template.yml .github/workflows/release-template.yml'
+check "Release workflow passes dispatch input through env" grep -q 'INPUT_TAG:.*inputs.tag' .github/workflows/release-template.yml
+check "Release workflow validates semantic tag" grep -q 'Invalid release tag' .github/workflows/release-template.yml
+check "Release workflow checks out resolved ref" grep -q "ref:.*workflow_dispatch.*inputs.tag" .github/workflows/release-template.yml
+check "Release workflow binds HEAD to tag commit" grep -q 'head_commit.*tag_commit' .github/workflows/release-template.yml
+check "Release workflow archives validated commit" grep -q 'git archive.*RELEASE_COMMIT' .github/workflows/release-template.yml
+check "Release workflow separates validation, packaging, and publication authority" validate_release_workflow_boundary
+check "Release workflow does not clobber assets" bash -c '! grep -q -- "--clobber" .github/workflows/release-template.yml'
+check "bootstrap-mcp dry-run redacts existing MCP secrets" validate_mcp_dry_run_redacts_existing_secrets
+check "No tracked local Claude settings" bash -c '! git ls-files --error-unmatch .claude/settings.local.json >/dev/null 2>&1'
+check "Codex config has no user-owned defaults" bash -c "! grep -Eq '^(model|model_reasoning_effort|approval_policy|sandbox_mode)\\s*=' .codex/config.toml"
+check "downstream-census --json" bash -c 'bash scripts/downstream-census.sh --no-sync --json "$PWD" 2>/dev/null | node -e "const text=require(\"fs\").readFileSync(0,\"utf8\").trim(); JSON.parse(text || \"[]\")"'
+check "generate-project-spec" bash -c 'bash scripts/generate-project-spec.sh | grep -q "^## Identity"'
+check "scan-project --report" bash -c 'bash scripts/scan-project.sh --report >/dev/null'
+check "task-brief --brief" bash scripts/task-brief.sh --brief
+check "task-brief --json" bash -c 'bash scripts/task-brief.sh --json | node -e "JSON.parse(require(\"fs\").readFileSync(0, \"utf8\"))"'
+check "codex-route-task template route" bash -c 'node scripts/codex-route-task.js "обнови агентский шаблон и release tag" | node -e "const r=JSON.parse(require(\"fs\").readFileSync(0,\"utf8\")); if(!r.skills.includes(\"codex-template-sync\") || !r.skills.includes(\"codex-health-check\")) process.exit(1)"'
+check "route-task fallback includes strategic review" bash -c 'bash scripts/route-task.sh "template release" | grep -q "codex-strategic-review"'
+check "route-task fallback requires high-risk fan-out" bash -c 'bash scripts/route-task.sh "template release" | grep -q "CODEX_FANOUT: required"'
+check "route-task fallback honors fan-out opt-out" bash -c 'bash scripts/route-task.sh "template release without subagents" | grep -q "CODEX_FANOUT: skip"'
+check "route-task fallback honors alternate opt-out" bash -c 'bash scripts/route-task.sh "template release, no fan-out" | grep -q "CODEX_FANOUT: skip"'
+check "route-task fallback caps children at three" bash -c 'test "$(bash scripts/route-task.sh "template release" | sed -n "s/^CODEX_SUBAGENTS: //p" | wc -w | tr -d " ")" -le 3'
+source_only_check "Unix setup manages JavaScript helpers" grep -q 'scripts/lib/.*\.js' setup.sh
+source_only_check "Windows setup derives its payload from tracked scripts" grep -q "'scripts/'" setup.bat
+source_only_check "Windows setup derives its payload from tracked tests" grep -q "'tests/'" setup.bat
+source_only_check "Unix setup derives its payload from tracked tests" grep -Fq 'tests/*' setup.sh
+
+echo ""
+echo "Bootstrap trust smoke:"
+if is_template_source_repo; then
+  SMOKE_SENTINEL="docs/.setup-leak-sentinel-$RANDOM-$$.txt"
+  SMOKE_PARENT="$(_temp_dir template-setup-smoke)"
+  SMOKE_PROJECT="$SMOKE_PARENT/project"
+  SMOKE_INDEX=""
+  cleanup_smoke() {
+    rm -f "$SMOKE_SENTINEL"
+    [ -n "$SMOKE_INDEX" ] && rm -f "$SMOKE_INDEX"
+    rm -f "$SMOKE_PROJECT.setup.log"
+    rm -rf "$SMOKE_PROJECT" 2>/dev/null || powershell.exe -NoProfile -Command "if (Test-Path '$SMOKE_PROJECT') { Remove-Item -Recurse -Force '$SMOKE_PROJECT' }" >/dev/null 2>&1 || true
+  }
+  run_setup_payload_smoke() {
+    local project="$1"
+    local sentinel="$2"
+
+    SMOKE_INDEX="$(_temp_file setup-smoke-index)"
+    GIT_INDEX_FILE="$SMOKE_INDEX" git read-tree HEAD
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A orca.yaml scripts/orca-setup.js scripts/test-orca-setup.js docs/ORCA_SETUP.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A docs/LUNA_EXECUTION_POLICY.md scripts/lib/codex-request-context.js scripts/codex-delegation-report.js scripts/test-codex-delegation-report.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A .agents .codex/agents .github/workflows/validate-template.yml _reference/agent-sot _reference/spec-kit integrations/spec-kit docs/AGENT_CONTEXT_SOT.md docs/AGENT_PIPELINES.md docs/CODEX_FANOUT_PATTERNS.md docs/CODEX_SKILLS_AUDIT.md docs/CODEX_SUBAGENTS_AUDIT.md docs/OPENAI_MODEL_GUIDANCE.md docs/TEMPLATE_RELEASES.md docs/WRITING_WORKFLOW.md docs/WRITING_REFERENCE_PROVENANCE.md .claude/agents/technical-writer.md .claude/skills/writing-workflow .claude/skills/technical-writing .claude/skills/technical-writing-review .claude/library/technical/writing.md .claude/library/technical/writing-mode-profiles.md .claude/library/technical/technical-writing-profile.md .claude/library/technical/writing-editorial-board.md .claude/library/technical/writing-reference-registry.json .claude/library/product/production-product-standard.md .claude/library/process/product-goal-loop.md .claude/library/process/client-executor-contract.md .claude/library/domain/domain-design-system.md .claude/library/domain/domain-design-pipeline.md templates/project-starter/DESIGN.md templates/project-starter/design-policy.ignore templates/project-starter/tasks/goal.md brain/03-knowledge/writing/reference-registry.json tests/fixtures/design-policy tests/fixtures/writing-tools scripts/lib/codex-route-intents.js scripts/lib/writing-intent.js scripts/lib/writing-route-policy.js scripts/lib/writing-reference-policy.js scripts/lib/writing-external-tool-policy.js scripts/lib/writing-path-policy.js scripts/lib/progressive-plan.js scripts/lib/subagent-trace.js scripts/codex-agent-policy.js scripts/codex-routing-cases-a.js scripts/codex-routing-cases-b.js scripts/codex-route-config.js scripts/codex-route-task.js scripts/test-writing-intent.js scripts/test-writing-references.js scripts/validate-writing-references.js scripts/test-codex-agent-policy.js scripts/test-codex-routing.js scripts/test-codex-subagents-live.sh scripts/test-progressive-plan.js scripts/test-subagent-trace.js scripts/init-spec-kit.sh scripts/sync-spec-kit.sh scripts/validate-agent-sot.js scripts/validate-spec-kit.js scripts/validate-text-policy.js scripts/progressive-status.js scripts/validate-progressive-plan.js scripts/validate-subagent-trace.js scripts/validate-codex-agents.js scripts/validate-codex-skills.js scripts/validate-production-standard.js scripts/validate-design-policy.js scripts/test-design-policy.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A .claude/library/technical/russian-writing-profile.md .claude/library/technical/russian-business-correspondence.md .claude/library/technical/russian-explanation-and-persuasion.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A .claude/library/technical/writing-library-catalog.json .claude/library/technical/writing-source-grounding.md scripts/writing-library.js scripts/test-writing-library.js scripts/lib/writing-library-store.js scripts/lib/writing-library-policy.js scripts/lib/writing-library-retrieve.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A _reference/writing-library-source.json docs/WRITING_LIBRARY_SETUP.md scripts/lib/writing-library-provision.js scripts/lib/setup-manifest.js scripts/test-writing-library-provision.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A .codex/hooks.json scripts/codex-hooks.js scripts/codex-turn.js scripts/lib/codex-turn-policy.js scripts/test-codex-hooks.js scripts/test-codex-workflows-live.js scripts/check-transfer-allowlist.js scripts/test-transfer-allowlist.js scripts/validate-lessons.js scripts/test-lessons.js .claude/library/process/privacy-transfer.md .claude/library/technical/preserve-product-value.md docs/NATIVE_WORKFLOW_GATES.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/task-wave-handoff.js .claude/library/process/task-wave-handoff.schema.json .claude/library/process/product-delivery-recipes.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A .claude/library/technical/writing-reading-map.json scripts/lib/writing-reading-plan.js scripts/lib/writing-editorial-review.js scripts/test-writing-reading-plan.js scripts/test-writing-editorial-review.js .codex/agents/writing-editor.toml
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/codex-request-recovery.js scripts/test-codex-request-recovery.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/test-codex-final-carrier.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/writing-library-index.js scripts/test-writing-library-index.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/codex-runtime.js scripts/test-codex-runtime.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/managed-temp.js scripts/lib/managed-observation-worker.js scripts/managed-temp.js scripts/test-managed-temp.js .claude/hooks/session-start.sh .claude/hooks/session-stop.sh .claude/library/technical/testing.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/managed-process.js scripts/lib/managed-process.ps1 scripts/lib/managed-cache.js scripts/lib/managed-run-profiles.js scripts/lib/managed-run-report.js scripts/lib/managed-run-ownership.js scripts/test-managed-stop-scope-live.js scripts/test-managed-process.js scripts/test-managed-cache.js scripts/test-managed-run.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/storage-operation-registry.js scripts/lib/storage-operation-hooks.js scripts/storage-operation.js scripts/test-storage-operation-registry.js scripts/test-storage-operation-hooks.js docs/STORAGE_OPERATIONS.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/lib/storage-volume-registry.js scripts/lib/storage-volume-identity.ps1 scripts/test-storage-volume-registry.js scripts/test-storage-volume-live.js scripts/lib/outcome-acceptance.js scripts/test-outcome-acceptance.js scripts/lesson-index.js scripts/test-lesson-index.js .claude/library/process/context-first.md .claude/library/process/self-verification.md docs/RELEASE_V6_2_0.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A docs/MIGRATION_V5.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/test-verify-check.js scripts/verify-check.sh scripts/check-drift.sh scripts/test-template.sh .claude/hooks/post-edit.sh .claude/agents/writer.md .claude/docs/domain-full/domain-design.md .claude/library/technical/atomic-reuse.md .claude/skills/audit .claude/skills/security-audit .claude/skills/domain-design-review tests/rules/skill-proportionality.test.md tests/rules/domain-software.test.md
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A AGENTS.md CLAUDE.md .codex/config.toml .mcp.json .gitignore README.md SETUP_GUIDE.md setup.sh setup.bat docs/SHARED_CONVENTIONS.md docs/AGENT_PIPELINES.md docs/CODE_INTELLIGENCE_TOOLCHAIN.md docs/SAFE_DEFAULTS.md _reference/tool-registry.md _reference/code-intelligence-tools.json _reference/codex-mcp-config.toml .claude/library/process/change-strategy-gate.md .claude/library/process/plan-first.md .claude/library/process/product-goal-loop.md .claude/library/process/client-executor-contract.md .claude/library/product/production-product-standard.md .claude/library/technical/architecture.md .claude/library/meta/critical-thinking.md .agents/skills/codex-change-strategy .agents/skills/codex-debug/SKILL.md .agents/skills/codex-decompose/SKILL.md .agents/skills/codex-strategic-review/SKILL.md scripts/lib/change-strategy-policy.js scripts/lib/code-intelligence-policy.js scripts/lib/codex-route-intents.js scripts/lib/codex-route-summary.js scripts/lib/codex-route-cli.js scripts/lib/codex-discovery-reroute.js scripts/lib/sync-manifest-reconcile.js scripts/lib/sync-safe-copy.js scripts/code-intelligence-tools.js scripts/test-code-intelligence-tools.js scripts/configure-codex-mcp.js scripts/test-codex-mcp-config.js scripts/bootstrap-mcp.sh scripts/import-graph.sh scripts/blast-radius.sh scripts/sync-template.sh scripts/validate-change-strategy.js scripts/test-change-strategy.js scripts/codex-route-task.js scripts/codex-agent-policy.js scripts/codex-routing-cases-b.js scripts/test-codex-routing.js scripts/test-codex-agent-policy.js scripts/validate-production-standard.js scripts/validate-template.sh tests/fixtures/change-strategy tasks/change-strategy.json
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A scripts/sync-template.js scripts/sync-template.cmd scripts/sync-all.js scripts/lib/sync-template-core.js scripts/lib/sync-template-apply.js scripts/lib/template-payload-policy.js scripts/lib/safe-config-write.js scripts/test-sync-template.js scripts/test-safe-config-write.js scripts/lib/skill-links.js scripts/test-skill-links.js
+    GIT_INDEX_FILE="$SMOKE_INDEX" git add -A .claude/skills .claude/pipelines scripts/check-drift.sh docs/MIGRATION_V5.md docs/MIGRATION_MATRIX.md docs/RELEASE_CHECKLIST.md docs/RELEASE_V5_0_1.md
+    if ! (cd "$(dirname "$project")" && GIT_INDEX_FILE="$SMOKE_INDEX" bash "$TEMPLATE_DIR/setup.sh" --orchestrator "$(basename "$project")") >"$project.setup.log" 2>&1; then
+      cat "$project.setup.log"
+      return 1
+    fi
+
+    [ ! -f "$project/$sentinel" ] &&
+      [ ! -f "$project/tasks/change-strategy.json" ] &&
+      [ -f "$project/scripts/lib/sync-manifest-reconcile.js" ] &&
+      [ -f "$project/scripts/lib/sync-safe-copy.js" ] &&
+      [ -f "$project/scripts/lib/managed-temp.js" ] &&
+      [ -f "$project/scripts/lib/managed-process.ps1" ] &&
+      [ -f "$project/scripts/lib/storage-volume-identity.ps1" ] &&
+      [ -f "$project/scripts/lib/outcome-acceptance.js" ] &&
+      [ -f "$project/scripts/lesson-index.js" ] &&
+      [ -f "$project/scripts/lib/managed-cache.js" ] &&
+      [ -f "$project/scripts/lib/writing-library-provision.js" ] &&
+      [ -f "$project/_reference/writing-library-source.json" ] &&
+      [ -f "$project/docs/WRITING_LIBRARY_SETUP.md" ] &&
+      [ -f "$project/scripts/managed-temp.js" ] &&
+      [ -f "$project/orca.yaml" ] &&
+      [ -f "$project/scripts/orca-setup.js" ] &&
+      [ -f "$project/scripts/test-orca-setup.js" ] &&
+      [ -f "$project/docs/ORCA_SETUP.md" ] &&
+      node -e 'const assert=require("assert"),fs=require("fs"),p=process.argv[1],m=JSON.parse(fs.readFileSync(p+"/.template-manifest.json","utf8"));for(const f of ["orca.yaml","scripts/orca-setup.js","scripts/test-orca-setup.js","docs/ORCA_SETUP.md"])assert(m.files[f],f+" absent from generated manifest");assert.strictEqual(m.files["orca.yaml"].category,"hybrid");' "$project" &&
+      node -e 'const fs=require("fs");const expected=fs.readFileSync("CLAUDE.md","utf8")+"\n"+fs.readFileSync("templates/orchestrator/CLAUDE.md","utf8");if(fs.readFileSync(process.argv[1],"utf8")!==expected)process.exit(1)' "$project/CLAUDE.md" &&
+      [ -z "$(git -C "$project" status --porcelain)" ] &&
+      node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],m=JSON.parse(fs.readFileSync(p+"/.template-manifest.json","utf8")),h=crypto.createHash("sha256").update(fs.readFileSync(p+"/AGENTS.md")).digest("hex"),source=crypto.createHash("sha256").update(fs.readFileSync("AGENTS.md")).digest("hex");if(m.files?.["AGENTS.md"]?.category!=="template"||m.files["AGENTS.md"].hash!==h||h!==source)process.exit(1)' "$project" &&
+      node -e 'const assert=require("assert"),fs=require("fs"),path=require("path"),crypto=require("crypto"),p=process.argv[1],m=JSON.parse(fs.readFileSync(p+"/.template-manifest.json","utf8")),policy=require(p+"/scripts/lib/template-payload-policy.js"),walk=(dir,base="")=>fs.readdirSync(dir,{withFileTypes:true}).flatMap((entry)=>{const rel=base?base+"/"+entry.name:entry.name;if(entry.isDirectory())return rel===".git"?[]:walk(path.join(dir,entry.name),rel);if(rel===".template-manifest.json"||rel===".claude/settings.local.json")return[];return[rel]}),copied=walk(p).sort(),listed=Object.keys(m.files).sort();assert.deepStrictEqual(listed,copied,"manifest must equal the actual copied file set");for(const f of listed){assert.strictEqual(m.files[f].category,policy.getCategory(f),f+" category");assert.strictEqual(m.files[f].hash,crypto.createHash("sha256").update(fs.readFileSync(p+"/"+f)).digest("hex"),f+" copied-byte hash")}assert(!m.files[".claude/settings.local.json"]);' "$project" &&
+      node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],m=JSON.parse(fs.readFileSync(p+"/.template-manifest.json","utf8"));const h=crypto.createHash("sha256").update(fs.readFileSync(p+"/CLAUDE.md")).digest("hex");if(m.files?.["CLAUDE.md"]?.category!=="project"||m.files["CLAUDE.md"].hash!==h)process.exit(1)' "$project" &&
+      [ -f "$project/.agents/skills/codex-design-workflow/SKILL.md" ] &&
+      [ -f "$project/.codex/agents/pr-explorer.toml" ] &&
+      [ -f "$project/.codex/agents/product-reviewer.toml" ] &&
+      [ -f "$project/.codex/agents/systems-reviewer.toml" ] &&
+      [ -f "$project/docs/CODEX_FANOUT_PATTERNS.md" ] &&
+      [ -f "$project/docs/AGENT_CONTEXT_SOT.md" ] &&
+      [ -f "$project/.claude/library/product/production-product-standard.md" ] &&
+      [ -f "$project/.claude/library/process/product-goal-loop.md" ] &&
+      [ -f "$project/.claude/library/process/client-executor-contract.md" ] &&
+      [ -f "$project/.claude/library/process/change-strategy-gate.md" ] &&
+      [ -f "$project/.claude/library/domain/domain-design-system.md" ] &&
+      [ -f "$project/.claude/library/domain/domain-design-pipeline.md" ] &&
+      [ -f "$project/.agents/skills/codex-design-workflow/references/design-command-modes.md" ] &&
+      [ -f "$project/.agents/skills/codex-writing-workflow/SKILL.md" ] &&
+      [ -f "$project/.agents/skills/codex-change-strategy/SKILL.md" ] &&
+      [ -f "$project/.agents/skills/codex-technical-writing/SKILL.md" ] &&
+      [ -f "$project/.agents/skills/codex-technical-writing-review/SKILL.md" ] &&
+      [ -f "$project/.claude/skills/writing-workflow/SKILL.md" ] &&
+      [ -f "$project/.claude/skills/technical-writing/SKILL.md" ] &&
+      [ -f "$project/.claude/skills/technical-writing-review/SKILL.md" ] &&
+      [ -f "$project/.claude/agents/technical-writer.md" ] &&
+      [ -f "$project/.claude/library/technical/writing-mode-profiles.md" ] &&
+      [ -f "$project/.claude/library/technical/russian-writing-profile.md" ] &&
+      [ -f "$project/.claude/library/technical/russian-business-correspondence.md" ] &&
+      [ -f "$project/.claude/library/technical/russian-explanation-and-persuasion.md" ] &&
+      [ -f "$project/.claude/library/technical/technical-writing-profile.md" ] &&
+      [ -f "$project/.claude/library/technical/writing-editorial-board.md" ] &&
+      [ -f "$project/.claude/library/technical/writing-reference-registry.json" ] &&
+      [ -f "$project/docs/WRITING_WORKFLOW.md" ] &&
+      [ -f "$project/docs/WRITING_REFERENCE_PROVENANCE.md" ] &&
+      [ -f "$project/docs/CODE_INTELLIGENCE_TOOLCHAIN.md" ] &&
+      [ -f "$project/_reference/code-intelligence-tools.json" ] &&
+      [ -f "$project/_reference/codex-mcp-config.toml" ] &&
+      [ -f "$project/scripts/code-intelligence-tools.js" ] &&
+      [ -f "$project/scripts/lib/code-intelligence-policy.js" ] &&
+      [ -f "$project/scripts/test-code-intelligence-tools.js" ] &&
+      [ -f "$project/scripts/configure-codex-mcp.js" ] &&
+      [ -f "$project/scripts/test-codex-mcp-config.js" ] &&
+      [ -f "$project/scripts/sync-template.js" ] &&
+      [ -f "$project/scripts/sync-template.cmd" ] &&
+      [ -f "$project/scripts/lib/sync-template-core.js" ] &&
+      [ -f "$project/scripts/lib/sync-template-apply.js" ] &&
+      [ -f "$project/scripts/lib/safe-config-write.js" ] &&
+      [ -f "$project/scripts/test-sync-template.js" ] &&
+      [ -f "$project/scripts/test-safe-config-write.js" ] &&
+      [ ! -f "$project/tasks/toolchain-discovery.json" ] &&
+      [ ! -f "$project/tasks/toolchain-change-strategy.json" ] &&
+      (cd "$project" && node scripts/code-intelligence-tools.js validate >/dev/null) &&
+      (cd "$project" && node scripts/test-code-intelligence-tools.js >/dev/null) &&
+      (cd "$project" && node scripts/test-codex-mcp-config.js >/dev/null) &&
+      (cd "$project" && node scripts/test-safe-config-write.js >/dev/null) &&
+      (cd "$project" && node scripts/configure-codex-mcp.js --check >/dev/null) &&
+      node -e "const m=JSON.parse(require('fs').readFileSync(process.argv[1]+'/.template-manifest.json','utf8')); if(m.files?.['.codex/config.toml']?.category!=='hybrid') process.exit(1)" "$project" &&
+      node -e "const m=JSON.parse(require('fs').readFileSync(process.argv[1]+'/.mcp.json','utf8')); if(!m.mcpServers?.['codebase-memory-mcp']) process.exit(1)" "$project" &&
+      node -e "const m=JSON.parse(require('fs').readFileSync(process.argv[1]+'/.template-manifest.json','utf8')); const paths=['docs/CODE_INTELLIGENCE_TOOLCHAIN.md','_reference/code-intelligence-tools.json','_reference/codex-mcp-config.toml','scripts/code-intelligence-tools.js','scripts/lib/code-intelligence-policy.js','scripts/test-code-intelligence-tools.js','scripts/configure-codex-mcp.js','scripts/test-codex-mcp-config.js']; if(paths.some((p)=>m.files?.[p]?.category!=='template')) process.exit(1)" "$project" &&
+      [ -f "$project/tests/fixtures/writing-tools/external-tool-adapter.fixture.js" ] &&
+      [ -f "$project/brain/03-knowledge/writing/reference-registry.json" ] &&
+      [ -f "$project/DESIGN.md" ] &&
+      [ -f "$project/design-policy.ignore" ] &&
+      [ -f "$project/tests/fixtures/design-policy/pass/basic.css" ] &&
+      [ -f "$project/tests/fixtures/design-policy/fail/gradient-text.css" ] &&
+      (cd "$project" && node scripts/test-design-policy.js >/dev/null) &&
+      (cd "$project" && node scripts/validate-production-standard.js >/dev/null) &&
+      [ -f "$project/tasks/goal.md" ] &&
+      node -e "const m=JSON.parse(require('fs').readFileSync(process.argv[1]+'/.template-manifest.json','utf8')); if(m.files?.['DESIGN.md']?.category!=='project') process.exit(1)" "$project" &&
+      node -e "const m=JSON.parse(require('fs').readFileSync(process.argv[1]+'/.template-manifest.json','utf8')); if(m.files?.['design-policy.ignore']?.category!=='project') process.exit(1)" "$project" &&
+      [ -f "$project/_reference/agent-sot/sources.json" ] &&
+      [ -f "$project/_reference/spec-kit/manifest.json" ] &&
+      [ -f "$project/integrations/spec-kit/README.md" ] &&
+      [ -f "$project/docs/TEMPLATE_RELEASES.md" ] &&
+      [ -f "$project/docs/MIGRATION_V5.md" ] &&
+      [ -f "$project/scripts/lib/codex-route-intents.js" ] &&
+      [ -f "$project/scripts/lib/writing-intent.js" ] &&
+      [ -f "$project/scripts/lib/writing-route-policy.js" ] &&
+      [ -f "$project/scripts/lib/writing-reference-policy.js" ] &&
+      [ -f "$project/scripts/lib/writing-external-tool-policy.js" ] &&
+      (cd "$project" && node scripts/test-writing-intent.js >/dev/null) &&
+      (cd "$project" && node scripts/test-writing-library.js >/dev/null) &&
+      (cd "$project" && node scripts/test-writing-references.js >/dev/null) &&
+      (cd "$project" && node scripts/validate-writing-references.js >/dev/null) &&
+      node -e "const m=JSON.parse(require('fs').readFileSync(process.argv[1]+'/.template-manifest.json','utf8')); const paths=['.claude/library/technical/writing-reference-registry.json','docs/WRITING_WORKFLOW.md','docs/WRITING_REFERENCE_PROVENANCE.md','tests/fixtures/writing-tools/external-tool-adapter.fixture.js','scripts/lib/writing-external-tool-policy.js']; if(paths.some((p)=>m.files?.[p]?.category!=='template')) process.exit(1)" "$project" &&
+      node -e "const m=JSON.parse(require('fs').readFileSync(process.argv[1]+'/.template-manifest.json','utf8')); if(m.files?.['scripts/lib/codex-route-intents.js']?.category!=='template') process.exit(1)" "$project" &&
+      [ -f "$project/scripts/codex-agent-policy.js" ] &&
+      [ -f "$project/scripts/codex-routing-cases-a.js" ] &&
+      [ -f "$project/scripts/codex-routing-cases-b.js" ] &&
+      [ -f "$project/scripts/codex-route-config.js" ] &&
+      [ -f "$project/scripts/codex-route-task.js" ] &&
+      [ -f "$project/scripts/test-codex-routing.js" ] &&
+      [ -f "$project/scripts/test-codex-agent-policy.js" ] &&
+      [ -f "$project/scripts/init-spec-kit.sh" ] &&
+      [ -f "$project/scripts/sync-spec-kit.sh" ] &&
+      [ -f "$project/scripts/validate-agent-sot.js" ] &&
+      [ -f "$project/scripts/validate-spec-kit.js" ] &&
+      [ -f "$project/scripts/validate-text-policy.js" ] &&
+      [ -f "$project/scripts/lib/change-strategy-policy.js" ] &&
+      [ -f "$project/scripts/lib/codex-route-summary.js" ] &&
+      [ -f "$project/scripts/lib/codex-route-cli.js" ] &&
+      [ -f "$project/scripts/lib/codex-discovery-reroute.js" ] &&
+      [ -f "$project/scripts/validate-change-strategy.js" ] &&
+      [ -f "$project/scripts/test-change-strategy.js" ] &&
+      [ -f "$project/tests/fixtures/change-strategy/discovery-architecture-mismatch.json" ] &&
+      [ -f "$project/.github/workflows/validate-template.yml" ] &&
+      [ ! -f "$project/.github/workflows/release-template.yml" ] &&
+      [ -f "$project/scripts/test-codex-subagents-live.sh" ] &&
+      [ -f "$project/scripts/validate-codex-agents.js" ] &&
+      [ -f "$project/scripts/validate-codex-skills.js" ] &&
+      [ -f "$project/scripts/validate-production-standard.js" ] &&
+      [ -f "$project/scripts/progressive-status.js" ] &&
+      (cd "$project" && node scripts/validate-codex-agents.js >/dev/null) &&
+      (cd "$project" && node scripts/test-codex-agent-policy.js >/dev/null) &&
+      (cd "$project" && node scripts/test-codex-routing.js >/dev/null) &&
+      (cd "$project" && node scripts/test-change-strategy.js >/dev/null)
+  }
+  trap cleanup_smoke EXIT
+  printf 'sentinel\n' > "$SMOKE_SENTINEL"
+  check "setup.sh creates a clean orchestrator, excludes maintainer state, and ships Codex skills" run_setup_payload_smoke "$SMOKE_PROJECT" "$SMOKE_SENTINEL"
+  cleanup_smoke
+  trap - EXIT
+else
+  skip "setup.sh bootstrap smoke (template source repo only)"
+fi
+
+echo ""
+echo "Sync regression smoke:"
+if false; then
+  SYNC_TEMPLATE_FIXTURE="$TEMPLATE_DIR/template-sync-fixture-$RANDOM-$$"
+  SYNC_MIGRATION_FIXTURE="$TEMPLATE_DIR/template-migration-fixture-$RANDOM-$$"
+  SYNC_EMPTY_MANIFEST_PROJECT="$TEMPLATE_DIR/template-empty-manifest-smoke-$RANDOM-$$"
+  SYNC_EMPTY_MANIFEST_OUTPUT="$SYNC_EMPTY_MANIFEST_PROJECT.out"
+  SYNC_PROJECT_ONLY_MANIFEST_PROJECT="$TEMPLATE_DIR/template-project-only-manifest-smoke-$RANDOM-$$"
+  SYNC_PROJECT_ONLY_MANIFEST_OUTPUT="$SYNC_PROJECT_ONLY_MANIFEST_PROJECT.out"
+  SYNC_SOURCE_ONLY_PROJECT="$TEMPLATE_DIR/template-source-only-sync-smoke-$RANDOM-$$"
+  SYNC_SOURCE_ONLY_OUTPUT="$SYNC_SOURCE_ONLY_PROJECT.out"
+  SYNC_BOOTSTRAP_DRY_RUN_PROJECT="$TEMPLATE_DIR/template-bootstrap-dry-run-smoke-$RANDOM-$$"
+  SYNC_BOOTSTRAP_DRY_RUN_OUTPUT="$SYNC_BOOTSTRAP_DRY_RUN_PROJECT.out"
+  SYNC_BOOTSTRAP_OWNERSHIP_PROJECT="$TEMPLATE_DIR/template-bootstrap-ownership-smoke-$RANDOM-$$"
+  SYNC_BOOTSTRAP_OWNERSHIP_OUTPUT="$SYNC_BOOTSTRAP_OWNERSHIP_PROJECT.out"
+  SYNC_GIT_TEMPLATE_FIXTURE="$TEMPLATE_DIR/template-sync-git-fixture-$RANDOM-$$"
+  SYNC_GIT_DRY_RUN_PROJECT="$TEMPLATE_DIR/template-git-dry-run-smoke-$RANDOM-$$"
+  SYNC_GIT_DRY_RUN_OUTPUT="$SYNC_GIT_DRY_RUN_PROJECT.out"
+  SYNC_LEGACY_SAFE_PROJECT="$TEMPLATE_DIR/template-legacy-safe-smoke-$RANDOM-$$"
+  SYNC_LEGACY_SAFE_OUTPUT="$SYNC_LEGACY_SAFE_PROJECT.out"
+  SYNC_LEGACY_CONFLICT_PROJECT="$TEMPLATE_DIR/template-legacy-conflict-smoke-$RANDOM-$$"
+  SYNC_LEGACY_CONFLICT_OUTPUT="$SYNC_LEGACY_CONFLICT_PROJECT.out"
+  SYNC_PATH_SAFETY_ROOT="$TEMPLATE_DIR/template-path-safety-smoke-$RANDOM-$$"
+  SYNC_PATH_SAFETY_OUTPUT="$SYNC_PATH_SAFETY_ROOT.out"
+  SYNC_TRAVERSAL_SOURCE="$TEMPLATE_DIR/template-traversal-source-$RANDOM-$$"
+  SYNC_NEW_PATH_ROOT="$TEMPLATE_DIR/template-new-path-smoke-$RANDOM-$$"
+  SYNC_NEW_PATH_OUTPUT="$SYNC_NEW_PATH_ROOT.out"
+  cleanup_sync_smoke() {
+    local path
+    for path in \
+      "$SYNC_TEMPLATE_FIXTURE" "$SYNC_MIGRATION_FIXTURE" \
+      "$SYNC_EMPTY_MANIFEST_PROJECT" "$SYNC_EMPTY_MANIFEST_OUTPUT" "$SYNC_EMPTY_MANIFEST_OUTPUT.apply" \
+      "$SYNC_PROJECT_ONLY_MANIFEST_PROJECT" "$SYNC_PROJECT_ONLY_MANIFEST_OUTPUT" "$SYNC_PROJECT_ONLY_MANIFEST_OUTPUT.apply" "$SYNC_PROJECT_ONLY_MANIFEST_OUTPUT.repeat" \
+      "$SYNC_SOURCE_ONLY_PROJECT" "$SYNC_SOURCE_ONLY_OUTPUT" "$SYNC_SOURCE_ONLY_OUTPUT.apply" \
+      "$SYNC_BOOTSTRAP_DRY_RUN_PROJECT" "$SYNC_BOOTSTRAP_DRY_RUN_OUTPUT" \
+      "$SYNC_BOOTSTRAP_OWNERSHIP_PROJECT" "$SYNC_BOOTSTRAP_OWNERSHIP_OUTPUT" \
+      "$SYNC_GIT_TEMPLATE_FIXTURE" "$SYNC_GIT_DRY_RUN_PROJECT" \
+      "$SYNC_GIT_DRY_RUN_OUTPUT" "$SYNC_GIT_DRY_RUN_OUTPUT.apply" "$SYNC_GIT_DRY_RUN_OUTPUT.canary" \
+      "$SYNC_GIT_DRY_RUN_OUTPUT.branch" "$SYNC_GIT_DRY_RUN_OUTPUT.conflict" "$SYNC_GIT_DRY_RUN_OUTPUT.missing" \
+      "$SYNC_LEGACY_SAFE_PROJECT" "$SYNC_LEGACY_SAFE_OUTPUT" "$SYNC_LEGACY_SAFE_OUTPUT.apply" "$SYNC_LEGACY_SAFE_OUTPUT.repeat" \
+      "$SYNC_LEGACY_CONFLICT_PROJECT" "$SYNC_LEGACY_CONFLICT_OUTPUT" "$SYNC_LEGACY_CONFLICT_OUTPUT.apply" "$SYNC_LEGACY_CONFLICT_OUTPUT.repeat" \
+      "$SYNC_PATH_SAFETY_ROOT" "$SYNC_PATH_SAFETY_OUTPUT" "$SYNC_TRAVERSAL_SOURCE" \
+      "$SYNC_NEW_PATH_ROOT" "$SYNC_NEW_PATH_OUTPUT"; do
+      rm -rf "$path" 2>/dev/null || {
+        sleep 1
+        rm -rf "$path" 2>/dev/null || echo "  WARN: deferred cleanup required: $path"
+      }
+    done
+  }
+  create_sync_template_fixture() {
+    local template="$1"
+
+    mkdir -p \
+      "$template/.agents/skills/codex-change-strategy/agents" \
+      "$template/.codex/agents" \
+      "$template/.claude/library/process" \
+      "$template/.claude/library/technical" \
+      "$template/brain/03-knowledge/communication" \
+      "$template/scripts" \
+      "$template/scripts/lib" \
+      "$template/docs" \
+      "$template/_reference/spec-kit" \
+      "$template/templates/project-starter/tasks" \
+      "$template/tests/fixtures/design-policy/pass" \
+      "$template/tests/fixtures/design-policy/fail" \
+      "$template/tests/fixtures/writing-tools" \
+      "$template/tests/fixtures/change-strategy"
+
+    printf '%s\n' '# Fixture Claude' '<!-- Template Version: 9.9.9 -->' > "$template/CLAUDE.md"
+    printf '%s\n' '# Fixture Agents' '<!-- Template Version: 9.9.9 -->' > "$template/AGENTS.md"
+    printf '%s\n' '# Fixture README 9.9.9' > "$template/README.md"
+    printf '%s\n' '*.log' > "$template/.gitignore"
+    printf '%s\n' '# Agent SOT fixture' > "$template/docs/AGENT_CONTEXT_SOT.md"
+    printf '%s\n' '{"ref":"fixture"}' > "$template/_reference/spec-kit/manifest.json"
+    cp scripts/sync-template.sh "$template/scripts/sync-template.sh"
+    cp .codex/config.toml "$template/.codex/config.toml"
+    cp .codex/agents/*.toml "$template/.codex/agents/"
+    cp -R .agents/skills/. "$template/.agents/skills/"
+    cp scripts/codex-agent-policy.js "$template/scripts/codex-agent-policy.js"
+    cp scripts/codex-route-config.js "$template/scripts/codex-route-config.js"
+    cp scripts/codex-route-task.js "$template/scripts/codex-route-task.js"
+    cp scripts/codex-routing-cases-a.js "$template/scripts/codex-routing-cases-a.js"
+    cp scripts/codex-routing-cases-b.js "$template/scripts/codex-routing-cases-b.js"
+    cp scripts/test-codex-agent-policy.js "$template/scripts/test-codex-agent-policy.js"
+    cp scripts/test-codex-routing.js "$template/scripts/test-codex-routing.js"
+    cp scripts/test-progressive-plan.js "$template/scripts/test-progressive-plan.js"
+    cp scripts/test-change-strategy.js "$template/scripts/test-change-strategy.js"
+    cp scripts/test-subagent-trace.js "$template/scripts/test-subagent-trace.js"
+    cp scripts/validate-progressive-plan.js "$template/scripts/validate-progressive-plan.js"
+    cp scripts/validate-change-strategy.js "$template/scripts/validate-change-strategy.js"
+    cp scripts/validate-subagent-trace.js "$template/scripts/validate-subagent-trace.js"
+    cp scripts/validate-codex-agents.js "$template/scripts/validate-codex-agents.js"
+    cp scripts/lib/codex-route-intents.js "$template/scripts/lib/codex-route-intents.js"
+    cp scripts/lib/codex-route-summary.js "$template/scripts/lib/codex-route-summary.js"
+    cp scripts/lib/codex-route-cli.js "$template/scripts/lib/codex-route-cli.js"
+    cp scripts/lib/codex-discovery-reroute.js "$template/scripts/lib/codex-discovery-reroute.js"
+    cp scripts/lib/writing-intent.js "$template/scripts/lib/writing-intent.js"
+    cp scripts/lib/writing-route-policy.js "$template/scripts/lib/writing-route-policy.js"
+    cp scripts/lib/writing-library-store.js "$template/scripts/lib/writing-library-store.js"
+    cp scripts/lib/writing-library-provision.js "$template/scripts/lib/writing-library-provision.js"
+    cp scripts/lib/writing-library-policy.js "$template/scripts/lib/writing-library-policy.js"
+    cp scripts/lib/writing-library-retrieve.js "$template/scripts/lib/writing-library-retrieve.js"
+    cp scripts/lib/writing-reference-policy.js "$template/scripts/lib/writing-reference-policy.js"
+    cp scripts/lib/writing-external-tool-policy.js "$template/scripts/lib/writing-external-tool-policy.js"
+    cp scripts/lib/writing-path-policy.js "$template/scripts/lib/writing-path-policy.js"
+    cp scripts/lib/progressive-plan.js "$template/scripts/lib/progressive-plan.js"
+    cp scripts/lib/change-strategy-policy.js "$template/scripts/lib/change-strategy-policy.js"
+    cp scripts/lib/code-intelligence-policy.js "$template/scripts/lib/code-intelligence-policy.js"
+    cp scripts/lib/subagent-trace.js "$template/scripts/lib/subagent-trace.js"
+    cp scripts/lib/sync-manifest-reconcile.js "$template/scripts/lib/sync-manifest-reconcile.js"
+    cp scripts/lib/sync-safe-copy.js "$template/scripts/lib/sync-safe-copy.js"
+    cp scripts/lib/codex-route-intents.js "$template/scripts/lib/codex-route-intents.js"
+    cp .claude/library/process/change-strategy-gate.md "$template/.claude/library/process/change-strategy-gate.md"
+    cp .claude/library/technical/writing-reference-registry.json "$template/.claude/library/technical/writing-reference-registry.json"
+    cp .claude/library/technical/writing-library-catalog.json "$template/.claude/library/technical/writing-library-catalog.json"
+    cp docs/WRITING_REFERENCE_PROVENANCE.md "$template/docs/WRITING_REFERENCE_PROVENANCE.md"
+    cp brain/03-knowledge/communication/ilyakhov-planning-principles.md "$template/brain/03-knowledge/communication/ilyakhov-planning-principles.md"
+    cp .agents/skills/codex-change-strategy/SKILL.md "$template/.agents/skills/codex-change-strategy/SKILL.md"
+    cp .agents/skills/codex-change-strategy/agents/openai.yaml "$template/.agents/skills/codex-change-strategy/agents/openai.yaml"
+    cp tests/fixtures/change-strategy/discovery-architecture-mismatch.json "$template/tests/fixtures/change-strategy/discovery-architecture-mismatch.json"
+
+    node -e 'const fs=require("fs"),path=require("path"),q=String.fromCharCode(39); const name="skill"+q+"]);require("+q+"fs"+q+").writeFileSync("+q+"SYNC_PATH_INJECTION"+q+","+q+"x"+q+");console.log(m.files["+q+"skill"; const dir=path.join(process.argv[1],".agents","skills",name); fs.mkdirSync(dir,{recursive:true}); fs.writeFileSync(path.join(dir,"SKILL.md"),"# inert path fixture\n","utf8");' "$template"
+
+    printf '%s\n' '# source-only unix setup fixture' > "$template/setup.sh"
+    printf '%s\r\n' '@echo off' 'rem source-only windows setup fixture' > "$template/setup.bat"
+    printf '%s\n' '# source-only starter task fixture' > "$template/templates/project-starter/tasks/current.md"
+    printf '%s\n' '.fixture-pass { color: var(--color-text); }' > "$template/tests/fixtures/design-policy/pass/basic.css"
+    printf '%s\n' '.fixture-fail { background: linear-gradient(red, blue); background-clip: text; }' > "$template/tests/fixtures/design-policy/fail/gradient-text.css"
+    printf '%s\n' 'module.exports = { provider: "fixture", configured: false };' > "$template/tests/fixtures/writing-tools/external-tool-adapter.fixture.js"
+  }
+  create_migration_template_fixture() {
+    local template="$1"
+    mkdir -p "$template/scripts/lib"
+    printf '%s\n' '# Fixture Claude' '<!-- Template Version: 9.9.9 -->' > "$template/CLAUDE.md"
+    printf '%s\n' '# Fixture Agents' '<!-- Template Version: 9.9.9 -->' > "$template/AGENTS.md"
+    printf '%s\n' '# Fixture README 9.9.9' > "$template/README.md"
+    cp scripts/lib/sync-manifest-reconcile.js "$template/scripts/lib/sync-manifest-reconcile.js"
+    cp scripts/lib/sync-safe-copy.js "$template/scripts/lib/sync-safe-copy.js"
+    cp scripts/lib/codex-route-intents.js "$template/scripts/lib/codex-route-intents.js"
+  }
+  write_empty_trackable_manifest() {
+    local project="$1"
+    mkdir -p "$project"
+    printf '%s\n' \
+      '{' \
+      '  "template_version": "unknown",' \
+      '  "created": "2000-01-01",' \
+      '  "updated": "2000-01-01",' \
+      '  "template_remote": "",' \
+      '  "files": {}' \
+      '}' > "$project/.template-manifest.json"
+  }
+  write_project_only_manifest() {
+    local project="$1"
+    local claude_hash
+
+    mkdir -p "$project"
+    printf '%s\n' '# Preserved project Claude' > "$project/CLAUDE.md"
+    claude_hash="$(_get_hash "$project/CLAUDE.md")"
+    printf '%s\n' \
+      '{' \
+      '  "template_version": "4.7.0",' \
+      '  "created": "2000-01-01",' \
+      '  "updated": "2000-01-01",' \
+      '  "template_remote": "",' \
+      '  "files": {' \
+      "    \"CLAUDE.md\": {\"category\": \"project\", \"hash\": \"$claude_hash\"}" \
+      '  }' \
+      '}' > "$project/.template-manifest.json"
+  }
+  write_trackable_manifest() {
+    local project="$1"
+    local hash
+
+    mkdir -p "$project"
+    printf '%s\n' '# Local Claude' '<!-- Template Version: 4.1.1 -->' > "$project/CLAUDE.md"
+    hash="$(_get_hash "$project/CLAUDE.md")"
+    printf '%s\n' \
+      '{' \
+      '  "template_version": "4.1.1",' \
+      '  "created": "2000-01-01",' \
+      '  "updated": "2000-01-01",' \
+      '  "template_remote": "",' \
+      '  "files": {' \
+      "    \"CLAUDE.md\": {\"category\": \"template\", \"hash\": \"$hash\"}" \
+      '  }' \
+      '}' > "$project/.template-manifest.json"
+  }
+  write_legacy_47_manifest() {
+    local project="$1"
+    local dirty_agents="${2:-false}"
+    local agents_hash claude_hash readme_hash
+
+    mkdir -p "$project/.codex" "$project/notes"
+    printf '%s\n' '# Legacy Agents 4.7' '<!-- Template Version: 4.7.0 -->' > "$project/AGENTS.md"
+    agents_hash="$(_get_hash "$project/AGENTS.md")"
+    printf '%s\n' '# Legacy Claude 4.7' '<!-- Template Version: 4.7.0 -->' > "$project/CLAUDE.md"
+    claude_hash="$(_get_hash "$project/CLAUDE.md")"
+    printf '%s\n' 'Project-owned Claude instruction.' >> "$project/CLAUDE.md"
+    printf '%s\n' '# Legacy README 4.7' > "$project/README.md"
+    readme_hash="$(_get_hash "$project/README.md")"
+    printf '%s\n' '# Local Codex notes' > "$project/.codex/README.md"
+    printf '%s\n' 'local-only notes' > "$project/notes/local.md"
+    if [ "$dirty_agents" = true ]; then
+      printf '%s\n' 'Project-local AGENTS change.' >> "$project/AGENTS.md"
+    fi
+    printf '%s\n' \
+      '{' \
+      '  "template_version": "4.7.0",' \
+      '  "created": "2000-01-01",' \
+      '  "updated": "2000-01-01",' \
+      '  "template_remote": "",' \
+      '  "files": {' \
+      "    \"AGENTS.md\": {\"category\": \"project\", \"hash\": \"$agents_hash\"}," \
+      "    \"CLAUDE.md\": {\"category\": \"project\", \"hash\": \"$claude_hash\"}," \
+      "    \"README.md\": {\"category\": \"template\", \"hash\": \"$readme_hash\"}" \
+      '  }' \
+      '}' > "$project/.template-manifest.json"
+  }
+  run_legacy_47_project_agents_sync_smoke() {
+    local project="$1"
+    local output="$2"
+    local template="$3"
+    local manifest_before agents_before claude_before codex_readme_before notes_before
+
+    write_legacy_47_manifest "$project" false || return 1
+    manifest_before="$(_get_hash "$project/.template-manifest.json")"
+    agents_before="$(_get_hash "$project/AGENTS.md")"
+    claude_before="$(_get_hash "$project/CLAUDE.md")"
+    codex_readme_before="$(_get_hash "$project/.codex/README.md")"
+    notes_before="$(_get_hash "$project/notes/local.md")"
+
+    bash scripts/sync-template.sh "$template" --project-dir "$project" --dry-run > "$output" 2>&1 || return 1
+    grep -q "Current: 4.7.0.*New: 9.9.9" "$output" || return 1
+    ! grep -q "AGENTS.md" "$output" || return 1
+    grep -q "WOULD UPDATE: README.md" "$output" || return 1
+    ! grep -q "CLAUDE.md" "$output" || return 1
+    ! grep -q ".codex/README.md" "$output" || return 1
+    ! grep -q "notes/local.md" "$output" || return 1
+    [ "$manifest_before" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+    [ "$agents_before" = "$(_get_hash "$project/AGENTS.md")" ] || return 1
+
+    if ! bash scripts/sync-template.sh "$template" --project-dir "$project" > "$output.apply" 2>&1; then
+      cat "$output.apply"
+      return 1
+    fi
+    [ "$agents_before" = "$(_get_hash "$project/AGENTS.md")" ] || return 1
+    cmp -s "$project/README.md" "$template/README.md" || return 1
+    [ "$claude_before" = "$(_get_hash "$project/CLAUDE.md")" ] || return 1
+    [ "$codex_readme_before" = "$(_get_hash "$project/.codex/README.md")" ] || return 1
+    [ "$notes_before" = "$(_get_hash "$project/notes/local.md")" ] || return 1
+    node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],m=JSON.parse(fs.readFileSync(p+"/.template-manifest.json","utf8"));const h=f=>crypto.createHash("sha256").update(fs.readFileSync(p+"/"+f)).digest("hex");if(m.template_version!=="9.9.9"||m.files["AGENTS.md"].category!=="project"||m.files["AGENTS.md"].hash!==h("AGENTS.md")||m.files["CLAUDE.md"].category!=="project"||m.files[".codex/README.md"]||m.files["notes/local.md"])process.exit(1);' "$project" || return 1
+
+    local converged_manifest converged_agents converged_claude
+    converged_manifest="$(_get_hash "$project/.template-manifest.json")"
+    converged_agents="$(_get_hash "$project/AGENTS.md")"
+    converged_claude="$(_get_hash "$project/CLAUDE.md")"
+    bash scripts/sync-template.sh "$template" --project-dir "$project" --dry-run > "$output.repeat" 2>&1 || return 1
+    ! grep -Eq "^  (WOULD (UPDATE|ADD|ADOPT|MIGRATE)|CONFLICT:)" "$output.repeat" || return 1
+    [ "$converged_manifest" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+    bash scripts/sync-template.sh "$template" --project-dir "$project" >> "$output.repeat" 2>&1 || return 1
+    [ "$converged_manifest" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+    [ "$converged_agents" = "$(_get_hash "$project/AGENTS.md")" ] || return 1
+    [ "$converged_claude" = "$(_get_hash "$project/CLAUDE.md")" ] || return 1
+
+    node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],f=p+"/.codex/README.md",m=p+"/.template-manifest.json";const j=JSON.parse(fs.readFileSync(m,"utf8"));j.files[".codex/README.md"]={category:"template",hash:crypto.createHash("sha256").update(fs.readFileSync(f)).digest("hex")};fs.writeFileSync(m,JSON.stringify(j,null,2)+"\n");' "$project" || return 1
+    bash scripts/sync-template.sh "$template" --project-dir "$project" >> "$output.repeat" 2>&1 || return 1
+    [ "$codex_readme_before" = "$(_get_hash "$project/.codex/README.md")" ] || return 1
+    node -e 'const m=require(process.argv[1]);if(m.files[".codex/README.md"])process.exit(1);' "$project/.template-manifest.json" || return 1
+  }
+  run_legacy_47_custom_agents_sync_smoke() {
+    local project="$1"
+    local output="$2"
+    local template="$3"
+    local agents_before claude_before codex_readme_before manifest_before
+
+    write_legacy_47_manifest "$project" true || return 1
+    agents_before="$(_get_hash "$project/AGENTS.md")"
+    claude_before="$(_get_hash "$project/CLAUDE.md")"
+    codex_readme_before="$(_get_hash "$project/.codex/README.md")"
+    manifest_before="$(_get_hash "$project/.template-manifest.json")"
+    bash scripts/sync-template.sh "$template" --project-dir "$project" --dry-run > "$output" 2>&1 || return 1
+    ! grep -q "AGENTS.md" "$output" || return 1
+    [ "$manifest_before" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+    [ "$agents_before" = "$(_get_hash "$project/AGENTS.md")" ] || return 1
+
+    bash scripts/sync-template.sh "$template" --project-dir "$project" > "$output.apply" 2>&1 || return 1
+    [ "$agents_before" = "$(_get_hash "$project/AGENTS.md")" ] || return 1
+    [ "$claude_before" = "$(_get_hash "$project/CLAUDE.md")" ] || return 1
+    [ "$codex_readme_before" = "$(_get_hash "$project/.codex/README.md")" ] || return 1
+    [ ! -e "$project/AGENTS.md.template-new" ] || return 1
+    node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],m=JSON.parse(fs.readFileSync(p+"/.template-manifest.json","utf8")),h=crypto.createHash("sha256").update(fs.readFileSync(p+"/AGENTS.md")).digest("hex");if(m.template_version!=="9.9.9"||m.files["AGENTS.md"].category!=="project"||m.files["AGENTS.md"].hash!==h||m.files[".codex/README.md"])process.exit(1);' "$project" || return 1
+
+    local resolved_manifest="$(_get_hash "$project/.template-manifest.json")"
+    bash scripts/sync-template.sh "$template" --project-dir "$project" --dry-run > "$output.repeat" 2>&1 || return 1
+    ! grep -Eq "^  (WOULD (UPDATE|ADD|ADOPT|MIGRATE)|CONFLICT:)" "$output.repeat" || return 1
+    bash scripts/sync-template.sh "$template" --project-dir "$project" >> "$output.repeat" 2>&1 || return 1
+    [ "$resolved_manifest" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+  }
+  run_sync_path_safety_smoke() {
+    local root="$1"
+    local output="$2"
+    local traversal_source="$3"
+    local traversal_project="$root/traversal/project"
+    local traversal_name
+    traversal_name="$(basename "$traversal_source")"
+    local traversal_victim="$root/traversal/$traversal_name"
+
+    mkdir -p "$traversal_project" || return 1
+    printf '%s\n' 'release source' > "$traversal_source"
+    printf '%s\n' 'outside victim' > "$traversal_victim"
+    local victim_hash manifest_hash
+    victim_hash="$(_get_hash "$traversal_victim")"
+    printf '{"template_version":"4.7.0","files":{"../%s":{"category":"template","hash":"%s"}}}\n' "$traversal_name" "$victim_hash" > "$traversal_project/.template-manifest.json"
+    manifest_hash="$(_get_hash "$traversal_project/.template-manifest.json")"
+    if bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$traversal_project" > "$output" 2>&1; then return 1; fi
+    grep -q "Unsafe manifest path" "$output" || return 1
+    [ "$victim_hash" = "$(_get_hash "$traversal_victim")" ] || return 1
+    [ "$manifest_hash" = "$(_get_hash "$traversal_project/.template-manifest.json")" ] || return 1
+    echo "path-safety stage passed: traversal"
+
+    local link_probe="$root/link-probe" link_target="$root/link-target"
+    printf '%s\n' probe > "$link_target"
+    if ! ln -s "$link_target" "$link_probe" 2>/dev/null ||
+       ! node -e 'if(!require("fs").lstatSync(process.argv[1]).isSymbolicLink())process.exit(1)' "$link_probe"; then
+      echo "  INFO: native symlink checks skipped on this host"
+      return 0
+    fi
+    rm -f "$link_probe"
+
+    local final_project="$root/final" final_external="$root/final-external"
+    mkdir -p "$final_project"
+    printf '%s\n' 'external final sentinel' > "$final_external"
+    ln -s "$final_external" "$final_project/README.md" || return 1
+    printf '{"template_version":"4.7.0","files":{"README.md":{"category":"template","hash":"deadbeef"}}}\n' > "$final_project/.template-manifest.json"
+    local final_hash="$(_get_hash "$final_external")" final_manifest="$(_get_hash "$final_project/.template-manifest.json")"
+    if bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$final_project" >> "$output" 2>&1; then return 1; fi
+    [ "$final_hash" = "$(_get_hash "$final_external")" ] || return 1
+    [ "$final_manifest" = "$(_get_hash "$final_project/.template-manifest.json")" ] || return 1
+    echo "path-safety stage passed: managed final symlink"
+
+    if ! printf '{"template_version":"4.7.0","files":{"README.md":{"category":"project","hash":"deadbeef"}}}\n' > "$final_project/.template-manifest.json"; then
+      echo "path-safety failure: project-owned manifest write failed"
+      return 1
+    fi
+    if ! final_manifest="$(_get_hash "$final_project/.template-manifest.json")"; then
+      echo "path-safety failure: project-owned manifest hash failed"
+      return 1
+    fi
+    if bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$final_project" >> "$output" 2>&1; then
+      echo "path-safety failure: project-owned final symlink was accepted"
+      tail -20 "$output"
+      return 1
+    fi
+    if ! grep -q "Symlink/reparse manifest path is not allowed: README.md" "$output"; then
+      echo "path-safety failure: project-owned final rejection reason missing"
+      tail -20 "$output"
+      return 1
+    fi
+    if [ "$final_hash" != "$(_get_hash "$final_external")" ]; then
+      echo "path-safety failure: project-owned external target changed"
+      return 1
+    fi
+    if [ "$final_manifest" != "$(_get_hash "$final_project/.template-manifest.json")" ]; then
+      echo "path-safety failure: project-owned manifest changed"
+      cat "$final_project/.template-manifest.json"
+      return 1
+    fi
+    echo "path-safety stage passed: project-owned final symlink"
+
+    local parent_project="$root/parent" parent_external="$root/parent-external"
+    mkdir -p "$parent_project" "$parent_external"
+    ln -s "$parent_external" "$parent_project/scripts" || return 1
+    printf '{"template_version":"4.7.0","files":{"scripts/lib/sync-safe-copy.js":{"category":"template","hash":"deadbeef"}}}\n' > "$parent_project/.template-manifest.json"
+    local parent_manifest="$(_get_hash "$parent_project/.template-manifest.json")"
+    if bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$parent_project" >> "$output" 2>&1; then return 1; fi
+    [ "$parent_manifest" = "$(_get_hash "$parent_project/.template-manifest.json")" ] || return 1
+    echo "path-safety stage passed: managed parent symlink"
+
+    local conflict_project="$root/conflict" conflict_external="$root/conflict-external"
+    mkdir -p "$conflict_project"
+    printf '%s\n' 'dirty local AGENTS' > "$conflict_project/AGENTS.md"
+    printf '%s\n' 'external conflict sentinel' > "$conflict_external"
+    ln -s "$conflict_external" "$conflict_project/AGENTS.md.template-new" || return 1
+    printf '{"template_version":"4.7.0","files":{"AGENTS.md":{"category":"template","hash":"deadbeef"}}}\n' > "$conflict_project/.template-manifest.json"
+    local conflict_hash="$(_get_hash "$conflict_external")" conflict_manifest="$(_get_hash "$conflict_project/.template-manifest.json")"
+    if bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$conflict_project" >> "$output" 2>&1; then return 1; fi
+    [ "$conflict_hash" = "$(_get_hash "$conflict_external")" ] || return 1
+    [ "$conflict_manifest" = "$(_get_hash "$conflict_project/.template-manifest.json")" ] || return 1
+    echo "path-safety stage passed: conflict sidecar symlink"
+
+    local config_project="$root/config-target" config_external="$root/config-target-external"
+    mkdir -p "$config_project/.codex"
+    printf '%s\n' 'external config sentinel' > "$config_external"
+    ln -s "$config_external" "$config_project/.codex/config.toml" || return 1
+    printf '{"template_version":"4.7.0","files":{".codex/config.toml":{"category":"project","hash":"deadbeef"}}}\n' > "$config_project/.template-manifest.json"
+    local config_hash="$(_get_hash "$config_external")" config_manifest="$(_get_hash "$config_project/.template-manifest.json")"
+    if bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$config_project" >> "$output" 2>&1; then
+      echo "path-safety failure: legacy project config symlink was accepted"
+      tail -20 "$output"
+      return 1
+    fi
+    if [ "$config_hash" != "$(_get_hash "$config_external")" ]; then
+      echo "path-safety failure: legacy project config external target changed"
+      tail -20 "$output"
+      return 1
+    fi
+    if [ "$config_manifest" != "$(_get_hash "$config_project/.template-manifest.json")" ]; then
+      echo "path-safety failure: legacy project config manifest changed"
+      tail -20 "$output"
+      return 1
+    fi
+    echo "path-safety stage passed: legacy project config symlink"
+
+    local config_parent_project="$root/config-parent" config_parent_external="$root/config-parent-external"
+    mkdir -p "$config_parent_project" "$config_parent_external"
+    printf '%s\n' 'external parent config sentinel' > "$config_parent_external/config.toml"
+    ln -s "$config_parent_external" "$config_parent_project/.codex" || return 1
+    printf '{"template_version":"4.7.0","files":{".codex/config.toml":{"category":"project","hash":"deadbeef"}}}\n' > "$config_parent_project/.template-manifest.json"
+    local config_parent_hash="$(_get_hash "$config_parent_external/config.toml")" config_parent_manifest="$(_get_hash "$config_parent_project/.template-manifest.json")"
+    if bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$config_parent_project" >> "$output" 2>&1; then
+      echo "path-safety failure: legacy project config parent symlink was accepted"
+      tail -20 "$output"
+      return 1
+    fi
+    if [ "$config_parent_hash" != "$(_get_hash "$config_parent_external/config.toml")" ]; then
+      echo "path-safety failure: legacy project config parent external target changed"
+      tail -20 "$output"
+      return 1
+    fi
+    if [ "$config_parent_manifest" != "$(_get_hash "$config_parent_project/.template-manifest.json")" ]; then
+      echo "path-safety failure: legacy project config parent manifest changed"
+      tail -20 "$output"
+      return 1
+    fi
+    echo "path-safety stage passed: legacy project config parent symlink"
+  }
+  run_new_path_convergence_smoke() {
+    local root="$1"
+    local output="$2"
+    local template="$3"
+    local target_hash
+    target_hash="$(_get_hash "$template/AGENTS.md")"
+
+    local same="$root/same"
+    mkdir -p "$same/scripts/lib"
+    cp "$template/AGENTS.md" "$same/AGENTS.md"
+    printf '%s\n' '# Local Claude' > "$same/CLAUDE.md"
+    cp "$template/scripts/lib/codex-route-intents.js" "$same/scripts/lib/codex-route-intents.js"
+    local same_claude_hash="$(_get_hash "$same/CLAUDE.md")"
+    printf '{"template_version":"4.7.0","files":{"AGENTS.md":{"category":"template","hash":"%s"},"CLAUDE.md":{"category":"project","hash":"%s"}}}\n' "$target_hash" "$same_claude_hash" > "$same/.template-manifest.json"
+    bash scripts/sync-template.sh "$template" --project-dir "$same" > "$output" 2>&1 || return 1
+    node -e 'const m=require(process.argv[1]);if(m.template_version!=="9.9.9"||m.files["scripts/lib/codex-route-intents.js"]?.category!=="template"||m.files["CLAUDE.md"]?.category!=="project")process.exit(1)' "$same/.template-manifest.json" || return 1
+    local same_manifest="$(_get_hash "$same/.template-manifest.json")"
+    bash scripts/sync-template.sh "$template" --project-dir "$same" >> "$output" 2>&1 || return 1
+    [ "$same_manifest" = "$(_get_hash "$same/.template-manifest.json")" ] || return 1
+
+    local conflict="$root/conflict"
+    mkdir -p "$conflict/scripts/lib"
+    cp "$template/AGENTS.md" "$conflict/AGENTS.md"
+    printf '%s\n' '# Local Claude' > "$conflict/CLAUDE.md"
+    printf '%s\n' 'local route helper' > "$conflict/scripts/lib/codex-route-intents.js"
+    local conflict_claude_hash="$(_get_hash "$conflict/CLAUDE.md")"
+    printf '{"template_version":"4.7.0","files":{"AGENTS.md":{"category":"template","hash":"%s"},"CLAUDE.md":{"category":"project","hash":"%s"}}}\n' "$target_hash" "$conflict_claude_hash" > "$conflict/.template-manifest.json"
+    if bash scripts/sync-template.sh "$template" --project-dir "$conflict" >> "$output" 2>&1; then return 1; fi
+    grep -q "CONFLICT: scripts/lib/codex-route-intents.js" "$output" || return 1
+    grep -q 'local route helper' "$conflict/scripts/lib/codex-route-intents.js" || return 1
+    cmp -s "$conflict/scripts/lib/codex-route-intents.js.template-new" "$template/scripts/lib/codex-route-intents.js" || return 1
+    node -e 'const m=require(process.argv[1]);if(m.template_version!=="4.7.0"||m.files["scripts/lib/codex-route-intents.js"])process.exit(1)' "$conflict/.template-manifest.json" || return 1
+    cp "$conflict/scripts/lib/codex-route-intents.js.template-new" "$conflict/scripts/lib/codex-route-intents.js"
+    rm -f "$conflict/scripts/lib/codex-route-intents.js.template-new"
+    bash scripts/sync-template.sh "$template" --project-dir "$conflict" >> "$output" 2>&1 || return 1
+    node -e 'const m=require(process.argv[1]);if(m.template_version!=="9.9.9"||m.files["scripts/lib/codex-route-intents.js"]?.category!=="template")process.exit(1)' "$conflict/.template-manifest.json" || return 1
+
+    local project_owned="$root/project-owned"
+    mkdir -p "$project_owned"
+    cp "$template/AGENTS.md" "$project_owned/AGENTS.md"
+    printf '%s\n' '# Preserved local Claude' > "$project_owned/CLAUDE.md"
+    printf '{"template_version":"4.7.0","files":{"AGENTS.md":{"category":"template","hash":"%s"}}}\n' "$target_hash" > "$project_owned/.template-manifest.json"
+    local project_claude_hash="$(_get_hash "$project_owned/CLAUDE.md")"
+    bash scripts/sync-template.sh "$template" --project-dir "$project_owned" >> "$output" 2>&1 || return 1
+    node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],m=require(p+"/.template-manifest.json"),h=crypto.createHash("sha256").update(fs.readFileSync(p+"/CLAUDE.md")).digest("hex");if(m.template_version!=="9.9.9"||m.files["CLAUDE.md"]?.category!=="project"||m.files["CLAUDE.md"].hash!==h)process.exit(1)' "$project_owned" || return 1
+    [ "$project_claude_hash" = "$(_get_hash "$project_owned/CLAUDE.md")" ] || return 1
+
+    local hybrid="$root/hybrid" empty_additions="$root/empty-additions"
+    mkdir -p "$hybrid/.codex"
+    printf '%s\n' '# project setting' > "$hybrid/.codex/config.toml"
+    printf '{"template_version":"4.7.0","files":{".codex/config.toml":{"category":"hybrid","hash":"stale"}}}\n' > "$hybrid/.template-manifest.json"
+    : > "$empty_additions"
+    node "$template/scripts/lib/sync-manifest-reconcile.js" --manifest "$hybrid/.template-manifest.json" --template-root "$template" --project-root "$hybrid" --new-version 9.9.9 --conflicts 0 --additions-file "$empty_additions" --project-additions-file "$empty_additions" >> "$output" 2>&1 || return 1
+    node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],m=require(p+"/.template-manifest.json"),h=crypto.createHash("sha256").update(fs.readFileSync(p+"/.codex/config.toml")).digest("hex");if(m.files[".codex/config.toml"]?.category!=="hybrid"||m.files[".codex/config.toml"].hash!==h)process.exit(1)' "$hybrid"
+  }
+  run_empty_manifest_sync_smoke() {
+    local project="$1"
+    local output="$2"
+
+    write_empty_trackable_manifest "$project" || return 1
+
+    bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$project" --dry-run > "$output" 2>&1 || return 1
+    grep -q "Manifest has no trackable files" "$output" || return 1
+    grep -q "WOULD ADD: scripts/sync-template.sh" "$output" || return 1
+    grep -q "WOULD ADD: CLAUDE.md" "$output" || return 1
+    grep -q "WOULD ADD: .gitignore" "$output" || return 1
+    grep -q "WOULD ADD: docs/AGENT_CONTEXT_SOT.md" "$output" || return 1
+    grep -q "WOULD ADD: scripts/codex-agent-policy.js" "$output" || return 1
+    grep -q "WOULD ADD: .codex/agents/product-reviewer.toml" "$output" || return 1
+    grep -q "WOULD ADD: .codex/agents/systems-reviewer.toml" "$output" || return 1
+    grep -q "WOULD ADD: .codex/agents/scout.toml" "$output" || return 1
+    grep -q "WOULD ADD: scripts/validate-progressive-plan.js" "$output" || return 1
+    grep -q "WOULD ADD: scripts/validate-change-strategy.js" "$output" || return 1
+    grep -q "WOULD ADD: scripts/lib/codex-route-summary.js" "$output" || return 1
+    grep -q "WOULD ADD: scripts/lib/codex-route-cli.js" "$output" || return 1
+    grep -q "WOULD ADD: scripts/lib/codex-discovery-reroute.js" "$output" || return 1
+    grep -q "WOULD ADD: brain/03-knowledge/communication/ilyakhov-planning-principles.md" "$output" || return 1
+    grep -q "WOULD ADD: .agents/skills/codex-change-strategy/SKILL.md" "$output" || return 1
+    grep -q "WOULD ADD: tests/fixtures/change-strategy/discovery-architecture-mismatch.json" "$output" || return 1
+    grep -q "WOULD ADD: _reference/spec-kit/manifest.json" "$output" || return 1
+    grep -q "WOULD ADD: tests/fixtures/design-policy/fail/gradient-text.css" "$output" || return 1
+    grep -q "WOULD ADD: tests/fixtures/writing-tools/external-tool-adapter.fixture.js" "$output" || return 1
+    [ ! -e "$project/SYNC_PATH_INJECTION" ] || return 1
+
+    if ! bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$project" > "$output.apply" 2>&1; then
+      cat "$output.apply"
+      return 1
+    fi
+    grep -q '"CLAUDE.md"' "$project/.template-manifest.json" || return 1
+    grep -q '"docs/AGENT_CONTEXT_SOT.md"' "$project/.template-manifest.json" || return 1
+    grep -q '"scripts/codex-agent-policy.js"' "$project/.template-manifest.json" || return 1
+    grep -q '"scripts/lib/codex-route-intents.js"' "$project/.template-manifest.json" || return 1
+    grep -q '".codex/agents/product-reviewer.toml"' "$project/.template-manifest.json" || return 1
+    grep -q '".codex/agents/systems-reviewer.toml"' "$project/.template-manifest.json" || return 1
+    grep -q '".codex/agents/scout.toml"' "$project/.template-manifest.json" || return 1
+    grep -q '"scripts/validate-progressive-plan.js"' "$project/.template-manifest.json" || return 1
+    grep -q '"scripts/validate-change-strategy.js"' "$project/.template-manifest.json" || return 1
+    grep -q '"scripts/lib/codex-route-summary.js"' "$project/.template-manifest.json" || return 1
+    grep -q '"scripts/lib/codex-route-cli.js"' "$project/.template-manifest.json" || return 1
+    grep -q '"scripts/lib/codex-discovery-reroute.js"' "$project/.template-manifest.json" || return 1
+    grep -q '"brain/03-knowledge/communication/ilyakhov-planning-principles.md"' "$project/.template-manifest.json" || return 1
+    [ -f "$project/brain/03-knowledge/communication/ilyakhov-planning-principles.md" ] || return 1
+    grep -q '".agents/skills/codex-change-strategy/SKILL.md"' "$project/.template-manifest.json" || return 1
+    grep -q '"tests/fixtures/change-strategy/discovery-architecture-mismatch.json"' "$project/.template-manifest.json" || return 1
+    grep -q '"_reference/spec-kit/manifest.json"' "$project/.template-manifest.json" || return 1
+    grep -q '"tests/fixtures/design-policy/fail/gradient-text.css"' "$project/.template-manifest.json" || return 1
+    grep -q '"tests/fixtures/writing-tools/external-tool-adapter.fixture.js"' "$project/.template-manifest.json" || return 1
+    cmp "$SYNC_TEMPLATE_FIXTURE/tests/fixtures/writing-tools/external-tool-adapter.fixture.js" "$project/tests/fixtures/writing-tools/external-tool-adapter.fixture.js" || return 1
+    ! grep -q '"templates/' "$project/.template-manifest.json" || return 1
+    ! grep -q '"setup.sh"' "$project/.template-manifest.json" || return 1
+    ! grep -q '"setup.bat"' "$project/.template-manifest.json" || return 1
+    (cd "$project" && node scripts/validate-codex-agents.js >/dev/null) || return 1
+    (cd "$project" && node scripts/test-codex-agent-policy.js >/dev/null) || return 1
+    (cd "$project" && node scripts/test-codex-routing.js >/dev/null) || return 1
+    (cd "$project" && node scripts/test-progressive-plan.js >/dev/null) || return 1
+    (cd "$project" && node scripts/test-change-strategy.js >/dev/null) || return 1
+    (cd "$project" && node scripts/test-subagent-trace.js >/dev/null) || return 1
+    [ ! -e "$project/SYNC_PATH_INJECTION" ] || return 1
+  }
+  run_project_only_manifest_sync_smoke() {
+    local project="$1"
+    local output="$2"
+    local claude_before manifest_before
+
+    write_project_only_manifest "$project" || return 1
+    claude_before="$(_get_hash "$project/CLAUDE.md")"
+    manifest_before="$(_get_hash "$project/.template-manifest.json")"
+
+    bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$project" --dry-run > "$output" 2>&1 || return 1
+    ! grep -q "Manifest has no trackable files" "$output" || return 1
+    grep -q "WOULD ADD: AGENTS.md" "$output" || return 1
+    [ "$claude_before" = "$(_get_hash "$project/CLAUDE.md")" ] || return 1
+    [ "$manifest_before" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+
+    bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$project" > "$output.apply" 2>&1 || return 1
+    [ "$claude_before" = "$(_get_hash "$project/CLAUDE.md")" ] || return 1
+    node -e 'const fs=require("fs"),crypto=require("crypto");const p=process.argv[1],m=require(p+"/.template-manifest.json"),h=crypto.createHash("sha256").update(fs.readFileSync(p+"/CLAUDE.md")).digest("hex");if(m.template_version!=="9.9.9"||m.files["CLAUDE.md"]?.category!=="project"||m.files["CLAUDE.md"].hash!==h)process.exit(1)' "$project" || return 1
+
+    manifest_before="$(_get_hash "$project/.template-manifest.json")"
+    bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$project" --dry-run > "$output.repeat" 2>&1 || return 1
+    ! grep -Eq "^  (WOULD (UPDATE|ADD|ADOPT|MIGRATE)|CONFLICT:)" "$output.repeat" || return 1
+    [ "$manifest_before" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+  }
+  run_source_only_sync_smoke() {
+    local project="$1"
+    local output="$2"
+
+    write_trackable_manifest "$project" || return 1
+    bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$project" --dry-run > "$output" 2>&1 || return 1
+    grep -q "WOULD ADD: scripts/lib/codex-route-intents.js" "$output" || return 1
+    ! grep -q "WOULD ADD: templates/" "$output" || return 1
+    ! grep -q "WOULD ADD: setup.sh" "$output" || return 1
+    ! grep -q "WOULD ADD: setup.bat" "$output" || return 1
+
+    if ! bash scripts/sync-template.sh "$SYNC_TEMPLATE_FIXTURE" --project-dir "$project" > "$output.apply" 2>&1; then
+      cat "$output.apply"
+      return 1
+    fi
+    cmp -s "$project/scripts/lib/codex-route-intents.js" "$SYNC_TEMPLATE_FIXTURE/scripts/lib/codex-route-intents.js" || return 1
+    grep -q '"scripts/lib/codex-route-intents.js"' "$project/.template-manifest.json" || return 1
+    [ ! -e "$project/templates" ] &&
+      [ ! -f "$project/setup.sh" ] &&
+      [ ! -f "$project/setup.bat" ] &&
+      ! grep -q '"templates/' "$project/.template-manifest.json" &&
+      ! grep -q '"setup.sh"' "$project/.template-manifest.json" &&
+      ! grep -q '"setup.bat"' "$project/.template-manifest.json"
+  }
+  run_bootstrap_dry_run_smoke() {
+    local template="$1"
+    local project="$2"
+    local output="$3"
+
+    mkdir -p "$project" || return 1
+    bash scripts/sync-template.sh "$template" --project-dir "$project" --bootstrap --dry-run > "$output" 2>&1 || return 1
+    grep -q "WOULD BOOTSTRAP" "$output" || return 1
+    [ ! -e "$project/.template-manifest.json" ] || return 1
+  }
+  run_bootstrap_ownership_smoke() {
+    local template="$1"
+    local project="$2"
+    local output="$3"
+
+    mkdir -p "$project" || return 1
+    printf '%s\n' '# Project Claude' > "$project/CLAUDE.md"
+    printf '%s\n' '# Project design contract' > "$project/DESIGN.md"
+    printf '%s\n' 'fixtures/generated/**' > "$project/design-policy.ignore"
+    bash scripts/sync-template.sh "$template" --project-dir "$project" --bootstrap > "$output" 2>&1 || return 1
+    node -e 'const m=require(process.argv[1]);for(const p of ["CLAUDE.md","DESIGN.md","design-policy.ignore"]){if(m.files?.[p]?.category!=="project")process.exit(1)}' "$project/.template-manifest.json"
+  }
+  run_from_git_dry_run_smoke() {
+    local template="$1"
+    local project="$2"
+    local output="$3"
+
+    create_sync_template_fixture "$template" || return 1
+    git -C "$template" init -q || return 1
+    git -C "$template" add . || return 1
+    git -C "$template" -c user.name="Template Smoke" -c user.email="template-smoke@example.invalid" commit -q -m "fixture" || return 1
+    git -C "$template" branch -M main || return 1
+    git -C "$template" tag v9.9.9 || return 1
+    sed -i 's/9\.9\.9/10.0.0/g' "$template/CLAUDE.md" || return 1
+    git -C "$template" add CLAUDE.md || return 1
+    git -C "$template" -c user.name="Template Smoke" -c user.email="template-smoke@example.invalid" commit -q -m "main diverges from release" || return 1
+
+    write_trackable_manifest "$project" || return 1
+    git -C "$project" init -q || return 1
+    local template_remote
+    template_remote="$(cd "$template" && pwd)"
+    node -e "const fs=require('fs'); const p=process.argv[1],m=JSON.parse(fs.readFileSync(p,'utf8')); m.template_remote=process.argv[2]; fs.writeFileSync(p,JSON.stringify(m,null,2));" "$project/.template-manifest.json" "$template_remote" || return 1
+    git -C "$project" add CLAUDE.md .template-manifest.json || return 1
+    git -C "$project" -c user.name="Project Smoke" -c user.email="project-smoke@example.invalid" commit -q -m "project fixture" || return 1
+
+    local manifest_before
+    local claude_before
+    manifest_before="$(_get_hash "$project/.template-manifest.json")"
+    claude_before="$(_get_hash "$project/CLAUDE.md")"
+    bash scripts/sync-template.sh --from-git --ref v9.9.9 --project-dir "$project" --dry-run > "$output" 2>&1 || return 1
+    grep -q "Fetching template preview from" "$output" || return 1
+    grep -q "Current: 4.1.1.*New: 9.9.9" "$output" || return 1
+    grep -q "WOULD UPDATE: CLAUDE.md" "$output" || return 1
+    grep -q "(Dry run" "$output" || return 1
+    [ "$manifest_before" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+    [ "$claude_before" = "$(_get_hash "$project/CLAUDE.md")" ] || return 1
+    ! git -C "$project" remote get-url template >/dev/null 2>&1 || return 1
+    [ ! -e "$project/.git/FETCH_HEAD" ] || return 1
+    git -C "$project" remote add template "$template_remote-conflict" || return 1
+    if bash scripts/sync-template.sh --from-git --ref v9.9.9 --project-dir "$project" --dry-run > "$output.conflict" 2>&1; then
+      return 1
+    fi
+    grep -q "Template source conflict" "$output.conflict" || return 1
+    git -C "$project" remote remove template || return 1
+    if bash scripts/sync-template.sh --from-git --ref main --project-dir "$project" --dry-run > "$output.branch" 2>&1; then
+      return 1
+    fi
+    grep -q "Non-release ref 'main' requires --canary" "$output.branch" || return 1
+    bash scripts/sync-template.sh --from-git --canary --ref main --project-dir "$project" --dry-run > "$output.canary" 2>&1 || return 1
+    grep -q "Current: 4.1.1.*New: 10.0.0" "$output.canary" || return 1
+    [ "$manifest_before" = "$(_get_hash "$project/.template-manifest.json")" ] || return 1
+    [ "$claude_before" = "$(_get_hash "$project/CLAUDE.md")" ] || return 1
+    ! git -C "$project" remote get-url template >/dev/null 2>&1 || return 1
+    [ ! -e "$project/.git/FETCH_HEAD" ] || return 1
+    if bash scripts/sync-template.sh --from-git --ref v9.9.8 --project-dir "$project" --dry-run > "$output.missing" 2>&1; then
+      return 1
+    fi
+    grep -q "Cannot fetch template ref: v9.9.8" "$output.missing" || return 1
+    if ! bash scripts/sync-template.sh --from-git --ref v9.9.9 --project-dir "$project" > "$output.apply" 2>&1; then
+      cat "$output.apply"
+      return 1
+    fi
+    node -e "const m=require(process.argv[1]); if(m.template_version!=='9.9.9') process.exit(1)" "$project/.template-manifest.json" || return 1
+    grep -q 'Template Version: 9.9.9' "$project/CLAUDE.md" || return 1
+    ! grep -q 'Template Version: 10.0.0' "$project/CLAUDE.md" || return 1
+    local applied_remote
+    applied_remote="$(git -C "$project" remote get-url template)"
+    [ "$(cd "$applied_remote" && pwd)" = "$(cd "$template_remote" && pwd)" ] || return 1
+  }
+  trap cleanup_sync_smoke EXIT
+  create_sync_template_fixture "$SYNC_TEMPLATE_FIXTURE"
+  create_migration_template_fixture "$SYNC_MIGRATION_FIXTURE"
+  check "sync-template preserves declared legacy 4.7 AGENTS ownership" run_legacy_47_project_agents_sync_smoke "$SYNC_LEGACY_SAFE_PROJECT" "$SYNC_LEGACY_SAFE_OUTPUT" "$SYNC_MIGRATION_FIXTURE"
+  check "sync-template preserves and converges customized legacy 4.7 AGENTS ownership" run_legacy_47_custom_agents_sync_smoke "$SYNC_LEGACY_CONFLICT_PROJECT" "$SYNC_LEGACY_CONFLICT_OUTPUT" "$SYNC_MIGRATION_FIXTURE"
+  check "sync-template rejects traversal and symlink write targets" run_sync_path_safety_smoke "$SYNC_PATH_SAFETY_ROOT" "$SYNC_PATH_SAFETY_OUTPUT" "$SYNC_TRAVERSAL_SOURCE"
+  check "sync-template converges new-path adoption, conflicts, project ownership, and hybrid hashes" run_new_path_convergence_smoke "$SYNC_NEW_PATH_ROOT" "$SYNC_NEW_PATH_OUTPUT" "$SYNC_MIGRATION_FIXTURE"
+  check "sync-template preserves a project-only manifest without rebuilding ownership" run_project_only_manifest_sync_smoke "$SYNC_PROJECT_ONLY_MANIFEST_PROJECT" "$SYNC_PROJECT_ONLY_MANIFEST_OUTPUT"
+  check "sync-template dry-run handles empty trackable manifest" run_empty_manifest_sync_smoke "$SYNC_EMPTY_MANIFEST_PROJECT" "$SYNC_EMPTY_MANIFEST_OUTPUT"
+  check "sync-template keeps source-only files out of generated projects" run_source_only_sync_smoke "$SYNC_SOURCE_ONLY_PROJECT" "$SYNC_SOURCE_ONLY_OUTPUT"
+  check "sync-template bootstrap dry-run leaves legacy project unchanged" run_bootstrap_dry_run_smoke "$SYNC_TEMPLATE_FIXTURE" "$SYNC_BOOTSTRAP_DRY_RUN_PROJECT" "$SYNC_BOOTSTRAP_DRY_RUN_OUTPUT"
+  check "sync-template bootstrap preserves project design ownership" run_bootstrap_ownership_smoke "$SYNC_TEMPLATE_FIXTURE" "$SYNC_BOOTSTRAP_OWNERSHIP_PROJECT" "$SYNC_BOOTSTRAP_OWNERSHIP_OUTPUT"
+  check "sync-template pinned ref previews, rejects missing tags, and applies exact release" run_from_git_dry_run_smoke "$SYNC_GIT_TEMPLATE_FIXTURE" "$SYNC_GIT_DRY_RUN_PROJECT" "$SYNC_GIT_DRY_RUN_OUTPUT"
+  cleanup_sync_smoke
+  trap - EXIT
+else
+  check "native sync preview, binding, rollback, conflict, and path safety" node scripts/test-sync-template.js
+fi
 
 echo ""
 echo "Results: $((CHECKS-ERRORS))/$CHECKS passed"
