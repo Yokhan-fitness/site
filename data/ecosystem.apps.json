@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-10-29",
+  "publicOrigin": "https://yokhan.xyz",
+  "apps": [
+    {
+      "id": "public",
+      "label": "BUFF IT",
+      "href": "https://yokhan.xyz/",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "app",
+      "label": "BUFF IT APP",
+      "href": "https://fitness.yokhan.xyz/",
+      "loginHref": "https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome",
+      "accountHref": "https://fitness.yokhan.xyz/profile",
+      "logoutHref": "https://fitness.yokhan.xyz/",
+      "surfaces": ["public", "app", "calls"],
+      "status": "live"
+    },
+    {
+      "id": "calls",
+      "label": "CONNECT",
+      "href": "https://connect.yokhan.xyz/",
+      "surfaces": ["public", "app"],
+      "status": "live"
+    },
+    {
+      "id": "auth",
+      "label": "BUFF IT ID",
+      "href": "https://auth.yokhan.xyz/",
+      "surfaces": ["public", "app", "calls"],
+      "status": "live"
+    },
+    {
+      "id": "guide",
+      "label": "Guide",
+      "href": "https://yokhan.xyz/guide.html",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "programs",
+      "label": "Программы",
+      "href": "https://yokhan.xyz/programs.html",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "coaching",
+      "label": "С тренером",
+      "href": "https://yokhan.xyz/coaching.html",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "method",
+      "label": "О системе",
+      "href": "https://yokhan.xyz/method.html",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "start",
+      "label": "С чего начать",
+      "href": "https://yokhan.xyz/start.html",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "safety",
+      "label": "Безопасность",
+      "href": "https://yokhan.xyz/safety.html",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "ecosystem",
+      "label": "Все проекты",
+      "href": "https://yokhan.xyz/ecosystem.html",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "portfolio",
+      "label": "Портфолио",
+      "href": "https://portfolio.yokhan.xyz/",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "kitchen",
+      "label": "Холодильник",
+      "href": "https://fitness.yokhan.xyz/kitchen",
+      "surfaces": ["public", "app"],
+      "status": "live"
+    },
+    {
+      "id": "guest",
+      "label": "Гостевая тренировка",
+      "href": "https://fitness.yokhan.xyz/train/guest",
+      "surfaces": ["public"],
+      "status": "live"
+    },
+    {
+      "id": "telegram",
+      "label": "Telegram",
+      "href": "https://t.me/yokhan_yokhan",
+      "surfaces": ["public"],
+      "status": "live"
+    }
+  ],
+  "header": {
+    "public": {
+      "brandHref": "https://yokhan.xyz/",
+      "account": {
+        "entryId": "app",
+        "loginHref": "https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome",
+        "accountHref": "https://fitness.yokhan.xyz/profile"
+      },
+      "groups": [
+        {
+          "id": "fitness",
+          "label": "Фитнес-приложение",
+          "links": ["app", "guest", "programs", "guide"]
+        },
+        {
+          "id": "services",
+          "label": "Дополнительные сервисы",
+          "links": ["calls", "kitchen", "guide", "ecosystem"]
+        },
+        {
+          "id": "coach",
+          "label": "С тренером",
+          "links": ["coaching", "portfolio", "telegram"]
+        },
+        {
+          "id": "system",
+          "label": "О системе",
+          "links": ["method", "start", "safety"]
+        }
+      ]
+    }
+  },
+  "returnTo": {
+    "default": "/home",
+    "allowedOrigins": [
+      "https://yokhan.xyz",
+      "https://fitness.yokhan.xyz",
+      "https://connect.yokhan.xyz",
+      "https://auth.yokhan.xyz",
+      "https://portfolio.yokhan.xyz"
+    ]
+  },
+  "rules": {
+    "publicPagesGuestOnly": true,
+    "sessionTransport": "same-origin-bff-preferred",
+    "headerSurfaces": ["public", "app", "calls"],
+    "rewardsInHeader": false
+  }
+}

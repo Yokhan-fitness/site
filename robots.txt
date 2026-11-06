@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /data/
+Disallow: /hub/
+Disallow: /photo/
+Disallow: /account.html
+Disallow: /app.html
+Disallow: /bot.html
+Disallow: /start.html
+Clean-param: from&utm_source&utm_medium&utm_campaign&utm_content&utm_term
+Sitemap: https://yokhan.xyz/sitemap.xml
