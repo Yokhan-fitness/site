@@ -1,0 +1,236 @@
+:root {
+  --generated-method-desktop: image-set(
+    url("../assets/generated/web/b01-06d-trainer-calibration-ceramic-desktop-v7-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b01-06d-trainer-calibration-ceramic-desktop-v7-1600.webp") type("image/webp")
+  );
+  --generated-method-mobile: image-set(
+    url("../assets/generated/web/b01-06d-trainer-calibration-ceramic-mobile-v7-800.avif") type("image/avif"),
+    url("../assets/generated/web/b01-06d-trainer-calibration-ceramic-mobile-v7-800.webp") type("image/webp")
+  );
+  --generated-calls-desktop: image-set(
+    url("../assets/generated/web/b01-06-calls-igor-ceramic-desktop-v6-1600.avif") type("image/avif"),
+    url("../assets/generated/web/b01-06-calls-igor-ceramic-desktop-v6-1600.webp") type("image/webp")
+  );
+  --generated-calls-mobile: image-set(
+    url("../assets/generated/web/b01-06-calls-igor-ceramic-mobile-v6-800.avif") type("image/avif"),
+    url("../assets/generated/web/b01-06-calls-igor-ceramic-mobile-v6-800.webp") type("image/webp")
+  );
+  --generated-hero-position: center top;
+  --generated-hero-mobile-position: center;
+}
+
+.method-page {
+  --generated-hero-desktop: var(--generated-method-desktop);
+  --generated-hero-mobile: var(--generated-method-mobile);
+}
+
+.coaching-page {
+  --generated-hero-desktop: var(--generated-calls-desktop);
+  --generated-hero-mobile: var(--generated-calls-mobile);
+}
+
+.generated-hero-page .hero__stage::before,
+.generated-hero-page .hero__stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.generated-hero-page .hero__stage::before {
+  z-index: 0;
+  background: var(--generated-hero-desktop) var(--generated-hero-position) / cover;
+}
+
+.generated-hero-page .hero__stage::after {
+  z-index: 1;
+  background: var(--hero-overlay), var(--hero-tint);
+}
+
+.generated-hero-page .hero__inner {
+  position: relative;
+  z-index: 2;
+}
+
+.generated-hero-page .hero__panel {
+  display: none;
+}
+
+.coaching-page .trainer-proof-section {
+  position: relative;
+  padding: 0 var(--page-gutter);
+  background: var(--surface-page);
+  color: var(--text-inverse);
+}
+
+.coaching-page .trainer-proof-section > .container {
+  width: 100%;
+  max-width: var(--page-frame-max);
+  padding: 0;
+}
+
+.coaching-page .trainer-proof {
+  position: relative;
+  isolation: isolate;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+  background: var(--surface-ink);
+  border-radius: var(--hero-shell-radius);
+}
+
+.coaching-page .trainer-proof__media {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.coaching-page .trainer-proof__media picture,
+.coaching-page .trainer-proof__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.coaching-page .trainer-proof__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--media-overlay-deep) 0 38%, var(--media-overlay-soft) 66%),
+    var(--hero-tint);
+  pointer-events: none;
+}
+
+.coaching-page .trainer-proof__photo {
+  object-fit: cover;
+  object-position: 58% center;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.coaching-page .trainer-proof__copy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--page-grid-max);
+  margin: 0 auto;
+  padding: var(--section-padding-y) var(--section-padding-x);
+  color: var(--text-inverse);
+}
+
+.coaching-page .trainer-proof__copy,
+.coaching-page .trainer-proof__copy .section-heading {
+  gap: var(--space-base);
+}
+
+.coaching-page .trainer-proof__copy .section-subtitle {
+  color: var(--text-inverse-soft);
+}
+
+.coaching-page .trainer-proof__copy .spec-table {
+  gap: var(--space-half);
+}
+
+.coaching-page .trainer-proof__copy .spec-table div {
+  background: var(--surface-panel);
+  padding: var(--space-half) var(--space-base);
+}
+
+.coaching-page .trainer-proof__copy .spec-table strong {
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 40rem) and (max-width: 58.6875rem) {
+  .coaching-page .trainer-proof__media::after {
+    background:
+      linear-gradient(90deg, var(--media-overlay-deep) 0 52%, var(--media-overlay-soft) 88%),
+      var(--hero-tint);
+  }
+
+  .coaching-page .trainer-proof__copy {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--space-2);
+  }
+
+  .coaching-page .trainer-proof__copy .section-title {
+    font-size: var(--text-xl);
+  }
+
+  .coaching-page .trainer-proof__copy .section-subtitle {
+    font-size: var(--text-md);
+  }
+}
+
+@media (min-width: 58.75rem) {
+  .coaching-page .trainer-proof {
+    grid-template-columns: minmax(0, 1fr);
+    aspect-ratio: 16 / 9;
+  }
+
+  .coaching-page .trainer-proof__copy {
+    align-self: center;
+  }
+
+  .coaching-page .trainer-proof__copy > * {
+    max-width: var(--content-md);
+  }
+
+  .coaching-page .trainer-proof__copy,
+  .coaching-page .trainer-proof__copy .section-heading {
+    gap: var(--space-base);
+  }
+
+  .coaching-page .trainer-proof__copy .section-title {
+    font-size: var(--text-xl);
+  }
+
+  .coaching-page .trainer-proof__copy .section-subtitle {
+    color: var(--text-inverse-soft);
+    font-size: var(--text-md);
+  }
+
+}
+
+@media (max-width: 48.75rem) {
+  .generated-hero-page .hero__stage::before {
+    background:
+      var(--generated-hero-mobile) var(--generated-hero-mobile-position) / cover;
+  }
+
+  .generated-hero-page .hero__stage::after {
+    background:
+      linear-gradient(var(--media-overlay-deep), var(--media-overlay-strong)),
+      var(--hero-tint);
+  }
+
+  .generated-hero-page .hero__inner {
+    min-height: var(--hero-min-height);
+    padding-bottom: var(--space-2);
+  }
+
+}
+
+@media (max-width: 39.9375rem) {
+  .coaching-page {
+    --generated-hero-mobile-position: 62% center;
+  }
+
+  .coaching-page .trainer-proof__media::after {
+    background:
+      linear-gradient(180deg, var(--media-overlay-deep) 0 62%, var(--media-overlay-soft) 100%),
+      var(--hero-tint);
+  }
+
+  .coaching-page .trainer-proof__photo {
+    object-position: 68% center;
+  }
+
+  .coaching-page .trainer-proof-section { padding-inline: 0; }
+  .coaching-page .trainer-proof { border-radius: 0; }
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>BUFF IT</title>
+  <rect width="64" height="64" rx="12" fill="#292c2d"/>
+  <path fill="#fff" d="M14 15h13c8 0 12 4 12 10 0 4-2 7-5 8 4 1 6 4 6 8 0 7-5 11-13 11H14V15zm8 7v8h5c3 0 5-1 5-4s-2-4-5-4h-5zm0 15v8h5c4 0 6-1 6-4s-2-4-6-4h-5zM44 15h7v37h-7z"/>
+</svg>

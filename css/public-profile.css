@@ -1,0 +1,55 @@
+/* Public profile controls inherit the canonical DS, including both modes. */
+html[data-buffit-design-style] body {
+  background: var(--buffit-design-page);
+  color: var(--buffit-design-ink);
+}
+.buffit-landing-home-editorial__frame { grid-template-columns: minmax(0, 1fr); }
+.buffit-landing-home-editorial__hero-wrap { min-inline-size: 0; }
+@media (max-width: 21.875rem) {
+  .buffit-landing-home-hero { --buffit-home-title-size: var(--buffit-public-hero-title-size-mobile); }
+}
+/* The approved high-key photography remains on its light studio stage. It is
+   an independent media context, while the rest of the page follows the mode. */
+html[data-buffit-mode="dark"] .buffit-landing-home-hero {
+  --buffit-design-ink: var(--buffit-design-ink-light);
+  --buffit-surface-page: var(--buffit-design-paper-light);
+  --buffit-text-primary: var(--buffit-design-ink-light);
+  --buffit-text-secondary: var(--buffit-design-ink-light);
+  --buffit-text-muted: var(--buffit-design-ink-light);
+  --buffit-home-photo-blend: darken;
+  --buffit-design-primary-fill: var(--buffit-design-primary-ink);
+  --buffit-design-primary-edge: var(--buffit-design-primary-ink);
+  --buffit-design-primary-text: var(--buffit-color-white);
+  color: var(--buffit-design-ink-light);
+}
+html[data-buffit-mode="dark"] .nav.is-nav-solid .nav__inner {
+  background: var(--surface-nav);
+  color: var(--text-primary);
+}
+.public-appearance {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-base);
+  padding: var(--space-2) var(--shell-padding-x);
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font: var(--text-sm)/var(--line-body) var(--font-body);
+}
+.public-appearance label { display: flex; align-items: center; gap: var(--space-half); }
+.public-appearance select {
+  min-block-size: calc(var(--space-base) * 2 + var(--space-half) + var(--space-min));
+  max-inline-size: 100%;
+  padding: var(--space-half) var(--space-base);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-panel);
+  color: var(--text-primary);
+  font: inherit;
+}
+.public-appearance select:focus-visible { outline: var(--buffit-design-focus-size) solid var(--buffit-design-control-edge); outline-offset: var(--space-min); }
+/* The standalone trainer profile is a consumer of the same public surfaces. */
+.coach-page { background: var(--surface-page); color: var(--text-primary); }
+.coach-page .coach-note { background: var(--surface-panel-muted); color: var(--text-primary); border-color: var(--buffit-design-outline); }
+html[data-buffit-mode="dark"] { color-scheme: dark; }

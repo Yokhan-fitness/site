@@ -1,0 +1,47 @@
+/* BUFF IT ID entry layer. Loaded after the canonical header contract. */
+.nav__actions {
+  position: relative;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-half);
+}
+
+.nav__login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-min-height);
+  padding: var(--space-half) var(--space-base);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--line-tight);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+body.is-nav-solid .nav__login,
+body.is-nav-menu-open .nav__login,
+body.is-nav-mobile-open .nav__login {
+  color: var(--text-primary);
+}
+
+.auth-service-card--muted {
+  opacity: 0.72;
+}
+
+@media (max-width: 80rem) {
+  .nav__actions {
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .nav__actions .nav__login,
+  .pdp-hero-page .nav__actions .nav__login {
+    display: inline-flex;
+    min-height: var(--button-min-height);
+    padding: var(--space-half) var(--space-base);
+    font-size: var(--text-sm);
+  }
+}

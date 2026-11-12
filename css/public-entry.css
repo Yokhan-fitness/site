@@ -1,0 +1,11 @@
+.entry-intro { padding: calc(var(--nav-height) + var(--space-lg)) 0 var(--space-lg); }
+.entry-intro .container { display:grid; gap:var(--space-1-5); }
+.entry-intro h1 { max-width:22ch; font-size:clamp(1.8rem,4.5vw,3.5rem); line-height:1.15; }
+.entry-intro__description { max-width:65ch; font-size:var(--text-lg); }
+.entry-page .section { padding-block:var(--space-lg); }
+.entry-page .support-grid { margin-top:var(--space-lg); }
+.entry-page .support-card { text-decoration:none; box-shadow:none; border:1px solid var(--surface-panel-muted); gap:var(--space-base); }
+.entry-page .support-card strong { color:var(--text-primary); margin-top:auto; }
+.entry-page .support-card:hover { background:var(--surface-panel); }
+.entry-page .support-card:focus-visible { outline:2px solid var(--text-primary); outline-offset:4px; }
+@media (max-width:54rem) { .entry-intro { padding-top:calc(var(--nav-height) + var(--space-lg)); } .entry-intro .hero__actions { display:grid; } .entry-intro .btn { width:100%; } }

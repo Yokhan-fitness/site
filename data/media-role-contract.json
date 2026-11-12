@@ -1,0 +1,177 @@
+{
+  "version": 5,
+  "minimumDistinctDimensions": 4,
+  "dimensions": ["location", "light", "camera", "action", "subject", "accent"],
+  "roles": {
+    "women": {
+      "assets": {
+        "desktop": "b03-08-women-strength-ceramic-desktop-v3-1600",
+        "mobile": "b03-08-women-strength-ceramic-mobile-v3-800"
+      },
+      "location": "brick-residential-courtyard",
+      "light": "late-warm-side-sun",
+      "camera": "eye-level-35mm-environmental",
+      "action": "low-step-up",
+      "subject": "woman-35-45",
+      "accent": "dusty-terracotta-olive",
+      "techniqueChecks": [
+        "whole leading foot is planted on a stable low platform",
+        "leading knee tracks over the second toe",
+        "pelvis remains level",
+        "torso is upright with only a slight natural forward lean"
+      ],
+      "technicalReview": { "status": "approved", "reviewer": "Codex visual review 2026-07-22" }
+    },
+    "men": {
+      "assets": {
+        "desktop": "b03-07-men-capability-ceramic-desktop-v3-1600",
+        "mobile": "b03-07-men-capability-ceramic-mobile-v3-800"
+      },
+      "location": "covered-residential-calisthenics-court",
+      "light": "cool-soft-overcast",
+      "camera": "low-angle-28mm-environmental",
+      "action": "strict-pull-up-upper-half",
+      "subject": "man-30-40",
+      "accent": "sage-bronze-linen",
+      "techniqueChecks": [
+        "fixed bar is continuous and supported at both ends",
+        "hands use a full closed pronated grip with neutral wrists",
+        "shoulders remain active and elbows track beside the trunk",
+        "trunk and legs remain vertical without swing",
+        "no assistance band is present"
+      ],
+      "technicalReview": { "status": "approved", "reviewer": "Codex visual review 2026-07-22" }
+    },
+    "health": {
+      "assets": {
+        "desktop": "b01-09-health-safe-return-ceramic-desktop-v3-1600",
+        "mobile": "b01-09-health-safe-return-ceramic-mobile-v3-800"
+      },
+      "location": "enclosed-ordinary-balcony",
+      "light": "soft-north-window",
+      "camera": "straight-eye-level-50mm",
+      "action": "controlled-sit-to-stand",
+      "subject": "adult-55-65",
+      "accent": "oat-sage-pale-wood",
+      "techniqueChecks": [
+        "solid chair has no wheels and is placed against a wall",
+        "both feet are flat and hip-width apart",
+        "knees track in line with the feet",
+        "torso leans slightly forward while gaze remains ahead"
+      ],
+      "technicalReview": { "status": "approved", "reviewer": "Codex visual review 2026-07-22" }
+    },
+    "food": {
+      "assets": {
+        "desktop": "b01-10-food-rhythm-ceramic-desktop-v3-1600",
+        "mobile": "b01-10-food-rhythm-ceramic-mobile-v3-800"
+      },
+      "location": "compact-lived-in-kitchen",
+      "light": "warm-evening-practical-plus-dusk-window",
+      "camera": "close-documentary-50mm",
+      "action": "portioning-everyday-dinner",
+      "subject": "father-and-teenage-daughter",
+      "accent": "amber-vegetable-green-cream",
+      "techniqueChecks": [],
+      "technicalReview": { "status": "not-applicable", "reviewer": null }
+    },
+    "guide": {
+      "assets": {
+        "desktop": "b01-08-guide-materials-ceramic-desktop-v2-1600",
+        "mobile": "b01-08-guide-materials-ceramic-mobile-v2-800"
+      },
+      "location": "apartment-entryway-console",
+      "light": "crisp-midday-shadow",
+      "camera": "steep-45-degree-still-life",
+      "action": "route-materials-ready-to-take",
+      "subject": "object-still-life-no-person",
+      "accent": "parchment-copper-muted-olive",
+      "techniqueChecks": [],
+      "technicalReview": { "status": "not-applicable", "reviewer": null }
+    },
+    "app": {
+      "assets": {
+        "desktop": "b01-07-app-in-use-ceramic-desktop-v3-1600",
+        "mobile": "b01-07-app-in-use-ceramic-mobile-v3-800"
+      },
+      "location": "neighbourhood-movement-studio",
+      "light": "clear-cool-morning-daylight",
+      "camera": "shallow-phone-foreground-over-shoulder",
+      "action": "straightening-mat-before-training",
+      "subject": "adult-25-35-plus-phone",
+      "accent": "pale-clay-sage-silver",
+      "techniqueChecks": [],
+      "technicalReview": { "status": "not-applicable", "reviewer": null }
+    }
+  },
+  "placementPolicy": {
+    "requiredFields": ["route", "slot", "role", "sceneId", "purpose", "reuseScope"],
+    "assetReuseLimit": 1,
+    "codeNativeKinds": [],
+    "generatedAssetKinds": ["generated-key-art", "generated-poster"],
+    "generatedAssetRequiredFields": ["creativeIntent", "compositionPlan", "cropPlan"],
+    "forbiddenPromptDirections": [
+      "warm wellness",
+      "premium wellness",
+      "stock montage",
+      "cottagecore map",
+      "literal first-order association"
+    ]
+  },
+  "placements": {
+    "home.hero": {
+      "route": "index.html",
+      "slot": "hero",
+      "role": "trainer-led-system",
+      "sceneId": "igor-expedition-route",
+      "purpose": "Introduce the real trainer and make the route-through-a-real-week the primary visual premise.",
+      "reuseScope": "placement-only",
+      "assets": {
+        "desktop": "b01-01-home-route-expedition-ceramic-desktop-v4-1600",
+        "mobile": "b01-01-home-route-expedition-ceramic-mobile-v4-800"
+      },
+      "identityReview": {"status": "approved", "referenceSet": "IgroChar", "reviewer": "Codex visual review 2026-07-22"},
+      "technicalReview": {"status": "not-applicable", "reviewer": null}
+    },
+    "home.roadmap": {
+      "route": "index.html",
+      "slot": "roadmap",
+      "role": "program-route",
+      "sceneId": "twelve-week-expedition-artifact",
+      "purpose": "Turn the twelve-week method into a tactile expedition artifact with depth and tension instead of a CSS diagram or a literal treasure-map illustration.",
+      "reuseScope": "placement-only",
+      "assetKind": "generated-key-art",
+      "creativeIntent": "A campaign poster that makes the route feel discovered and earned without pins, icons, labels or cartoon treasure-map language.",
+      "compositionPlan": "One coherent photographed miniature terrain made from real training materials, topographic paper, tape and metal; strong diagonal route and clear copy-safe left field.",
+      "cropPlan": {
+        "desktop": "16:9, route rises from lower centre to upper right, copy-safe left 42%",
+        "mobile": "4:5, preserve the central diagonal and final destination without shrinking the full desktop scene"
+      },
+      "assets": {
+        "desktop": "b04-01-home-route-expedition-poster-desktop-v1-1600",
+        "mobile": "b04-01-home-route-expedition-poster-mobile-v1-800"
+      },
+      "technicalReview": {"status": "not-applicable", "reviewer": null}
+    },
+    "coaching.trainer-proof": {
+      "route": "coaching.html",
+      "slot": "trainer-proof",
+      "role": "live-technique-coaching",
+      "sceneId": "igor-calibration-bay",
+      "purpose": "Show that technique is observed and corrected without depicting a generated exercise repetition.",
+      "reuseScope": "coaching-and-method-proof",
+      "assets": {
+        "desktop": "b01-06d-trainer-calibration-ceramic-desktop-v7-1600",
+        "mobile": "b01-06d-trainer-calibration-ceramic-mobile-v7-800"
+      },
+      "identityReview": {"status": "approved", "referenceSet": "IgroChar", "reviewer": "Codex visual review 2026-07-22"},
+      "techniqueChecks": [
+        "trainer is not performing an exercise",
+        "spine is neutral and upright",
+        "ribs remain stacked over pelvis",
+        "both feet are naturally planted"
+      ],
+      "technicalReview": {"status": "approved", "reviewer": "Codex full-resolution visual review 2026-07-22"}
+    }
+  }
+}

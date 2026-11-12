@@ -1,0 +1,139 @@
+{
+  "contractVersion": 3,
+  "consumer": "YokhanFitnessLanding",
+  "designSystem": {
+    "package": "@buffit/design-system",
+    "packageVersion": "0.1.0",
+    "sourceRevision": "13ff9563ca4cbc078b7b334c61b3210c516247bd",
+    "sourceState": "dirty-local-candidate",
+    "integrationMode": "generated-static-page-model",
+    "isRuntimeDependency": false
+  },
+  "canonicalSources": [
+    {
+      "path": "src/css/site-header.css",
+      "sha256": "198922d4e7491585a11a82752d799995878b6dd4ad6116e1e2675133ddcd7154"
+    },
+    {
+      "path": "src/css/site-account.css",
+      "sha256": "df8a497b3fcb973a7d3150a1f1da81c2f325438de9179f87fc7e88b973db21b4"
+    },
+    {
+      "path": "src/css/site-dropdown.css",
+      "sha256": "88afe326743d045222c1785e93aee426808b779bdd6ec08ebc4ae7f1ecd67b7a"
+    },
+    {
+      "path": "scripts/rendered-token-check/runtime.mjs",
+      "sha256": "1854414bdb7f4b30e1be78fd1d0101f34a1d1df35728d5395620029b1b5f8dd5"
+    },
+    {
+      "path": "src/css/tokens.css",
+      "sha256": "a0b950d0079ee0ad9f3ef0aa2b574a0f592b4f5800a3b663801ccafaa8f55812"
+    },
+    {
+      "path": "src/css/layout.css",
+      "sha256": "842f2a66b643c58fb5fef23cd26e94dbe8adce3262bb457ce2f24cad5f114405"
+    },
+    {
+      "path": "src/css/landing.css",
+      "sha256": "e698aaecac34503dccbdf2d826aa891b943c1cebd1df7b099f0b9a99bc381e66"
+    },
+    {
+      "path": "src/css/landing-components.css",
+      "sha256": "c50d2528b26ef6817466f8e66c104726253ed2a50d9e59d54d57d643931bfef0"
+    },
+    {
+      "path": "contracts/landing-component-manifest.json",
+      "sha256": "d0605f6a37a81f64fd5f0386b16d7272391229197bfe1a319b3691673c3bd298"
+    }
+  ],
+  "copiedFiles": [
+    "css/buffit-home-system.css",
+    "css/buffit-home-assets/*",
+    "landing-media/*",
+    "contracts/landing-component-manifest.json",
+    "contracts/landing-home-static-manifest.json"
+  ],
+  "componentManifest": {
+    "path": "contracts/landing-component-manifest.json",
+    "owner": "@buffit/design-system",
+    "adoption": "exact-generated-copy"
+  },
+  "localAdapters": [
+    "js/nav-menu.js"
+  ],
+  "ownership": {
+    "designSystem": "homepage page model, component composition, shared contracts, styles and media fixtures",
+    "landing": "public routes, SEO metadata, static delivery, deployment and the non-React navigation adapter"
+  },
+  "layoutContract": {
+    "wideFrame": "--page-frame-max",
+    "contentGrid": "--page-grid-max",
+    "columns": 12,
+    "readableSpan": "--page-readable-max",
+    "mobile": "one shared --page-gutter; full bleed only by explicit component variant"
+  },
+  "verification": {
+    "command": "Controlled local candidate flow: run the DS static producer inside node scripts/managed-temp.js with BUFFIT_HOME_OUTPUT set to a fresh candidate directory under AGENT_RUN_OUTPUT; create the exact homepage-expected JSON from the controlled source SHA/content digest/manifest digest/pinset; then run node scripts/build-stockholm-public.mjs <fresh landing-* output> --homepage-candidate <candidate directory> --homepage-expected <controlled JSON>. Run DS check:landing-static-parity against that candidate before packaging.",
+    "viewports": [
+      320,
+      360,
+      390,
+      430,
+      768,
+      1440
+    ],
+    "states": [
+      "closed",
+      "open",
+      "keyboard-focus",
+      "escape-return"
+    ]
+  },
+  "homepageCandidateInput": {
+    "mode": "explicit-validated-local-candidate",
+    "cliSyntax": "node scripts/build-stockholm-public.mjs <fresh landing-* output> [release-id] --homepage-candidate <candidate directory inside AGENT_RUN_OUTPUT> --homepage-expected <controlled JSON inside AGENT_RUN_OUTPUT>",
+    "expectedJsonSchema": {
+      "schemaVersion": 1,
+      "sourceSha256": "caller-supplied lowercase SHA-256",
+      "contentDigest": "caller-supplied lowercase SHA-256",
+      "manifestSha256": "caller-supplied lowercase SHA-256",
+      "pins": "caller-supplied complete source/parser/compiler/schema/registry/renderer/tokens/fonts/media SHA-256 pinset"
+    },
+    "identity": {
+      "pageId": "buffit.home",
+      "owner": "YokhanFitnessLanding",
+      "routeRef": "/",
+      "sourceMode": "markdown",
+      "sourcePath": "content/pages/home.md"
+    },
+    "outputs": {
+      "stylesheet": "css/buffit-home-markdown-[8 uppercase base32 chars].css",
+      "runtime": "js/buffit-landing-home-markdown-[8 uppercase base32 chars].js",
+      "stylesheetAssets": "css/buffit-home-markdown-assets/**"
+    },
+    "validation": "Exact candidate manifest digest, source SHA, content digest, pinset, manifest output hashes, inert payload, closure inventory, media digests and filesystem identity are checked before staged package creation; candidate snapshot is rechecked before promotion.",
+    "bytePolicy": "Compiled index, stylesheet, runtime and inert model payload are preserved byte-for-byte; existing legacy entrypoints and non-home outputs remain unchanged.",
+    "legacyMode": "Without explicit candidate flags existing behavior remains; a partially specified or invalid candidate fails closed and never falls back to the legacy homepage.",
+    "sourceProvenance": "Expected source and pins are controlled caller input and must not be copied only from the candidate manifest.",
+    "manifest": {
+      "schemaVersion": 2,
+      "files": "Top-level canonical path to lowercase SHA-256 map covering every candidate-emitted file except contracts/landing-home-static-manifest.json itself; the external expected manifestSha256 binds that self-manifest."
+    },
+    "copyClosure": [
+      "index.html",
+      "manifest-pinned hashed runtime and stylesheet",
+      "all stylesheetAssets (fonts/images) under css/buffit-home-markdown-assets/",
+      "all media paths declared in the candidate manifest",
+      "contracts/landing-component-manifest.json"
+    ],
+    "promotion": "Fresh managed staging directory; full staged file/hash inventory validation; candidate identity is rechecked before fresh output rename; pre-existing output is never overwritten.",
+    "candidateAdditionalExternalHosts": [
+      {
+        "host": "kitchen.yokhan.xyz",
+        "scheme": "https",
+        "evidence": "Existing design-system-owned homepage action target in src/react/landing-home-content.ts; applied only to authored-candidate validation, not the global legacy URL policy."
+      }
+    ]
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "updated": "2026-05-30",
+  "principles": [
+    "Не выдумывать кейсы, отзывы, замеры или скриншоты.",
+    "Разделять научную основу, процесс сервиса, социальное доказательство и границы безопасности.",
+    "Медицинские и психические состояния не обещать лечить тренировками.",
+    "Для каждого маршрута нужен свой тип доказательства, а не один общий блок доверия."
+  ],
+  "sources": [
+    {
+      "id": "who-physical-activity",
+      "title": "WHO physical activity fact sheet",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+      "safeClaim": "Регулярная физическая активность и снижение сидячего времени связаны с существенной пользой для здоровья."
+    },
+    {
+      "id": "who-guidelines-strength",
+      "title": "WHO Guidelines on Physical Activity and Sedentary Behaviour",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK566046/",
+      "safeClaim": "Взрослым рекомендуют силовую активность для основных мышечных групп два или более дня в неделю."
+    },
+    {
+      "id": "cdc-adult-activity",
+      "title": "CDC adult physical activity basics",
+      "url": "https://www.cdc.gov/physical-activity-basics/adding-adults/index.html",
+      "safeClaim": "Практичная недельная база для взрослых: аэробная активность плюс силовая активность два дня в неделю."
+    },
+    {
+      "id": "pubmed-resistance-depression",
+      "title": "Resistance Training in Depression",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37656468/",
+      "safeClaim": "Силовые тренировки могут снижать выраженность депрессивных симптомов, но не заменяют диагностику и лечение депрессии."
+    },
+    {
+      "id": "jama-ret-depression",
+      "title": "Resistance exercise training and depressive symptoms meta-analysis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6137526/",
+      "safeClaim": "Метанализ РКИ связывает resistance training со снижением депрессивных симптомов; это формулируется как поддержка, не как гарантия лечения."
+    }
+  ],
+  "assets": [
+    {
+      "id": "app-week-plan",
+      "title": "Пример недели в APP / Personal",
+      "where": [
+        "programs.html",
+        "coaching.html",
+        "app.html"
+      ],
+      "idealAsset": "скрин или мок недельного плана: тренировки, домашнее задание, отметки, корректировка",
+      "why": "делает персонализацию видимой, а не абстрактной"
+    },
+    {
+      "id": "bot-route-result",
+      "title": "Скрин результата Telegram-диагностики",
+      "where": [
+        "start.html",
+        "bot.html",
+        "programs.html"
+      ],
+      "idealAsset": "чистый скрин: выбранная цель, готовность, следующий шаг",
+      "why": "снижает тревогу перед кликом в бота"
+    },
+    {
+      "id": "calls-route-note",
+      "title": "Как выглядит итог созвона",
+      "where": [
+        "calls-access.html",
+        "coaching.html"
+      ],
+      "idealAsset": "санитизированная карточка: цель, ограничения, формат недели, первый шаг",
+      "why": "показывает, что созвон заканчивается решением, а не продажным давлением"
+    },
+    {
+      "id": "food-smartcart",
+      "title": "Пример FOOD / smartcart",
+      "where": [
+        "nutrition.html",
+        "program-weight-loss.html",
+        "program-glutes.html"
+      ],
+      "idealAsset": "корзина продуктов, замены, 2-3 простых блюда под цель",
+      "why": "переводит питание из теории в бытовое решение"
+    },
+    {
+      "id": "guide-preview",
+      "title": "Превью гайда новичка",
+      "where": [
+        "guide.html",
+        "program-entry-fitness.html"
+      ],
+      "idealAsset": "оглавление и 1-2 разворота: как начать без перегруза",
+      "why": "дает ценность тем, кто пока не готов покупать"
+    },
+    {
+      "id": "health-red-flags",
+      "title": "Чеклист HEALTH / красные флаги",
+      "where": [
+        "health.html",
+        "safety.html",
+        "program-healthy-back.html"
+      ],
+      "idealAsset": "чеклист: когда тренировка не первый шаг, когда нужен врач",
+      "why": "усиливает доверие и снижает риск плохого старта"
+    },
+    {
+      "id": "client-case",
+      "title": "Кейс клиента с разрешением",
+      "where": [
+        "programs.html",
+        "coaching.html",
+        "program-*.html"
+      ],
+      "idealAsset": "before state, ограничения, маршрут, 12 недель, результат, permission level",
+      "why": "заменяет абстрактное обещание конкретной человеческой историей"
+    }
+  ],
+  "routeProof": {
+    "new-image": "одежда/фото до-после, неделя плана, питание и главный внешний маркер",
+    "weight-loss": "динамика веса/талии, food-cart, шаги, силовой план и удержание после сложной недели",
+    "glutes": "техника движений, прогрессия нагрузки, фото/одежда с разрешением, восстановление",
+    "healthy-back": "границы безопасности, симптомы без лечения на сайте, домашние действия, техника",
+    "athlete-body": "силовые маркеры, фото силуэта, прогресс по верхнему телу, план недели",
+    "entry-fitness": "первые выполненные недели, снижение страха, простая техника, guide preview",
+    "pull-ups": "регрессии, тяга/хват, первый повтор или промежуточные маркеры",
+    "flexible-body": "мобильность, диапазон движения, перенос в силовые, ощущение легкости",
+    "maintain-shape": "удержание режима, сценарии поездок/занятых недель, поддерживающий минимум",
+    "power-exit": "тяга, переход, контроль плеч, ступени к выходу силой",
+    "front-hang": "позиции удержания, кор/хват, прогрессии переднего виса"
+  }
+}

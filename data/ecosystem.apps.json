@@ -23,7 +23,7 @@
     {
       "id": "calls",
       "label": "CONNECT",
-      "href": "https://connect.yokhan.xyz/",
+      "href": "https://calls.yokhan.xyz/",
       "surfaces": ["public", "app"],
       "status": "live"
     },
@@ -149,7 +149,7 @@
     "allowedOrigins": [
       "https://yokhan.xyz",
       "https://fitness.yokhan.xyz",
-      "https://connect.yokhan.xyz",
+      "https://calls.yokhan.xyz",
       "https://auth.yokhan.xyz",
       "https://portfolio.yokhan.xyz"
     ]

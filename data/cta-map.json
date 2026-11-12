@@ -1,0 +1,537 @@
+{
+  "updated": "2026-07-12",
+  "purpose": "Map every meaningful BUFF IT site CTA to funnel stage, Telegram start parameter, lead intent, and expected post-bot route.",
+  "trackingRules": [
+    "Every external bot CTA must use a unique startParam when the page intent differs.",
+    "Program pages use program-catalog start params as the canonical source.",
+    "Personal Telegram links are for warm/context-heavy leads; they do not replace bot diagnostics.",
+    "Guide/channel links are not failure paths; they keep not-ready users inside the warm orbit.",
+    "Health and safety routes must avoid sales pressure when red flags are present."
+  ],
+  "primaryDestinations": [
+    {
+      "id": "site-start",
+      "url": "start.html",
+      "job": "decision bridge before bot or direct contact"
+    },
+    {
+      "id": "telegram-bot",
+      "url": "https://t.me/YokhanGym_bot",
+      "job": "diagnostics, source capture, route recommendation"
+    },
+    {
+      "id": "telegram-personal",
+      "url": "https://t.me/yokhan_yokhan",
+      "job": "human trust, questions, consult and close"
+    },
+    {
+      "id": "telegram-channel",
+      "url": "https://t.me/igor_it_fit",
+      "job": "nurture not-ready users and show proof/thinking"
+    }
+  ],
+  "coreCtas": [
+    {
+      "id": "home-start",
+      "page": "index.html",
+      "label": "Начать",
+      "href": "start.html",
+      "startParam": null,
+      "funnelStage": "first-choice",
+      "segment": "unknown",
+      "intent": "choose entry point",
+      "destination": "site-start"
+    },
+    {
+      "id": "home-coaching",
+      "page": "index.html",
+      "label": "Персональный фитнес-тренер онлайн",
+      "href": "coaching.html?from=home",
+      "startParam": null,
+      "funnelStage": "offer-consideration",
+      "segment": "coach-led-interest",
+      "intent": "open the live online coaching offer from the indexed homepage",
+      "destination": "coaching-page"
+    },
+    {
+      "id": "start-diagnostics",
+      "page": "start.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_start",
+      "startParam": "buffit_start",
+      "funnelStage": "qualification",
+      "segment": "hot-or-warm",
+      "intent": "choose route with bot",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-picker",
+      "page": "programs.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_program_picker",
+      "startParam": "buffit_program_picker",
+      "funnelStage": "qualification",
+      "segment": "goal-aware",
+      "intent": "pick 12-week goal route",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "bot-entry",
+      "page": "bot.html",
+      "label": "Открыть бота",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_bot",
+      "startParam": "buffit_bot",
+      "funnelStage": "qualification",
+      "segment": "bot-ready",
+      "intent": "answer diagnostic questions",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "personal-direct",
+      "page": "links.html",
+      "label": "Личная переписка",
+      "href": "https://t.me/yokhan_yokhan",
+      "startParam": null,
+      "funnelStage": "human-close",
+      "segment": "warm-context-heavy",
+      "intent": "ask direct question or book consult",
+      "destination": "telegram-personal"
+    },
+    {
+      "id": "channel-nurture",
+      "page": "links.html",
+      "label": "Канал",
+      "href": "https://t.me/igor_it_fit",
+      "startParam": null,
+      "funnelStage": "nurture",
+      "segment": "not-ready",
+      "intent": "stay in warm orbit",
+      "destination": "telegram-channel"
+    },
+    {
+      "id": "app-support",
+      "page": "app.html",
+      "label": "Подобрать маршрут",
+      "href": "start.html",
+      "startParam": null,
+      "funnelStage": "trust",
+      "segment": "delivery-curious",
+      "intent": "understand app support inside coaching",
+      "destination": "site-start"
+    },
+    {
+      "id": "self-consult",
+      "page": "self-training.html",
+      "label": "Запросить разовый разбор",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_self_waitlist",
+      "startParam": "buffit_self_waitlist",
+      "funnelStage": "low-ticket-entry",
+      "segment": "diy-budget",
+      "intent": "request one-time science-based training consultation",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "health-check",
+      "page": "health.html",
+      "label": "Проверить старт",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_health_check",
+      "startParam": "buffit_health_check",
+      "funnelStage": "safety",
+      "segment": "risk-or-anxious",
+      "intent": "screen safe training entry",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "safety-guide",
+      "page": "safety.html",
+      "label": "Получить материал",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_safety_guide",
+      "startParam": "buffit_safety_guide",
+      "funnelStage": "safety-material",
+      "segment": "risk-or-caregiver",
+      "intent": "get first-aid/home-kit material",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "beginner-guide",
+      "page": "guide.html",
+      "label": "Получить гайд",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_guide",
+      "startParam": "buffit_guide",
+      "funnelStage": "nurture",
+      "segment": "not-ready-or-beginner",
+      "intent": "get beginner guide",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "calls-request",
+      "page": "calls-access.html",
+      "label": "Запросить разбор",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_calls",
+      "startParam": "buffit_calls",
+      "funnelStage": "human-close",
+      "segment": "context-heavy",
+      "intent": "request route/call review",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "method-diagnostics",
+      "page": "method.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_method",
+      "startParam": "buffit_method",
+      "funnelStage": "qualification",
+      "segment": "method-convinced",
+      "intent": "convert method trust into route",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "links-diagnostics",
+      "page": "links.html",
+      "label": "Открыть диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_links",
+      "startParam": "buffit_links",
+      "funnelStage": "qualification",
+      "segment": "navigation-ready",
+      "intent": "use links page as quick entry",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "home-diagnostics",
+      "page": "index.html",
+      "label": "Подобрать старт",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_home",
+      "startParam": "buffit_home",
+      "funnelStage": "qualification",
+      "segment": "unknown",
+      "intent": "enter diagnostics from home hero or bottom CTA",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "training-coaching",
+      "page": "training.html",
+      "label": "Посмотреть ведение и цены",
+      "href": "coaching.html?from=training",
+      "startParam": null,
+      "funnelStage": "offer-consideration",
+      "segment": "coach-led-interest",
+      "intent": "compare fixed coaching formats after training overview",
+      "destination": "coaching-page"
+    },
+    {
+      "id": "coaching-diagnostics",
+      "page": "coaching.html",
+      "label": "Обсудить мою ситуацию",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_coaching",
+      "startParam": "buffit_coaching",
+      "organicHref": "https://t.me/YokhanGym_bot?start=buffit_coaching_seo",
+      "organicStartParam": "buffit_coaching_seo",
+      "funnelStage": "qualification",
+      "segment": "coach-led-interest",
+      "intent": "request coach-led route selection",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "men-diagnostics",
+      "page": "men.html",
+      "label": "Подобрать программу",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_men",
+      "startParam": "buffit_men",
+      "funnelStage": "qualification",
+      "segment": "men-route",
+      "intent": "pick male-oriented goal route",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "women-diagnostics",
+      "page": "women.html",
+      "label": "Подобрать программу",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_women",
+      "startParam": "buffit_women",
+      "funnelStage": "qualification",
+      "segment": "women-route",
+      "intent": "pick female-oriented goal route",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "personal-coach",
+      "page": "personal.html",
+      "label": "Пройти подбор",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_coach",
+      "startParam": "buffit_coach",
+      "funnelStage": "qualification",
+      "segment": "delivery-curious",
+      "intent": "enter coaching diagnostics from Personal support page",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "coach-profile-coaching",
+      "page": "coach/index.html",
+      "label": "Посмотреть, как устроено ведение и сколько оно стоит",
+      "href": "/coaching.html?from=coach",
+      "startParam": null,
+      "funnelStage": "offer-consideration",
+      "segment": "personal-profile-reader",
+      "intent": "understand Igor coaching before qualification",
+      "destination": "coaching-page"
+    },
+    {
+      "id": "programs-diagnostics",
+      "page": "programs.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_programs",
+      "startParam": "buffit_programs",
+      "funnelStage": "qualification",
+      "segment": "goal-aware",
+      "intent": "pick 12-week goal route from programs catalog",
+      "destination": "telegram-bot"
+    }
+  ],
+  "programCtas": [
+    {
+      "id": "program-new-image",
+      "page": "program-new-image.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_new_image",
+      "startParam": "buffit_new_image",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "универсальный маршрут",
+      "intent": "Подготовь тело к новому образу",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-weight-loss",
+      "page": "program-weight-loss.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_weight_loss",
+      "startParam": "buffit_weight_loss",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "вес и устойчивость",
+      "intent": "Похудеть навсегда",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-glutes",
+      "page": "program-glutes.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_glutes",
+      "startParam": "buffit_glutes",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "женский визуальный оффер",
+      "intent": "Топ ягодицы",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-athlete-body",
+      "page": "program-athlete-body.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_athlete_body",
+      "startParam": "buffit_athlete_body",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "мужской визуальный оффер",
+      "intent": "Тело атлета",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-entry-fitness",
+      "page": "program-entry-fitness.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_entry",
+      "startParam": "buffit_entry",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "старт без стыда",
+      "intent": "Вход в фитнес",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-healthy-back",
+      "page": "program-healthy-back.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_back",
+      "startParam": "buffit_back",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "сидячая работа",
+      "intent": "Здоровая спина",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-pull-ups",
+      "page": "program-pull-ups.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_pullups",
+      "startParam": "buffit_pullups",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "навык силы",
+      "intent": "Подтягивание",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-flexible-body",
+      "page": "program-flexible-body.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_flexible",
+      "startParam": "buffit_flexible",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "легкость и мобильность",
+      "intent": "Гибкое тело",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-maintain-shape",
+      "page": "program-maintain-shape.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_maintain",
+      "startParam": "buffit_maintain",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "удержание результата",
+      "intent": "Поддержание формы",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-power-exit",
+      "page": "program-power-exit.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_power_exit",
+      "startParam": "buffit_power_exit",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "продвинутый навык",
+      "intent": "Выход силы",
+      "destination": "telegram-bot"
+    },
+    {
+      "id": "program-front-hang",
+      "page": "program-front-hang.html",
+      "label": "Пройти диагностику",
+      "href": "https://t.me/YokhanGym_bot?start=buffit_front_hang",
+      "startParam": "buffit_front_hang",
+      "funnelStage": "goal-specific-qualification",
+      "segment": "контроль тела",
+      "intent": "Передний вис",
+      "destination": "telegram-bot"
+    }
+  ],
+  "postBotRoutes": [
+    {
+      "result": "hot-fit",
+      "userState": "goal is urgent, budget and format are acceptable, no red flags",
+      "next": "personal Telegram or consultation",
+      "page": "start.html",
+      "recommendedMessage": "Собрали маршрут. Дальше лучше коротко согласовать формат и стартовую неделю лично.",
+      "sitePromise": "goal is clear; move from browsing to start-week agreement",
+      "pageSection": "programs.html[data-outcome=\"hot-fit\"]",
+      "proofBlocks": [
+        "chosen 12-week goal",
+        "start-week format",
+        "risk/tool fallback"
+      ],
+      "objectionHandled": "I still need to read more before starting"
+    },
+    {
+      "result": "warm-fit",
+      "userState": "goal is real, but needs clarity or trust",
+      "next": "program page + CALLS",
+      "page": "calls-access.html",
+      "recommendedMessage": "Похоже, маршрут подходит, но есть детали. Лучше разобрать цель и ограничения на коротком созвоне.",
+      "sitePromise": "use a short review to avoid the wrong first load",
+      "pageSection": "calls-access.html[data-outcome=\"warm-fit\"]",
+      "proofBlocks": [
+        "context",
+        "boundaries",
+        "one next decision"
+      ],
+      "objectionHandled": "a call is just sales pressure"
+    },
+    {
+      "result": "not-ready",
+      "userState": "interested but not ready to buy now",
+      "next": "guide + channel",
+      "page": "guide.html",
+      "recommendedMessage": "Не надо покупать на эмоции. Возьми гайд, посмотри базу и вернись к диагностике, когда станет яснее.",
+      "sitePromise": "get useful base and return later without pressure",
+      "pageSection": "guide.html[data-outcome=\"not-ready\"]",
+      "proofBlocks": [
+        "guide now",
+        "channel nurture",
+        "return path"
+      ],
+      "objectionHandled": "I am not ready to buy, so there is no next step"
+    },
+    {
+      "result": "diy-budget",
+      "userState": "wants structure, but not full coach-led support",
+      "next": "one-time consultation 5-8k + beginner guide fallback",
+      "page": "self-training.html",
+      "recommendedMessage": "Если хочется самому и дешевле, предложить разовую консультацию за 5–8к: цель, ограничения, научно обоснованная тренировочная программа и одна коррекция через неделю по отзывам. Это не ведение, а аккуратный старт без случайной программы.",
+      "sitePromise": "buy one-time structure without full coaching",
+      "pageSection": "self-training.html[data-outcome=\"diy-budget\"]",
+      "proofBlocks": [
+        "program under real conditions",
+        "one correction",
+        "not weekly coaching"
+      ],
+      "objectionHandled": "full coaching is too expensive right now"
+    },
+    {
+      "result": "medical-red-flag",
+      "userState": "pain, injury, neurological symptoms, fever, or unsafe state",
+      "next": "HEALTH/safety-first route",
+      "page": "health.html",
+      "recommendedMessage": "Тут не надо продавливаться в тренировку. Сначала безопасность и медицинская рамка, потом нагрузка.",
+      "sitePromise": "separate training from safety boundaries first",
+      "pageSection": "health.html[data-outcome=\"medical-red-flag\"]",
+      "proofBlocks": [
+        "stop signals",
+        "safe scope",
+        "return route"
+      ],
+      "objectionHandled": "I should push through pain to get fit"
+    },
+    {
+      "result": "food-barrier",
+      "userState": "training goal is blocked by nutrition chaos",
+      "next": "nutrition + smartcart support",
+      "page": "nutrition.html",
+      "recommendedMessage": "Цель упирается не только в тренировки. Нужен простой пищевой ритм и корзина без отдельной войны.",
+      "sitePromise": "fix food rhythm enough for training to work",
+      "pageSection": "nutrition.html[data-outcome=\"food-barrier\"]",
+      "proofBlocks": [
+        "shopping basket",
+        "meal rhythm",
+        "training connection"
+      ],
+      "objectionHandled": "my issue is motivation, not food environment"
+    }
+  ],
+  "unresolvedInputs": [
+    "First readiness classifier is implemented after the selector; deeper multi-question route diagnostics and proof assets still need implementation.",
+    "Real proof assets and screenshots are still missing for APP, CALLS, FOOD, GUIDE, HEALTH and client cases.",
+    "Self-training subscription remains a later product; current budget lane can show the one-time 5–8k consultation."
+  ],
+  "botImplementation": {
+    "repo": "../YokhanGymBot",
+    "status": "source tracking, route picker, post-picker site links, and first readiness classifier deployed and smoked live on 2026-05-29",
+    "sourceField": "quiz_leads.source",
+    "preservedThrough": "handlers/spine_quiz_handler.py::_begin_quiz copies source before state.clear() and writes it back",
+    "entrySelector": "handlers/buffit_route_picker.py maps buffit_* start params and broad aliases to goal-first route choices before the spine diagnostic",
+    "analytics": [
+      "quiz_started data.source",
+      "quiz_completed data.source",
+      "route_picker_opened data.source",
+      "route_selected data.source",
+      "route_readiness_opened data.source/data.route",
+      "route_readiness_selected data.source/data.route/data.result"
+    ],
+    "trainerBrief": "handlers/spine_quiz_result.py::_notify_trainer includes Источник: <source>",
+    "tests": [
+      "YokhanGymBot/tests/test_source_tracking.py",
+      "YokhanGymBot/tests/test_buffit_route_picker.py",
+      "live Telegram Web smoke: buffit_program_picker -> weight route -> nutrition.html",
+      "YokhanGymBot readiness classifier tests: 18 focused tests passed",
+      "live Telegram Web smoke: br_clarify -> br_ready_food -> nutrition.html"
+    ],
+    "currentGap": "site content has the main product ladder and six outcome routes; next gap is proof assets, screenshots, and client cases for each route.",
+    "siteRouteLinks": "high-level site sources, program sources, service sources, and one-time consultation sources are covered by the bot as buffit_* starts.",
+    "readinessLayer": "br_clarify opens hot-fit, warm-fit, not-ready, diy-budget, medical-red-flag, and food-barrier choices; diy-budget now offers one-time 5–8k consultation instead of waitlist; live smoke confirmed weight route -> br_clarify -> br_ready_food -> nutrition.html",
+    "siteOutcomeLayer": "start.html and bot.html show all six readiness outcomes; target pages now include matching data-outcome sections for hot-fit, warm-fit, not-ready, diy-budget, medical-red-flag, and food-barrier."
+  }
+}

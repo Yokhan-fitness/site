@@ -3,10 +3,12 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { preparePublicPresentation } from './public-presentation.mjs';
+import { readLandingHomeCandidate, homepageCandidatePinsetSha256 } from './landing-home-candidate.mjs';
 
 export const PUBLIC_EXTERNAL_HOSTS = new Set([
   'fitness.yokhan.xyz',
   'connect.yokhan.xyz',
+  'calls.yokhan.xyz',
   'portfolio.yokhan.xyz',
   'giants.yokhan.xyz',
   'courier.yokhan.xyz',
@@ -18,7 +20,8 @@ export const PUBLIC_EXTERNAL_HOSTS = new Set([
   'www.ncbi.nlm.nih.gov',
   'www.who.int',
 ]);
-export const PUBLIC_SCRIPTS = new Set(['js/nav-menu.js', 'js/nav-state.js', 'js/public-profile.js', 'js/buffit-landing-home.js', 'js/public-account.js']);
+const AUTHORED_HOMEPAGE_EXTERNAL_HOSTS = new Set([...PUBLIC_EXTERNAL_HOSTS, 'kitchen.yokhan.xyz']);
+export const PUBLIC_SCRIPTS = new Set(['js/nav-menu.js', 'js/nav-state.js', 'js/public-profile.js', 'js/buffit-landing-home.js', 'js/public-account.js', 'js/coaching-source.js']);
 export const PUBLIC_PAGE_EXCLUDES = new Set(['account.html', 'yandex_daceb2f35abb6b87.html']);
 export const RESOURCE_ROOTS = ['css/', 'js/', 'fonts/', 'assets/', 'landing-media/', 'coach/'];
 export const FORBIDDEN_PATH = /(^|\/)(?:\.env(?:\.[^/]*)?|raw|private|clients?|secrets?|\.git|\.session-cache|\.deploy)(?:\/|$)/i;
@@ -27,8 +30,22 @@ export const PUBLIC_OUTPUT_PARENT = path.resolve('C:/Users/iohan/Documents/Perso
 export const PUBLIC_OUTPUT = path.join(PUBLIC_OUTPUT_PARENT, 'landing-r1-build3');
 export function isAllowedPublicOutput(output) {
   const resolved = path.resolve(output);
-  return path.dirname(resolved).toLowerCase() === PUBLIC_OUTPUT_PARENT.toLowerCase()
-    && /^landing-[a-z0-9-]+$/i.test(path.basename(resolved));
+  const nameAllowed = /^landing-[a-z0-9-]+$/i.test(path.basename(resolved));
+  if (!nameAllowed) return false;
+  if (path.dirname(resolved).toLowerCase() === PUBLIC_OUTPUT_PARENT.toLowerCase()) return true;
+  const managedRoot = process.env.AGENT_RUN_OUTPUT;
+  if (!managedRoot) return false;
+  try {
+    const root = fs.realpathSync(path.resolve(managedRoot));
+    const fromRoot = path.relative(root, resolved);
+    if (!fromRoot || fromRoot === '..' || fromRoot.startsWith(`..${path.sep}`) || path.isAbsolute(fromRoot)) return false;
+    let cursor = root;
+    for (const part of fromRoot.split(path.sep).slice(0, -1).filter(Boolean)) {
+      cursor = path.join(cursor, part);
+      if (fs.existsSync(cursor) && fs.lstatSync(cursor).isSymbolicLink()) return false;
+    }
+    return true;
+  } catch { return false; }
 }
 
 const HASH = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
@@ -73,6 +90,178 @@ export function resolveSourceUrl(repo, owner, rawValue) {
   return { candidate: file, sourcePath: slash(path.relative(repo, file)) };
 }
 
+function packageLocalPath(owner, rawValue) {
+  const value = String(rawValue ?? '').trim().replaceAll('&amp;', '&');
+  if (!value || value.startsWith('#') || value.startsWith('?') || /^(?:https?:|mailto:|tel:|data:|blob:|javascript:|file:|\/\/)/i.test(value)) return null;
+  let decoded;
+  try { decoded = decodeURIComponent(value.split(/[?#]/, 1)[0]); }
+  catch { throw new Error('Homepage candidate contains malformed URL encoding.'); }
+  if (!decoded || decoded.includes('\\') || decoded.includes('\0') || decoded.includes(':')) {
+    throw new Error('Homepage candidate contains an unsafe local URL.');
+  }
+  if (decoded === '/') return '';
+  const resolved = decoded.startsWith('/')
+    ? path.posix.normalize(decoded.slice(1))
+    : path.posix.normalize(path.posix.join(path.posix.dirname(owner), decoded));
+  if (!resolved || resolved === '.' || resolved === '..' || resolved.startsWith('../') || resolved.startsWith('/')) {
+    throw new Error('Homepage candidate local URL escapes the site root.');
+  }
+  return resolved;
+}
+
+function authoredPageExists(localPath, pageSet, aliases) {
+  if (localPath === 'index.html' || localPath === '') return true;
+  if (localPath.endsWith('.html')) return pageSet.has(localPath);
+  const route = `${localPath.replace(/\/$/, '')}/`;
+  return aliases.has(route);
+}
+
+function validateAuthoredHomepage(candidate, repo, pageSet, aliases) {
+  const html = candidate.indexHtml.toString('utf8');
+  if (/yokhanfitness\.ru/i.test(html) || /\son[a-z]+\s*=/i.test(html)
+    || /<(?:iframe|object|embed)\b/i.test(html)
+    || /<meta\b[^>]*http-equiv\s*=\s*["']?refresh/i.test(html)) {
+    throw new Error('Homepage candidate contains a blocked public markup pattern.');
+  }
+  const scriptTags = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
+  for (const [, attributes, body] of scriptTags) {
+    const tag = `<script ${attributes}>`;
+    const src = attrValue(tag, 'src');
+    const type = attrValue(tag, 'type');
+    const id = attrValue(tag, 'id');
+    if (id === 'landing-home-model' && type === 'application/json' && !src) continue;
+    if (body.trim()) throw new Error('Homepage candidate contains executable inline script content.');
+    if (!src) throw new Error('Homepage candidate contains an unapproved inline script.');
+    const localPath = packageLocalPath('index.html', src);
+    const authoredRuntime = localPath === candidate.manifest.outputs.runtimeScript;
+    if (!localPath || (!authoredRuntime && !PUBLIC_SCRIPTS.has(localPath))) throw new Error('Homepage candidate references an unapproved script.');
+    if (!authoredRuntime && !fs.existsSync(path.join(repo, ...localPath.split('/')))) {
+      throw new Error(`Homepage candidate script is missing from the public site: ${localPath}.`);
+    }
+  }
+  const attrs = /\b(href|src|poster|action|formaction|srcset)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+  for (const [, attrName, doubleQuoted, singleQuoted, unquoted] of html.matchAll(attrs)) {
+    const name = attrName.toLowerCase();
+    const value = (doubleQuoted ?? singleQuoted ?? unquoted ?? '').replaceAll('&amp;', '&').trim();
+    const values = name === 'srcset' ? value.split(',').map(item => item.trim().split(/\s+/, 1)[0]) : [value];
+    for (const item of values) {
+      if (!item || item.startsWith('#') || item.startsWith('?')) continue;
+      let url;
+      try { url = new URL(item, 'https://yokhan.xyz/'); }
+      catch { throw new Error('Homepage candidate contains an invalid public URL.'); }
+      if (url.origin !== 'https://yokhan.xyz') {
+        if (name !== 'href' || url.protocol !== 'https:' || !AUTHORED_HOMEPAGE_EXTERNAL_HOSTS.has(url.hostname.toLowerCase())) {
+          throw new Error(`Homepage candidate contains a disallowed external URL: ${name}=${url.href}`);
+        }
+        continue;
+      }
+      const localPath = packageLocalPath('index.html', item);
+      if (!localPath) continue;
+      if (localPath.startsWith('landing-media/')) {
+        if (!candidate.publicFiles.has(localPath)) throw new Error(`Homepage candidate media is missing: ${localPath}.`);
+        continue;
+      }
+      if (candidate.publicFiles.has(localPath)) continue;
+      if (name === 'href' && authoredPageExists(localPath, pageSet, aliases)) continue;
+      const found = resolveSourceUrl(repo, 'index.html', item);
+      if (!found || !RESOURCE_ROOTS.some(root => found.sourcePath.startsWith(root))
+        || found.sourcePath.endsWith('.js') && !PUBLIC_SCRIPTS.has(found.sourcePath)) {
+        throw new Error(`Homepage candidate local URL is not in the public site: ${localPath}.`);
+      }
+    }
+  }
+  return html;
+}
+
+function candidatePathsReferencedByHtml(html, owner, candidateFiles) {
+  const found = new Set();
+  const attrs = /\b(?:href|src|poster|action|formaction|srcset)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+  for (const match of html.matchAll(attrs)) {
+    const value = (match[1] ?? match[2] ?? match[3] ?? '').replaceAll('&amp;', '&');
+    const values = match[0].toLowerCase().includes('srcset')
+      ? value.split(',').map(item => item.trim().split(/\s+/, 1)[0]) : [value];
+    for (const item of values) {
+      const localPath = packageLocalPath(owner, item);
+      if (localPath && candidateFiles.has(localPath)) found.add(localPath);
+    }
+  }
+  return found;
+}
+
+function addCssDependencies(repo, initialPaths, destination) {
+  const queue = [...initialPaths].filter(file => file.endsWith('.css'));
+  const visited = new Set();
+  while (queue.length) {
+    const owner = queue.pop();
+    if (visited.has(owner)) continue;
+    visited.add(owner);
+    const absolute = path.join(repo, ...owner.split('/'));
+    if (!fs.existsSync(absolute) || !fs.statSync(absolute).isFile()) continue;
+    const css = fs.readFileSync(absolute, 'utf8');
+    for (const match of css.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)|@import\s+(?:url\()?\s*["']([^"']+)["']\s*\)?/gi)) {
+      const value = match[1] ?? match[2];
+      const found = resolveSourceUrl(repo, owner, value);
+      if (!found) continue;
+      if (!RESOURCE_ROOTS.some(root => found.sourcePath.startsWith(root)) || found.sourcePath.endsWith('.js')) {
+        throw new Error(`CSS dependency outside public allowlist: ${found.sourcePath}`);
+      }
+      if (!destination.has(found.sourcePath)) {
+        destination.add(found.sourcePath);
+        if (found.sourcePath.endsWith('.css')) queue.push(found.sourcePath);
+      }
+    }
+  }
+}
+
+function assertManagedPath(pathValue, managedRoot, label) {
+  const root = fs.realpathSync(path.resolve(managedRoot));
+  const absolute = path.resolve(pathValue);
+  const fromRoot = path.relative(root, absolute);
+  if (!fromRoot || fromRoot === '..' || fromRoot.startsWith(`..${path.sep}`) || path.isAbsolute(fromRoot)) {
+    throw new Error(`${label} must stay inside AGENT_RUN_OUTPUT.`);
+  }
+  let cursor = root;
+  for (const part of fromRoot.split(path.sep).slice(0, -1).filter(Boolean)) {
+    cursor = path.join(cursor, part);
+    if (fs.existsSync(cursor) && fs.lstatSync(cursor).isSymbolicLink()) throw new Error(`${label} cannot traverse a symlink or junction.`);
+  }
+  return absolute;
+}
+
+function verifyStagedPackage(root) {
+  const manifestPath = path.join(root, 'manifest.json');
+  const manifestBytes = fs.readFileSync(manifestPath);
+  const manifest = JSON.parse(manifestBytes.toString('utf8'));
+  if (!Array.isArray(manifest.files)) throw new Error('Staged public manifest is incomplete.');
+  const expected = new Set(['manifest.json']);
+  for (const entry of manifest.files) {
+    const relativePath = entry.path.replace(/^site\//, '');
+    if (!entry.path.startsWith('site/') || entry.path.includes('\\') || relativePath.split('/').some(part => !part || part === '.' || part === '..')) {
+      throw new Error('Staged public manifest contains an unsafe output path.');
+    }
+    const absolute = path.join(root, ...entry.path.split('/'));
+    const bytes = fs.readFileSync(absolute);
+    if (!fs.statSync(absolute).isFile() || bytes.length !== entry.bytes || HASH(bytes) !== entry.sha256) {
+      throw new Error(`Staged public output failed its manifest check: ${entry.path}.`);
+    }
+    expected.add(entry.path);
+  }
+  const actual = new Set();
+  const walk = (dir, prefix = '') => {
+    for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
+      const rel = prefix ? `${prefix}/${item.name}` : item.name;
+      if (item.isSymbolicLink()) throw new Error(`Staged public output contains a symlink: ${rel}.`);
+      if (item.isDirectory()) walk(path.join(dir, item.name), rel);
+      else if (item.isFile()) actual.add(rel);
+      else throw new Error(`Staged public output contains an unsupported entry: ${rel}.`);
+    }
+  };
+  walk(root);
+  if (actual.size !== expected.size || [...expected].some(file => !actual.has(file))) {
+    throw new Error('Staged public output file inventory does not match its manifest.');
+  }
+}
+
 function attrValue(tag, name) {
   const found = tag.match(new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i'));
   return found ? (found[1] ?? found[2] ?? found[3] ?? '') : null;
@@ -108,7 +297,7 @@ function rewriteRetiredUrl(raw) {
     if (mode === 'register' || mode === 'reset' || mode === 'password-reset') return '/account-unavailable.html';
     return 'https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome';
   }
-  if (host === 'callservice.yokhanfitness.ru' || host === 'calls.yokhanfitness.ru') return 'https://connect.yokhan.xyz/';
+  if (host === 'callservice.yokhanfitness.ru' || host === 'calls.yokhanfitness.ru') return 'https://calls.yokhan.xyz/';
   if (host === 'smartcart.yokhanfitness.ru' || host === 'dayflow.yokhanfitness.ru') return '/service-unavailable.html';
   if (host === 'guide.yokhanfitness.ru') return '/guide.html';
   if (host === 'yokhanfitness.ru' || host === 'www.yokhanfitness.ru') {
@@ -231,7 +420,10 @@ function transformHtml(html, owner, repo, pageSet, resourceSet, generated) {
   });
   html = html.replace(/<script\b([^>]*)>[\s\S]*?<\/script\s*>/gi, (whole, attrs) => {
     const src = attrValue(`<script ${attrs}>`, 'src');
-    if (!src) return '';
+    if (!src) {
+      const type = attrValue(`<script ${attrs}>`, 'type')?.toLowerCase();
+      return type === 'application/ld+json' ? whole : '';
+    }
     const found = resolveSourceUrl(repo, owner, src);
     if (owner === 'index.html' && ['js/nav-state.js', 'js/nav-menu.js'].includes(found?.sourcePath)) return '';
     return found && PUBLIC_SCRIPTS.has(found.sourcePath) && resourceSet.has(found.sourcePath)
@@ -280,45 +472,94 @@ function allPublicPages(repo) {
   return pages.sort((a, b) => a.localeCompare(b));
 }
 
-export function buildPublicSite({ repo, output, releaseId = 'landing-public-20261010-r1' }) {
+export function buildPublicSite({ repo, output, releaseId = 'landing-public-20261010-r1', homepageCandidate = null }) {
   if (!/^landing-public-[0-9]{8}-[a-z0-9-]+$/.test(releaseId)) throw new Error('Invalid public release ID');
   repo = path.resolve(repo);
   output = path.resolve(output);
   if (fs.existsSync(output)) throw new Error(`Output already exists; refusing overwrite: ${output}`);
-  if (!isAllowedPublicOutput(output)) throw new Error(`Output must be a fresh landing-* child of ${PUBLIC_OUTPUT_PARENT}`);
-  const rootDir = path.dirname(output);
-  const site = path.join(output, 'site');
+  if (!isAllowedPublicOutput(output)) throw new Error('Output must be a fresh landing-* directory in AGENT_RUN_OUTPUT or the historical allowlist.');
+  const managedRoot = process.env.AGENT_RUN_OUTPUT ? path.resolve(process.env.AGENT_RUN_OUTPUT) : null;
+  if (homepageCandidate && !managedRoot) throw new Error('Authored homepage builds must run inside managed AGENT_RUN_OUTPUT.');
+  if (homepageCandidate) {
+    assertManagedPath(output, managedRoot, 'Authored homepage output');
+    assertManagedPath(homepageCandidate.root, managedRoot, 'Homepage candidate');
+  }
+
+  const candidate = homepageCandidate
+    ? readLandingHomeCandidate({ root: homepageCandidate.root, expected: homepageCandidate.expected })
+    : null;
   const pages = allPublicPages(repo);
   const pageSet = new Set(pages);
   const generated = generatedPages(repo);
   for (const key of generated.keys()) pageSet.add(key);
+  const aliases = routeAliases(pageSet);
+  if (candidate && !pages.includes('index.html')) throw new Error('Authored homepage requires the existing index.html consumer route.');
   const prepared = new Map(pages.map(sourcePath => [sourcePath,
-    preparePublicPresentation(fs.readFileSync(path.join(repo, sourcePath), 'utf8'), sourcePath, repo)]));
+    candidate && sourcePath === 'index.html'
+      ? validateAuthoredHomepage(candidate, repo, pageSet, aliases)
+      : preparePublicPresentation(fs.readFileSync(path.join(repo, sourcePath), 'utf8'), sourcePath, repo)]));
   for (const [sourcePath, html] of generated) generated.set(sourcePath, preparePublicPresentation(html, sourcePath, repo));
-  const resourceSet = new Set();
-  // Keep the old public icon URL neutral for existing bookmarks and cached tabs.
-  resourceSet.add('coach/favicon.svg');
-  const cssQueue = [];
-  for (const sourcePath of pages) sourceLinks(prepared.get(sourcePath), sourcePath, repo, pageSet, resourceSet);
-  for (const sourcePath of generated.keys()) sourceLinks(generated.get(sourcePath), sourcePath, repo, pageSet, resourceSet);
-  // Hero/case images selected after hydration are absent from static markup.
-  // Discover only the canonical runtime's literal public media references.
-  const homeRuntime = fs.readFileSync(path.join(repo, 'js/buffit-landing-home.js'), 'utf8');
-  for (const match of homeRuntime.matchAll(/["'](\/landing-media\/[A-Za-z0-9_.-]+\.(?:png|webp|avif|svg))["']/g)) {
-    const found = resolveSourceUrl(repo, 'index.html', match[1]);
-    if (!found || !found.sourcePath.startsWith('landing-media/')) throw new Error(`Missing runtime media: ${match[1]}`);
-    resourceSet.add(found.sourcePath);
+
+  const resourceSet = new Set(['coach/favicon.svg']);
+  const nonHomeResources = new Set();
+  for (const sourcePath of pages) {
+    sourceLinks(prepared.get(sourcePath), sourcePath, repo, pageSet, resourceSet);
+    if (sourcePath !== 'index.html') sourceLinks(prepared.get(sourcePath), sourcePath, repo, pageSet, nonHomeResources);
   }
-  for (const sourcePath of resourceSet) if (sourcePath.endsWith('.css')) cssQueue.push(sourcePath);
+  for (const [sourcePath, html] of generated) {
+    sourceLinks(html, sourcePath, repo, pageSet, resourceSet);
+    sourceLinks(html, sourcePath, repo, pageSet, nonHomeResources);
+  }
+  if (candidate) {
+    for (const sourcePath of candidate.publicFiles.keys()) resourceSet.add(sourcePath);
+    // Keep the legacy runtime asset available byte-for-byte for existing package consumers;
+    // only the authored index uses the manifest-pinned hashed runtime.
+    resourceSet.add('js/buffit-landing-home.js');
+    for (const sourcePath of pages.filter(page => page !== 'index.html')) {
+      for (const ref of candidatePathsReferencedByHtml(prepared.get(sourcePath), sourcePath, candidate.publicFiles)) nonHomeResources.add(ref);
+    }
+    for (const [sourcePath, html] of generated) {
+      for (const ref of candidatePathsReferencedByHtml(html, sourcePath, candidate.publicFiles)) nonHomeResources.add(ref);
+    }
+  } else {
+    // Legacy home media is discovered from its runtime only for legacy builds.
+    const homeRuntime = fs.readFileSync(path.join(repo, 'js/buffit-landing-home.js'), 'utf8');
+    for (const match of homeRuntime.matchAll(/["'](\/landing-media\/[A-Za-z0-9_.-]+\.(?:png|webp|avif|svg))["']/g)) {
+      const found = resolveSourceUrl(repo, 'index.html', match[1]);
+      if (!found || !found.sourcePath.startsWith('landing-media/')) throw new Error(`Missing runtime media: ${match[1]}`);
+      resourceSet.add(found.sourcePath);
+    }
+  }
+  addCssDependencies(repo, nonHomeResources, nonHomeResources);
+  if (candidate) {
+    for (const sourcePath of candidate.publicFiles.keys()) {
+      if (!nonHomeResources.has(sourcePath)) continue;
+      const original = path.join(repo, ...sourcePath.split('/'));
+      if (!fs.existsSync(original) || !fs.statSync(original).isFile()
+        || !fs.readFileSync(original).equals(candidate.publicFiles.get(sourcePath))) {
+        throw new Error(`Homepage candidate would change a shared non-home resource: ${sourcePath}.`);
+      }
+    }
+  }
+
+  const cssQueue = [...resourceSet].filter(sourcePath => sourcePath.endsWith('.css'));
+  const visitedCss = new Set();
   while (cssQueue.length) {
     const owner = cssQueue.pop();
-    const css = fs.readFileSync(path.join(repo, owner), 'utf8');
+    if (visitedCss.has(owner)) continue;
+    visitedCss.add(owner);
+    const candidateBytes = candidate?.publicFiles.get(owner);
+    const sourcePath = path.join(repo, ...owner.split('/'));
+    const bytes = candidateBytes ?? fs.readFileSync(sourcePath);
+    const css = bytes.toString('utf8');
     const deps = new Set();
     for (const match of css.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)|@import\s+(?:url\()?\s*["']([^"']+)["']\s*\)?/gi)) {
       const value = match[1] ?? match[2];
       const found = resolveSourceUrl(repo, owner, value);
       if (!found) continue;
-      if (!RESOURCE_ROOTS.some((root) => found.sourcePath.startsWith(root)) || found.sourcePath.endsWith('.js')) throw new Error(`CSS dependency outside public allowlist: ${found.sourcePath}`);
+      if (!RESOURCE_ROOTS.some(root => found.sourcePath.startsWith(root)) || found.sourcePath.endsWith('.js')) {
+        throw new Error(`CSS dependency outside public allowlist: ${found.sourcePath}`);
+      }
       deps.add(found.sourcePath);
     }
     for (const dep of deps) if (!resourceSet.has(dep)) {
@@ -329,72 +570,114 @@ export function buildPublicSite({ repo, output, releaseId = 'landing-public-2026
   for (const sourcePath of resourceSet) {
     if (FORBIDDEN_PATH.test(sourcePath) || FORBIDDEN_SUFFIX.test(sourcePath)) throw new Error(`Forbidden public resource: ${sourcePath}`);
   }
+
   const gitStatus = execFileSync('git', ['status', '--porcelain', '--untracked-files=all'], { cwd: repo, encoding: 'utf8' });
-  const dirtyPaths = new Set(gitStatus.split(/\r?\n/).filter(Boolean).map((line) => line.slice(3).replaceAll('\\', '/')));
-  fs.mkdirSync(rootDir, { recursive: true });
-  fs.mkdirSync(site, { recursive: true });
-  const copied = [];
-  const write = (outputPath, sourcePath, bytes, transformed, sourceBytes) => {
-    const destination = path.join(site, outputPath);
-    fs.mkdirSync(path.dirname(destination), { recursive: true });
-    fs.writeFileSync(destination, bytes);
-    copied.push({ path: `site/${slash(outputPath)}`, source: sourcePath, sourceSha256: sourceBytes ? HASH(sourceBytes) : null, sha256: HASH(bytes), bytes: bytes.length, dirty: sourcePath ? dirtyPaths.has(sourcePath) : null, transformed });
-  };
-  for (const sourcePath of pages) {
-    const sourceBytes = fs.readFileSync(path.join(repo, sourcePath));
-    const clean = transformHtml(prepared.get(sourcePath), sourcePath, repo, pageSet, resourceSet, false);
-    write(sourcePath, sourcePath, Buffer.from(clean), true, sourceBytes);
-  }
-  for (const [sourcePath, html] of generated) {
-    const clean = transformHtml(html, sourcePath, repo, pageSet, resourceSet, true);
-    write(sourcePath, null, Buffer.from(clean), true, null);
-  }
-  for (const sourcePath of [...resourceSet].sort()) {
-    const sourceBytes = fs.readFileSync(path.join(repo, sourcePath));
-    let bytes = sourceBytes;
-    let transformed = false;
-    if (sourcePath.endsWith('.css')) {
-      const css = sourceBytes.toString('utf8');
-      const clean = css.replace(/@import\s+(?:url\()?\s*["']?(?:https?:)?\/\/[^;]+;?/gi, '')
-        .replace(/url\(\s*["']?(?:https?:)?\/\/[^)]*["']?\s*\)/gi, 'none');
-      bytes = Buffer.from(clean);
-      transformed = clean !== css;
+  const dirtyPaths = new Set(gitStatus.split(/\r?\n/).filter(Boolean).map(line => line.slice(3).replaceAll('\\', '/')));
+  const stageParent = path.dirname(output);
+  fs.mkdirSync(stageParent, { recursive: true });
+  const stage = fs.mkdtempSync(path.join(stageParent, '.landing-site-stage-'));
+  const site = path.join(stage, 'site');
+  try {
+    fs.mkdirSync(site, { recursive: true });
+    const copied = [];
+    const write = (outputPath, sourcePath, bytes, transformed, sourceBytes) => {
+      const normalized = outputPath.replaceAll('\\', '/');
+      if (normalized.split('/').some(part => !part || part === '.' || part === '..') || path.isAbsolute(outputPath)) {
+        throw new Error(`Unsafe public package path: ${outputPath}`);
+      }
+      const destination = path.join(site, ...normalized.split('/'));
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.writeFileSync(destination, bytes, { flag: 'wx' });
+      copied.push({ path: `site/${normalized}`, source: sourcePath, sourceSha256: sourceBytes ? HASH(sourceBytes) : null, sha256: HASH(bytes), bytes: bytes.length, dirty: sourcePath ? dirtyPaths.has(sourcePath) : null, transformed });
+    };
+    for (const sourcePath of pages) {
+      if (candidate && sourcePath === 'index.html') {
+        write(sourcePath, null, candidate.indexHtml, false, candidate.indexHtml);
+        continue;
+      }
+      const sourceBytes = fs.readFileSync(path.join(repo, sourcePath));
+      const clean = transformHtml(prepared.get(sourcePath), sourcePath, repo, pageSet, resourceSet, false);
+      write(sourcePath, sourcePath, Buffer.from(clean), true, sourceBytes);
     }
-    write(sourcePath, sourcePath, bytes, transformed, sourceBytes);
+    for (const [sourcePath, html] of generated) {
+      const clean = transformHtml(html, sourcePath, repo, pageSet, resourceSet, true);
+      write(sourcePath, null, Buffer.from(clean), true, null);
+    }
+    for (const rootMeta of ['robots.txt', 'sitemap.xml']) {
+      const metaPath = path.join(repo, rootMeta);
+      if (fs.existsSync(metaPath) && fs.statSync(metaPath).isFile()) {
+        const bytes = fs.readFileSync(metaPath);
+        write(rootMeta, rootMeta, bytes, false, bytes);
+      }
+    }
+    for (const sourcePath of [...resourceSet].sort()) {
+      const candidateBytes = candidate?.publicFiles.get(sourcePath);
+      const sourceBytes = candidateBytes ?? fs.readFileSync(path.join(repo, ...sourcePath.split('/')));
+      let bytes = sourceBytes;
+      let transformed = false;
+      if (sourcePath.endsWith('.css') && !candidateBytes) {
+        const css = sourceBytes.toString('utf8');
+        const clean = css.replace(/@import\s+(?:url\()?\s*["']?(?:https?:)?\/\/[^;]+;?/gi, '')
+          .replace(/url\(\s*["']?(?:https?:)?\/\/[^)]*["']?\s*\)/gi, 'none');
+        bytes = Buffer.from(clean);
+        transformed = clean !== css;
+      }
+      write(sourcePath, candidateBytes ? null : sourcePath, bytes, transformed, sourceBytes);
+    }
+    for (const [alias, target] of aliases) {
+      const sourceOutput = path.join(site, ...target.split('/'));
+      const bytes = fs.readFileSync(sourceOutput);
+      const outputPath = `${alias}index.html`;
+      const destination = path.join(site, ...outputPath.split('/'));
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.writeFileSync(destination, bytes, { flag: 'wx' });
+      copied.push({ path: `site/${outputPath}`, source: target, sourceSha256: null, sha256: HASH(bytes), bytes: bytes.length, dirty: null, transformed: true, aliasOf: `site/${target}` });
+    }
+    const manifest = {
+      artifact: 'buffit-public-static-package',
+      version: releaseId,
+      releaseId,
+      source: { repo: 'YokhanFitnessLanding', commit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8' }).trim(), worktree: 'dirty source snapshot; every shipped source file is recorded and hashed' },
+      policy: {
+        output: slash(path.relative(path.dirname(output), output)),
+        publicPagesOnly: true,
+        excludedPages: [...PUBLIC_PAGE_EXCLUDES],
+        scripts: [...PUBLIC_SCRIPTS],
+        allowedExternalLinkHosts: [...PUBLIC_EXTERNAL_HOSTS],
+        appLogin: 'https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome',
+        guestTrial: 'https://fitness.yokhan.xyz/train/guest',
+        calls: 'https://calls.yokhan.xyz/',
+        registrationAndReset: 'account-unavailable.html',
+        unavailableDayFlowSmartCart: 'service-unavailable.html',
+        gates: 'existing APP request/status entry; static package does not change VPN or key issuance',
+        acquisition: '/coach/ -> /coaching.html -> t.me/yokhan_yokhan',
+        coachingPricesRubPerMonth: [32000, 48000],
+        rawMediaAndPrivatePathsExcluded: true,
+      },
+      ...(candidate ? { homepageCandidate: {
+        schemaVersion: 1,
+        identity: { id: 'buffit.home', owner: 'YokhanFitnessLanding', routeRef: '/' },
+        manifestSha256: candidate.manifestSha256,
+        sourceSha256: candidate.sourceSha256,
+        contentDigest: candidate.contentDigest,
+        pageModelDigest: candidate.pageModelDigest,
+        pinsetSha256: homepageCandidatePinsetSha256(candidate.pins),
+        pins: candidate.pins,
+        componentManifestSha256: candidate.manifest.outputs.componentManifestSha256,
+        stylesheet: candidate.manifest.outputs.stylesheet,
+        runtimeScript: candidate.manifest.outputs.runtimeScript,
+      } } : {}),
+      routeAliases: Object.fromEntries([...aliases].map(([route, target]) => [`/${route}`, target])),
+      files: copied.sort((a, b) => a.path.localeCompare(b.path)),
+    };
+    fs.writeFileSync(path.join(stage, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, { encoding: 'utf8', flag: 'wx' });
+    verifyStagedPackage(stage);
+    candidate?.verifyUnchanged();
+    if (fs.existsSync(output)) throw new Error('Output appeared during package generation; refusing promotion.');
+    fs.renameSync(stage, output);
+    return { output, count: copied.length, manifest };
+  } catch (error) {
+    fs.rmSync(stage, { recursive: true, force: true });
+    throw error;
   }
-  const aliases = routeAliases(pageSet);
-  for (const [alias, target] of aliases) {
-    const sourceOutput = path.join(site, target);
-    const bytes = fs.readFileSync(sourceOutput);
-    const destination = path.join(site, alias, 'index.html');
-    fs.mkdirSync(path.dirname(destination), { recursive: true });
-    fs.writeFileSync(destination, bytes);
-    copied.push({ path: `site/${alias}index.html`, source: target, sourceSha256: null, sha256: HASH(bytes), bytes: bytes.length, dirty: null, transformed: true, aliasOf: `site/${target}` });
-  }
-  const manifest = {
-    artifact: 'buffit-public-static-package',
-    version: releaseId,
-    releaseId,
-    source: { repo: 'YokhanFitnessLanding', commit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8' }).trim(), worktree: 'dirty source snapshot; every shipped source file is recorded and hashed' },
-    policy: {
-      output: slash(path.relative(path.dirname(output), output)),
-      publicPagesOnly: true,
-      excludedPages: [...PUBLIC_PAGE_EXCLUDES],
-      scripts: [...PUBLIC_SCRIPTS],
-      allowedExternalLinkHosts: [...PUBLIC_EXTERNAL_HOSTS],
-      appLogin: 'https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome',
-      guestTrial: 'https://fitness.yokhan.xyz/train/guest',
-      calls: 'https://connect.yokhan.xyz/',
-      registrationAndReset: 'account-unavailable.html',
-      unavailableDayFlowSmartCart: 'service-unavailable.html',
-      gates: 'existing APP request/status entry; static package does not change VPN or key issuance',
-      acquisition: '/coach/ -> /coaching.html -> t.me/yokhan_yokhan',
-      coachingPricesRubPerMonth: [26000, 34000],
-      rawMediaAndPrivatePathsExcluded: true,
-    },
-    routeAliases: Object.fromEntries([...aliases].map(([route, target]) => [`/${route}`, target])),
-    files: copied.sort((a, b) => a.path.localeCompare(b.path)),
-  };
-  fs.writeFileSync(path.join(output, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, { encoding: 'utf8', flag: 'wx' });
-  return { output, count: copied.length, manifest };
 }

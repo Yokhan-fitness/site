@@ -38,10 +38,10 @@
 Статья (DTF/Habr/Пикабу)
   → Канал @igor_it_fit (прогрев)
     → Бот @YokhanGym_bot (квиз, определение архетипа)
-      → Персонализированный лендинг yokhanfitness.ru/{archetype}
+      → Персонализированный лендинг yokhan.xyz/{archetype}
         → Консультация (Игорь лично, 30 мин)
-          → Тренировки (через приложение app.yokhanfitness.ru)
-            → Guide (guide.yokhanfitness.ru — самообучение)
+          → Тренировки (через приложение fitness.yokhan.xyz)
+            → Guide (guide.yokhan.xyz — самообучение)
             → FirstAid / MedKit (при необходимости)
 ```
 
@@ -155,7 +155,7 @@
 
 | Проект | Путь | Стек | Роль |
 |--------|------|------|------|
-| **yokhanFitnessDocsWebsite** | `~/Documents/GitHub/yokhanFitnessDocsWebsite` | Docusaurus | guide.yokhanfitness.ru |
+| **yokhanFitnessDocsWebsite** | `~/Documents/GitHub/yokhanFitnessDocsWebsite` | Docusaurus | guide.yokhan.xyz |
 | **YokhanFirstAid** | `~/Documents/YokhanFirstAid` | Docusaurus | Вики заболеваний |
 | **YokhanMedKit** | `~/Documents/YokhanMedKit` | Docusaurus | Аптечка |
 
@@ -178,13 +178,13 @@
 
 | Домен | Проект | Назначение | Статус |
 |-------|--------|-----------|--------|
-| `yokhanfitness.ru` | Landing | Лендинги по архетипам | IN PROGRESS |
-| `app.yokhanfitness.ru` | AppMY | WebApp (PWA) | ACTIVE |
-| `telegram.yokhanfitness.ru` | AppMY | WebApp (TG Mini App) | ACTIVE |
-| `api.yokhanfitness.ru` | AppMY | Backend API | ACTIVE |
-| `guide.yokhanfitness.ru` | DocsWebsite | Гайд для новичков | ACTIVE |
-| `firstaid.yokhanfitness.ru` | FirstAid | Вики заболеваний | CREATED |
-| `medkit.yokhanfitness.ru` | MedKit | Аптечка | CREATED |
+| `yokhan.xyz` | Landing | Лендинги по архетипам | IN PROGRESS |
+| `fitness.yokhan.xyz` | AppMY | WebApp (PWA) | ACTIVE |
+| `telegram.yokhan.xyz` | AppMY | WebApp (TG Mini App) | ACTIVE |
+| `api.yokhan.xyz` | AppMY | Backend API | ACTIVE |
+| `guide.yokhan.xyz` | DocsWebsite | Гайд для новичков | ACTIVE |
+| `firstaid.yokhan.xyz` | FirstAid | Вики заболеваний | CREATED |
+| `medkit.yokhan.xyz` | MedKit | Аптечка | CREATED |
 | `@YokhanGym_bot` | GymBot | Квиз + онбординг | ACTIVE |
 | `@igor_it_fit` | — | TG канал, контент | ACTIVE |
 
@@ -194,12 +194,12 @@
 
 ```
 Landing  ──ссылается──→  @YokhanGym_bot (CTA)
-Landing  ──ссылается──→  guide.yokhanfitness.ru (гайд)
+Landing  ──ссылается──→  guide.yokhan.xyz (гайд)
 Landing  ──ссылается──→  @igor_it_fit (footer)
-GymBot   ──ссылается──→  telegram.yokhanfitness.ru (WebApp)
-GymBot   ──ссылается──→  guide.yokhanfitness.ru (follow-up ссылки)
-GymBot   ──ссылается──→  api.yokhanfitness.ru (backend secret)
-AppMY    ──ссылается──→  api.yokhanfitness.ru (собственный backend)
+GymBot   ──ссылается──→  telegram.yokhan.xyz (WebApp)
+GymBot   ──ссылается──→  guide.yokhan.xyz (follow-up ссылки)
+GymBot   ──ссылается──→  api.yokhan.xyz (backend secret)
+AppMY    ──ссылается──→  api.yokhan.xyz (собственный backend)
 AppMY    ──shared secret──→  GymBot (TELEGRAM_BOT_BACKEND_SECRET)
 ```
 

@@ -135,7 +135,7 @@ def verify_live() -> list[str]:
             )
         if url.endswith("/coaching.html"):
             check('"@type": "Service"' in html, "coaching exposes Service schema", errors)
-            check('"price": "26000"' in html and '"price": "34000"' in html, "coaching schema matches fixed prices", errors)
+            check('"price": "32000"' in html and '"price": "48000"' in html, "coaching schema matches fixed prices", errors)
             check("buffit_coaching_seo" in html, "coaching exposes organic source handoff", errors)
             check("js/coaching-source.js" in html, "coaching loads source handoff script", errors)
             check(get_h1(html) == EXPECTED_COACHING_H1, "coaching H1 owns the fixed search query", errors)
@@ -198,7 +198,7 @@ def verify_local(root: Path) -> list[str]:
             )
         if url.endswith("/coaching.html"):
             check('"@type": "Service"' in html, "local coaching exposes Service schema", errors)
-            check('"price": "26000"' in html and '"price": "34000"' in html, "local coaching schema matches fixed prices", errors)
+            check('"price": "32000"' in html and '"price": "48000"' in html, "local coaching schema matches fixed prices", errors)
             check("buffit_coaching_seo" in html, "local coaching exposes organic source handoff", errors)
             check("js/coaching-source.js" in html, "local coaching loads source handoff script", errors)
             check(get_h1(html) == EXPECTED_COACHING_H1, "local coaching H1 owns the fixed search query", errors)

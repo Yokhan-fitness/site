@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "kind": "BUFF_IT_SITE_HEADER_CONTRACT",
+  "updated": "2026-10-29",
+  "sources": {
+    "apps": "data/ecosystem.apps.json",
+    "headerComponent": "@buffit/design-system/react#BuffItSiteHeader",
+    "session": "same-origin /api/session"
+  },
+  "surfaces": ["public", "app", "calls"],
+  "states": [
+    "anonymous",
+    "loading",
+    "authenticated",
+    "expired",
+    "error"
+  ],
+  "session": {
+    "method": "GET",
+    "path": "/api/session",
+    "credentials": "include",
+    "cache": "no-store",
+    "response": {
+      "authenticated": "boolean",
+      "displayName": "string?",
+      "avatarUrl": "string?",
+      "accountUrl": "string?",
+      "logoutUrl": "string?"
+    },
+    "rules": [
+      "No access tokens or refresh tokens in browser-readable storage.",
+      "The public page remains static and cacheable; only the account slot is dynamic.",
+      "Anonymous, expired and error responses render the signed-out entry.",
+      "The endpoint must not be cached by a shared cache."
+    ]
+  },
+  "returnTo": {
+    "sameOriginOnly": true,
+    "allowedOriginsSource": "data/ecosystem.apps.json#/returnTo/allowedOrigins",
+    "defaultSource": "data/ecosystem.apps.json#/returnTo/default",
+    "reject": [
+      "protocol-relative URLs",
+      "backslashes",
+      "control characters",
+      "/auth/callback"
+    ]
+  },
+  "header": {
+    "public": {
+      "guestDefault": true,
+      "personalizedHtml": false,
+      "accountSlot": "client-island"
+    },
+    "app": {
+      "guestDefault": false,
+      "initialState": "bff"
+    },
+    "calls": {
+      "guestDefault": false,
+      "initialState": "bff"
+    }
+  },
+  "rules": [
+    "Header links and app switcher come from data/ecosystem.apps.json.",
+    "The header never computes XP, achievements or entitlements.",
+    "The header never owns app business logic.",
+    "A header link to an unknown external host fails the public build."
+  ]
+}

@@ -110,3 +110,5 @@ template-leak-smoke-*/
 
 # Temporary repro/debug artifacts
 tmp-*
+.deploy/
+.vite/

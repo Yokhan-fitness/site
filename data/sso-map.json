@@ -1,0 +1,89 @@
+{
+  "updated": "2026-07-11",
+  "issuer": "https://auth.yokhanfitness.ru/realms/yokhan",
+  "siteEntry": "https://app.yokhanfitness.ru/auth?mode=login&returnTo=/home",
+  "rule": "The static landing site never stores passwords, access tokens, refresh tokens, or client secrets. It only routes users to Keycloak and connected services.",
+  "services": [
+    {
+      "id": "buffit-id",
+      "name": "BUFF IT ID",
+      "url": "https://auth.yokhanfitness.ru/realms/yokhan/account/",
+      "clientId": null,
+      "status": "live",
+      "sso": "keycloak-account-console",
+      "notes": "Keycloak account profile and SSO session owner."
+    },
+    {
+      "id": "smartcart",
+      "name": "SmartCart",
+      "url": "https://smartcart.yokhanfitness.ru/welcome",
+      "clientId": "smartcart-web",
+      "status": "connected",
+      "sso": "authorization-code-pkce",
+      "notes": "Production auth smoke passed with Keycloak and local app token exchange."
+    },
+    {
+      "id": "calls",
+      "name": "BUFF IT CALLS",
+      "url": "https://callservice.yokhanfitness.ru/",
+      "clientId": "yokhan-callservice-web",
+      "status": "connected",
+      "sso": "authorization-code-pkce",
+      "notes": "Production auth smoke passed with Keycloak, local app token exchange, and same-browser SSO after SmartCart."
+    },
+    {
+      "id": "guide",
+      "name": "BUFF IT GUIDE",
+      "url": "https://guide.yokhanfitness.ru/",
+      "clientId": "yokhan-guide-web",
+      "status": "public-live-auth-pending",
+      "sso": "planned",
+      "notes": "Public site is available. Personal access should be connected after service auth model review."
+    },
+    {
+      "id": "photo",
+      "name": "BUFF IT PHOTO",
+      "url": "https://photo.yokhanfitness.ru/",
+      "clientId": "yokhan-photo-web",
+      "status": "public-live-auth-pending",
+      "sso": "planned",
+      "notes": "Domain is available. Auth integration needs separate smoke before client access."
+    },
+    {
+      "id": "gates",
+      "name": "BUFF IT GATES",
+      "url": "https://app.yokhanfitness.ru/services/gates?request=1",
+      "clientId": "yokhan-app-pwa",
+      "status": "connected",
+      "sso": "authorization-code-pkce",
+      "notes": "GATES is a service inside BUFF IT APP. Personal keys and configs require BUFF IT ID."
+    },
+    {
+      "id": "telegram",
+      "name": "BUFF IT Telegram entry",
+      "url": "https://telegram.yokhanfitness.ru/",
+      "clientId": "yokhan-telegram-miniapp",
+      "status": "public-live-auth-pending",
+      "sso": "webview-risk",
+      "notes": "Telegram WebView cookie behavior must be tested separately."
+    },
+    {
+      "id": "app",
+      "name": "BUFF IT APP",
+      "url": "https://app.yokhanfitness.ru/",
+      "clientId": "yokhan-app-pwa",
+      "status": "connected",
+      "sso": "authorization-code-pkce",
+      "notes": "Production Fitness APP and the primary interactive BUFF IT account entry."
+    },
+    {
+      "id": "dayflow",
+      "name": "BUFF IT Day Flow",
+      "url": "https://yokhanfitness.ru/dayflow/",
+      "clientId": "dayflow-web",
+      "status": "connected",
+      "sso": "authorization-code-pkce-silent-check",
+      "notes": "Direct product entry. Reuses the Keycloak realm session without sharing app tokens or browser storage."
+    }
+  ]
+}

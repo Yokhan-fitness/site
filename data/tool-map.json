@@ -1,0 +1,129 @@
+{
+    "updated":  "2026-05-28",
+    "primaryGoal":  "turn BUFF IT attention into paid 12-week coaching routes",
+    "publicSurfaces":  [
+                           {
+                               "id":  "site",
+                               "name":  "BUFF IT site",
+                               "page":  "index.html",
+                               "job":  "expand acquaintance, segment by goal, and route to the next useful step",
+                               "stage":  "pre-bot trust and choice"
+                           },
+                           {
+                               "id":  "telegram-bot",
+                               "name":  "@YokhanGym_bot",
+                               "url":  "https://t.me/YokhanGym_bot",
+                               "job":  "diagnostics, source parameter capture, first route recommendation",
+                               "stage":  "qualification and first commitment"
+                           },
+                           {
+                               "id":  "telegram-personal",
+                               "name":  "@yokhan_yokhan",
+                               "url":  "https://t.me/yokhan_yokhan",
+                               "job":  "personal warm lead, questions, consultation and closing",
+                               "stage":  "human trust and sale"
+                           },
+                           {
+                               "id":  "telegram-channel",
+                               "name":  "@igor_it_fit",
+                               "url":  "https://t.me/igor_it_fit",
+                               "job":  "nurture not-ready leads and show ongoing thinking/proof",
+                               "stage":  "warm-up and retention"
+                           }
+                       ],
+    "tools":  [
+                  {
+                      "id":  "fitness",
+                      "name":  "BUFF IT FITNESS",
+                      "page":  "training.html",
+                      "status":  "current paid offer",
+                      "job":  "12-week goal routes with coach-led online training"
+                  },
+                  {
+                      "id":  "app",
+                      "name":  "BUFF IT APP",
+                      "page":  "app.html",
+                      "status":  "support tool now, self-training subscription later",
+                      "job":  "plan, exercises, homework, marks, progress and independent structure"
+                  },
+                  {
+                      "id":  "personal",
+                      "name":  "BUFF IT PERSONAL",
+                      "page":  "personal.html",
+                      "status":  "client tracking lane",
+                      "job":  "coach-led progress, corrections and client history"
+                  },
+                  {
+                      "id":  "calls",
+                      "name":  "BUFF IT CALLS",
+                      "page":  "calls-access.html",
+                      "status":  "current support tool",
+                      "job":  "private p2p calls for diagnostics, technique and route corrections"
+                  },
+                  {
+                      "id":  "food",
+                      "name":  "BUFF IT FOOD",
+                      "page":  "nutrition.html",
+                      "status":  "current support tool",
+                      "job":  "smartcart, food decisions and repeatable shopping for body goals"
+                  },
+                  {
+                      "id":  "guide",
+                      "name":  "BUFF IT GUIDE",
+                      "page":  "guide.html",
+                      "status":  "current lead magnet / support material",
+                      "job":  "beginner training guide and non-purchase trust path"
+                  },
+                  {
+                      "id":  "health",
+                      "name":  "BUFF IT HEALTH",
+                      "page":  "health.html",
+                      "status":  "current safety layer",
+                      "job":  "red flags, first aid, home medkit and safer start decisions"
+                  }
+              ],
+    "newToolIdeas":  [
+                         {
+                             "id":  "source-dashboard",
+                             "name":  "source/start-param dashboard",
+                             "why":  "see which page, post, segment and CTA produce bot starts, diagnostics and consultations"
+                         },
+                         {
+                             "id":  "diagnostic-result-page",
+                             "name":  "shareable diagnostic result page",
+                             "why":  "after the bot, show a clean route summary, price options, risks and next action"
+                         },
+                         {
+                             "id":  "proof-vault",
+                             "name":  "proof and case vault",
+                             "why":  "collect progress photos, logs, measurements and testimonials once, reuse across pages"
+                         },
+                         {
+                             "id":  "lead-followup-crm",
+                             "name":  "Telegram lead follow-up CRM",
+                             "why":  "not-ready leads need reminders, guide follow-up, objection notes and next contact date"
+                         },
+                         {
+                             "id":  "risk-screener",
+                             "name":  "red-flag and readiness screener",
+                             "why":  "separate sales-ready leads from people who need safety guidance or medical referral first"
+                         },
+                         {
+                             "id":  "week-checkin",
+                             "name":  "weekly readiness and plan adjustment check-in",
+                             "why":  "turn APP/DAYFLOW into a retention loop: sleep, stress, pain, walks, training completion"
+                         }
+                     ],
+    "routingArtifacts":  [
+                             {
+                                 "id":  "cta-map",
+                                 "path":  "data/cta-map.json",
+                                 "job":  "machine-readable page CTA, start-param and post-bot route map"
+                             },
+                             {
+                                 "id":  "cta-map-doc",
+                                 "path":  "docs/CTA_SOURCE_PARAM_MAP_20260528.md",
+                                 "job":  "human-readable funnel routing table"
+                             }
+                         ]
+}
