@@ -1,0 +1,183 @@
+# Agent Context Source Of Truth
+
+This document is the template-level source of truth for agent instruction
+architecture. Use it before changing `AGENTS.md`, `CLAUDE.md`, `.agents/skills`,
+`.codex/agents`, `.claude/skills`, `.claude/agents`, hooks, routing scripts, or
+template sync behavior.
+
+## Rule
+
+Do not redesign agent infrastructure from memory. Check:
+
+1. `_reference/agent-sot/sources.json` for the source registry and freshness.
+2. `_reference/agent-sot/README.md` for the local interpretation.
+3. `_reference/agent-sot/top-works.md` for the priority reading set.
+4. Official docs URLs from the registry when behavior may have changed.
+5. `_reference/agent-sot/originals/ai-agent-spec-v3-final.md` for the imported
+   project spec that motivated this template.
+
+Do not paste full third-party documentation into the repo. Store URLs, dates,
+small notes, and local conclusions. User-provided local specs may be stored as
+originals when explicitly supplied.
+
+## SOT Conflict Protocol
+
+Every decision surface must have one active source of truth. When two plausible
+sources conflict, agents must not resolve the conflict silently.
+
+Authority order:
+
+1. Current user instruction or explicit product-owner decision.
+2. Project-owned overlays: `project-*` files, AgentOS Strategy/Tactic/Plan/Todo/Gate, project specs, accepted ADRs.
+3. Repository SOT docs: this file, `_reference/agent-sot/sources.json`, `PROJECT_SPEC.md`, `tasks/goal.md`, `tasks/current.md`.
+4. Shared template rules in `.claude/library/` and route-selected Codex skills.
+5. Historical notes, examples, research notes, and release history.
+
+If authority is still ambiguous, or if choosing one source changes product
+behavior, safety, privacy, data, release, architecture, or ownership, ask the user with 2-3 options and a recommendation. After the decision, record the
+chosen SOT in the relevant durable place so the same conflict does not recur.
+
+Use this shape:
+
+```text
+SOT conflict:
+- Source A says:
+- Source B says:
+- Impact:
+- Options:
+- Recommendation:
+- I need your decision on:
+```
+
+## Architecture
+
+### Hot Memory
+
+Files loaded every session must stay short and directional:
+
+- Codex: `AGENTS.md`.
+- Claude Code: `CLAUDE.md`.
+- Shared rules: `.claude/library/`.
+
+Hot memory may contain durable invariants, routes to more context, and hard
+guardrails. It must not contain full catalogs, long research notes, or copied
+documentation.
+
+### Specialist Memory
+
+Reusable procedures and domain knowledge live in skills and agents:
+
+- Codex skills: `.agents/skills/<name>/SKILL.md`.
+- Codex subagents: `.codex/agents/*.toml`.
+- Claude skills: `.claude/skills/<name>/SKILL.md`.
+- Claude subagents: `.claude/agents/*.md`.
+
+Use progressive disclosure: a `SKILL.md` should route to supporting references
+instead of forcing all material into every turn.
+
+Skill contracts describe the outcome, applicability, non-obvious constraints,
+relevant sources and acceptance evidence. Let the model choose routine execution
+details. Fixed sequences belong to fragile operations such as data migrations
+or releases, not every task touching that domain. Keep specialist knowledge
+available on demand; reducing context must not erase it.
+
+When maintaining skills, remove obsolete/conflicting instructions at their
+source rather than adding overrides to every caller. Do not infer that a
+stronger model makes permissions, user-owned product waves, source grounding
+or quality gates unnecessary. Model-specific prompting observations are not
+proof of other model behavior. Validate realistic positive and negative scenarios
+on the worker models actually used, and separate static checks from observed
+decisions and end-to-end execution. Do not promise token savings without a
+controlled workload comparison.
+
+### Cold Memory
+
+Stable references, architecture records, source registries, and long-form
+research live in `docs/`, `_reference/`, `brain/`, and `tasks/`.
+
+Agent SOT material belongs under `_reference/agent-sot/`. Operational summaries
+that agents must see during maintenance belong in this file.
+
+The priority reading set is `_reference/agent-sot/top-works.md`. It must contain
+at least 20 source cards and each card must reference an ID from
+`_reference/agent-sot/sources.json`.
+
+GitHub Spec Kit also has a managed local snapshot under `_reference/spec-kit/`.
+Use it for offline reading and deploy it with `scripts/init-spec-kit.sh`.
+Refresh it with `scripts/sync-spec-kit.sh --latest-tag` after checking upstream.
+
+## Decision Matrix
+
+Use hooks for deterministic checks that must run every time.
+Use skills for reusable workflows, domain knowledge, and long references loaded
+only when relevant.
+Use GPT-6 Luna High for bounded implementation with explicit file scope, including
+sequential execution, and subagents for useful read-only exploration/review.
+Sol 6.1 High retains contract preparation, decisions, integration and acceptance.
+Parallelism needs independent ownership; it is not a prerequisite for delegation.
+Current local Codex releases may delegate after a direct request **or** when an
+applicable `AGENTS.md` or skill instruction requests it. Therefore a project
+rule may authorize proactive delegation for independent material work; a
+separate user request is not required. Explicit user opt-out still wins. If a
+higher runtime policy disables proactive delegation, report that as a runtime
+constraint instead of rewriting or misreporting the project policy.
+Use `AGENTS.md` and `CLAUDE.md` for routing and high-leverage constraints only.
+Use scripts for repeatable validation, scaffolding, release, and drift checks.
+Use Spec Kit style artifacts (`spec.md`, `plan.md`, `tasks.md`) when task intent
+and dependency order must survive multiple sessions or agents.
+
+## Compatibility Rules
+
+- Codex and Claude share `.claude/library/` and `docs/SHARED_CONVENTIONS.md`.
+- Codex-specific files stay in `AGENTS.md`, `.codex/`, and `.agents/skills/`.
+- Claude-specific files stay in `CLAUDE.md`, `.claude/settings.json`,
+  `.claude/hooks/`, `.claude/agents/`, and `.claude/skills/`.
+- AgentOS, when present, is the orchestrator. Codex/Claude routes become worker
+  execution contracts, not a competing task graph.
+- Project-specific extensions use `project-*` overlays and are preserved by sync.
+
+## Freshness
+
+Run `node scripts/validate-agent-sot.js` after any agent infrastructure change.
+If a source in `_reference/agent-sot/sources.json` is stale or marked
+`requires_fresh_check`, browse the canonical URL before editing behavior.
+
+Current official-doc check: 2026-10-27 for GPT-6 Luna capabilities and Codex
+subagent behavior. The user selected GPT-6 Luna High for future light and bounded
+workers; preserve already-running workers and parent model/effort preferences.
+Historical Terra and GPT-5.6 source cards remain historical evidence,
+not the active policy. Requested model/effort must be distinguished from child
+runtime metadata; custom role TOML may override explicit spawn settings.
+
+Use an available DeepSeek Flash integration for bounded read-only advice on
+coordinator plans, pipeline consistency and material reports. Availability and
+requested/effective model are separate observations. This is advisory review,
+not release authority or permission to transfer private evidence; do not add
+network calls to lifecycle hooks or buy access when unavailable. DeepSeek Flash may
+also be a fast-worker alternative when an authorized provider integration supports
+the task; its separate provider/architecture contract owns dispatch and evidence,
+and this alternative does not replace the advisor at material coordinator boundaries.
+
+Skill maintenance guidance refreshed 2026-10-07: [Build skills](https://learn.chatgpt.com/docs/build-skills).
+Applied locally as narrower triggers and scope-based workflows, not as relaxed safety gates.
+
+## Minimum Closeout
+
+For agent infrastructure changes, verify:
+
+Follow `.claude/library/process/self-verification.md` for cadence. Before the
+implementation task, select focused checks for changed surfaces. At final integration,
+the parent chooses one relevant aggregate:
+
+- `bash scripts/validate-template.sh` for structural/instruction validation;
+- `bash scripts/test-template.sh` when behavioral/regression or delivered-payload
+  smoke coverage is required.
+
+Inspect aggregate contents rather than assuming coverage. Current aggregates
+include agent SOT, routing, Codex skill, and Codex agent checks; do not append
+those same leaf commands as mandatory duplicate runs. Add a check only for a
+relevant uncovered risk or a concrete invalidation since its covered run, and
+state the reason before another broad run. Source-only edits do not themselves
+authorize release, tag, push, or downstream sync. Mandatory CI/security/release
+gates still apply at their required boundary. Instruction validation establishes
+presence/consistency, not a universal host-enforced ban on test commands.

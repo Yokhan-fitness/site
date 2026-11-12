@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "product": {
+    "purpose": "Помочь посетителю BUFF IT узнать свою жизненную ситуацию, выбрать подходящий маршрут и перейти к реальному следующему действию через светлую ceramic-систему и содержательные изображения.",
+    "user": "Русскоязычный взрослый с сидячей работой, ограниченным временем и одной из целей: мягкий старт, спина, снижение веса, изменение формы, сила, навык или самостоятельный режим.",
+    "final_path": "Вход на главную или целевую страницу -> узнавание своей ситуации по образу и обещанию -> выбор маршрута в контенте или топ-меню -> релевантная программа/сервис -> текущий CTA без тупика -> возврат к карте BUFF IT.",
+    "current_alternative": "Тёмные изображения гасятся тёмными overlay, часть семантических media-токенов ведёт на generic Unsplash, а страницы разных аудиторий недостаточно различаются визуально.",
+    "kpi": {
+      "leading": "Доля основных маршрутов, где первый экран и карточка визуально различимы и ведут к правильному CTA без лишнего выбора.",
+      "lagging": "Квалифицированные переходы в подбор программы, coaching, GUIDE, APP, CALLS или другой конечный сервисный маршрут.",
+      "guardrail": "Никакого чёрного визуального режима, стокового фитнеса, ложных клиентов/кейсов, медицинских обещаний, сексуализации и ухудшения скорости загрузки."
+    }
+  },
+  "enabling_checkpoints": [
+    {
+      "id": "semantic-media-inventory",
+      "result": "Каждая страница и карточка сопоставлена с аудиторией, пользовательским вопросом, media-ролью, desktop/mobile слотом и критериями отклонения."
+    },
+    {
+      "id": "ceramic-token-contract",
+      "result": "Черные поверхности и overlays заменены семантическими ceramic-токенами; контраст и bounded/edge-to-edge правила проверяются в rendered geometry."
+    },
+    {
+      "id": "local-asset-pipeline",
+      "result": "Выбранные генерации хранятся локально в raw/web, экспортируются в AVIF/WebP и не зависят от Unsplash или временной папки генератора."
+    }
+  ],
+  "slices": [
+    {
+      "kind": "product-slice",
+      "id": "ceramic-home-and-navigation",
+      "readiness": 10,
+      "user_victory": "Посетитель на главной сразу видит жизненный, светлый образ BUFF IT и через содержательное топ-меню выбирает программу, формат или материал без визуального шума.",
+      "journey": {
+        "entry": "Главная BUFF IT на мобильном или desktop.",
+        "action": "Посетитель читает обещание, узнаёт домашний контекст и открывает нужную категорию меню либо основной CTA.",
+        "feedback": "Lead-образ и короткая структура подтверждают, что выбранная категория соответствует цели.",
+        "outcome": "Открывается релевантная программа, coaching, GUIDE или service page с тем же визуальным обещанием.",
+        "return": "Общий header и карта ссылок позволяют вернуться к другому маршруту."
+      },
+      "purpose_mechanism": "Светлый life-fit hero и category lead media превращают абстрактную экосистему в узнаваемые жизненные сценарии.",
+      "positioning": "Домашняя система вокруг реальной недели, а не фитнес-реклама и не чёрный премиум-шаблон.",
+      "kpi": {
+        "leading": "Главная и четыре категории меню различимы на 390, 845, 1296 и 1440 px; primary CTA остаётся видимым.",
+        "lagging": "Переход из главной/меню попадает в правильный маршрут и сохраняет source contract.",
+        "guardrail": "Нет dark-on-dark, menu overlap, горизонтального overflow и лишнего мобильного media download."
+      },
+      "final_path": "Home -> hero/menu choice -> target route -> CTA -> return.",
+      "acceptance_evidence": [
+        {"kind": "conversion-path", "ref": "required:home-nav-mobile-desktop-route-captures-and-target-cta"}
+      ],
+      "falsifier": "Картинка выглядит как фитнес-сток, меню стало тяжелее, текст требует чёрного overlay или переход ведёт не в обещанный маршрут.",
+      "truth_boundary": {"stubs": [], "excluded_claims": ["Скриншот не доказывает рост конверсии."], "outcome_depends_on_stub": false},
+      "replacement": "Удалить внешние Unsplash-зависимости и прежние dark overlay-пути после подключения локальных semantic assets.",
+      "rough_edges": ["Внутренние program/support страницы ещё получают групповые, а не индивидуальные сцены."],
+      "next_sharpening": "Развести аудитории и цели по отдельным program hero/card assets."
+    },
+    {
+      "kind": "product-slice",
+      "id": "audience-program-routes",
+      "readiness": 30,
+      "user_victory": "Пользователь отличает мягкий старт, спину, снижение веса, женскую форму, мужскую силу и продвинутый навык по ситуации и действию, а не по цветной плашке.",
+      "journey": {
+        "entry": "Программный каталог, мужская/женская категория или целевая program page.",
+        "action": "Пользователь сопоставляет свою цель с образом и открывает маршрут.",
+        "feedback": "Hero и карточка продолжают один сценарий и показывают достижимую стартовую ступень.",
+        "outcome": "Пользователь понимает формат и переходит к подбору/консультации.",
+        "return": "Related routes и header возвращают к сравнению без потери контекста."
+      },
+      "purpose_mechanism": "Разные персонажи, комнаты, движения и бытовые напряжения визуально кодируют покупательскую задачу.",
+      "positioning": "Маршрут уважает стартовую точку и жизнь человека вместо продажи идеального тела.",
+      "kpi": {"leading": "Все priority program routes имеют локальный semantic asset и mobile crop.", "lagging": "CTA каждой program page ведёт в существующий подбор без dead end.", "guardrail": "Нет shame, sexualisation, gym spectacle и fake transformation."},
+      "final_path": "Category/program entry -> audience image -> route details -> picker/coaching CTA -> return.",
+      "acceptance_evidence": [{"kind": "conversion-path", "ref": "required:program-family-mobile-desktop-route-to-picker"}],
+      "falsifier": "Две разные цели выглядят взаимозаменяемо или изображение обещает результат, которого текст и продукт не дают.",
+      "truth_boundary": {"stubs": [], "excluded_claims": ["Сгенерированные персонажи не являются клиентами или доказательством результата."], "outcome_depends_on_stub": false},
+      "replacement": "Убрать generic fitness/women/health backgrounds после назначения final route assets.",
+      "rough_edges": ["Реальные клиентские proof assets отсутствуют и не симулируются."],
+      "next_sharpening": "Заполнить support/service surfaces object-based media и проверить performance budget."
+    },
+    {
+      "kind": "product-slice",
+      "id": "support-service-world",
+      "readiness": 100,
+      "user_victory": "Пользователь понимает роль APP, CALLS, GUIDE, FOOD, GATES и самостоятельного режима по одному предметному образу и доходит до работающего действия.",
+      "journey": {
+        "entry": "Support page, service card или ecosystem section.",
+        "action": "Пользователь выбирает понятный сервис по его роли в неделе.",
+        "feedback": "Страница объясняет доступ, результат действия и путь назад.",
+        "outcome": "Открывается реальный сервис, документация, звонок или текущая честная граница доступности.",
+        "return": "Service gateway возвращает в BUFF IT map или следующий маршрут."
+      },
+      "purpose_mechanism": "Тактильные service objects связывают цифровые части экосистемы с тренировкой, едой и недельным ритмом.",
+      "positioning": "Технология поддерживает реальное действие, а не заменяет его фантазийным интерфейсом.",
+      "kpi": {"leading": "Все service roles имеют локальный asset и корректный ingress/return path.", "lagging": "Переходы доходят до работающего сервиса или честной unavailable boundary.", "guardrail": "Нет fake UI, private data, cyberpunk, медицинских и security-страшилок."},
+      "final_path": "Ecosystem/service entry -> role image -> service action -> feedback -> return.",
+      "acceptance_evidence": [{"kind": "conversion-path", "ref": "required:service-pages-mobile-desktop-action-and-return-path"}],
+      "falsifier": "Изображение понятнее только с подписью, сервис ведёт в fallback HTML или визуал показывает несуществующий UI.",
+      "truth_boundary": {"stubs": [], "excluded_claims": ["Media coverage не доказывает работоспособность внешнего сервиса."], "outcome_depends_on_stub": false},
+      "replacement": "Удалить внешние stock URLs, obsolete generated variants и неиспользуемые media tokens.",
+      "rough_edges": ["Конверсия и узнаваемость требуют последующего наблюдения, а не визуальной самооценки."],
+      "next_sharpening": "Добавить разрешённые реальные proof media и измерить влияние на route choice."
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+import assert from "node:assert/strict";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+
+const fixture = mkdtempSync(join(tmpdir(), "context-router-runtime-"));
+const project = join(fixture, "project");
+const external = join(fixture, "external");
+mkdirSync(project);
+mkdirSync(external);
+writeFileSync(join(project, "inside.txt"), "inside\n", "utf8");
+writeFileSync(join(external, "outside.txt"), "outside\n", "utf8");
+
+const server = fileURLToPath(new URL("../dist/index.js", import.meta.url));
+const environment = Object.fromEntries(Object.entries(process.env).filter((entry): entry is [string, string] => typeof entry[1] === "string"));
+const transport = new StdioClientTransport({
+  command: process.execPath,
+  args: [server],
+  cwd: project,
+  env: environment,
+  stderr: "pipe",
+});
+let serverStderr = "";
+transport.stderr?.on("data", (chunk) => { serverStderr += String(chunk); });
+const client = new Client({ name: "context-router-runtime-test", version: "1.0.0" });
+
+try {
+  try { await client.connect(transport); } catch (error) {
+    throw new Error(`MCP connection failed: ${error instanceof Error ? error.message : String(error)}\n${serverStderr}`);
+  }
+  const tools = await client.listTools();
+  const names = tools.tools.map((tool) => tool.name);
+  assert(names.includes("research"));
+  assert(names.includes("get_context"));
+  assert(!names.includes("run_pipeline"), "mutating pipeline tool must be opt-in");
+
+  for (const name of ["get_context", "switch_context"]) {
+    const routed = await client.callTool({ name, arguments: { keywords: "Разреши неоднозначную архитектуру", depth: "brief" } });
+    assert.notEqual(routed.isError, true);
+    const output = JSON.stringify(routed.content);
+    assert.match(output, /WORKFLOW_DEPTH: routed/u);
+    assert.match(output, /RESOURCE_DECISION:/u);
+    assert.match(output, /gpt-6\.1-sol/u);
+    assert.match(output, /recommendation-only/u);
+    assert.match(output, /CODEX_SUBAGENTS:.*architecture_consultant/u);
+  }
+
+  const boundedRoute = await client.callTool({
+    name: "get_context",
+    arguments: {
+      keywords: "Implement the approved settings module",
+      depth: "brief",
+      worker_contract: {
+        role: "implementer",
+        scope: ["src/settings.ts"],
+        acceptance: ["focused settings checks pass"],
+        hostDispatchCapabilities: ["explicit-model-contract"],
+      },
+    },
+  });
+  assert.notEqual(boundedRoute.isError, true, JSON.stringify(boundedRoute));
+  const boundedOutput = (boundedRoute.content as Array<{ text?: string }>)
+    .map((item) => "text" in item ? item.text : "")
+    .join("\n");
+  assert.match(boundedOutput, /DELEGATION_DECISION:.*"state":"ready"/u);
+  assert.match(boundedOutput, /EXECUTION_NEXT_ACTION: Dispatch a candidate/u);
+  assert.match(boundedOutput, /"model":"gpt-6-luna"/u);
+  assert.match(boundedOutput, /"fork_turns":"none"/u);
+
+  const inside = await client.callTool({ name: "research", arguments: { target: "inside.txt" } });
+  assert.notEqual(inside.isError, true, JSON.stringify(inside));
+  assert.match(JSON.stringify(inside.content), /inside\.txt/u);
+
+  const traversal = await client.callTool({ name: "research", arguments: { target: "../external/outside.txt" } });
+  assert.equal(traversal.isError, true);
+  assert.doesNotMatch(JSON.stringify(traversal.content), /outside\\n/u);
+  console.log("context-router MCP initialize, tools/list, cwd, and boundary tests passed");
+} finally {
+  await client.close();
+  rmSync(fixture, { recursive: true, force: true });
+}

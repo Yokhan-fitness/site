@@ -1,0 +1,150 @@
+# Agent Project Template v6.2.0
+
+This compatible minor version completes the workflow repairs found in real
+writing, UI, delegation and storage work. Publication, installed files and native
+activation are separate states. Publication must be checked against the exact GitHub release; quota savings
+remain unmeasured.
+
+## Resulting behavior
+
+- Stop responsibility follows the exact request that owns an unresolved managed
+  run. Foreign and legacy problems remain visible while their resources stay
+  protected. Missing termination evidence never becomes permission to delete.
+- Managed runs retain a separate terminal report, safe launch/proof diagnostics
+  and explicit request binding. Later reports and disposable project cleanup do
+  not erase prior diagnostic history.
+- New cache coordinators retain the old file-exclusion barrier and add a
+  crash-released SQLite mutex. Only strictly known matching v2 coordinator
+  metadata can be recovered automatically after confirmed process death. Legacy
+  mutex recovery requires an explicit expected hash and PID; full original bytes
+  and a receipt are retained. Payload, leases and run ownership checks remain
+  independent.
+- Luna coverage distinguishes started calls from completed, integrated useful
+  work. The headline target uses the latter. Neither metric establishes spending
+  savings or semantic quality.
+- Clear Russian execution requests prepare a bounded worker contract rather
+  than silently staying in the parent. An author can complete a nonfiction draft
+  and revise that same artifact after a distinct editor's findings.
+- Native realtime requests classify the current input separately from background
+  transcript text. Missing independent editorial evidence receives its own
+  diagnostic after successful application verification; it is not reported as
+  unread or unapplied primary sources. Substantive prose keeps the same reading
+  and review requirements.
+- Russian article detection uses article word forms rather than the fragment
+  `стат` inside unrelated words such as `достаточно`. Visual feedback no longer
+  becomes an authored article through that match; an explicit post or letter
+  request still enters its writing workflow.
+- Outcome evidence connects the original scenario, product facts and target
+  surface to actual observations. Source, publication, installation and active
+  execution require their own evidence; a filled receipt does not prove meaning
+  or a working interface.
+- Hook messages provide bounded navigation to the complete primary reading
+  packet. The selected full sections remain required; copied examples and an
+  index do not replace reading or editorial judgment.
+- Participating projects coordinate declared storage reservations through a
+  per-user external volume ledger. Project manifests, protections and lifecycle
+  ownership remain in their project registries. Uncertain reservations remain
+  allocated until explicit owner-fenced reconciliation.
+- Project registry initialization handles bounded SQLite contention before WAL
+  and transaction setup, reopening failed handles and rereading schema state.
+  This does not retry an issued writer grant or relax capacity/ownership checks.
+- Shared shell/path safety guards use Bash builtins instead of repeated matching
+  subprocesses. Codex overrides inherited TEST_MODE for real guard calls. The
+  existing five-second deadline and shared policy ownership remain unchanged.
+- Valid PreToolUse failures return an explicit JSON denial. In the restored
+  Windows host, an stderr/exit-code denial was recorded as a hook failure and
+  the harmless negative canary still executed; the explicit denial stopped it.
+  The seven hook command definitions and their persisted trust are unchanged.
+  The intended Docker command-substitution cleanup rule now blocks its tested
+  mass-cleanup form; historical shell escaping had made that form ineffective.
+- A default Orca setup checks the runtime, required hook files and local router
+  dependencies, preserves customized setup configuration, and prepares only the
+  missing template-router dependencies/build. Temporary npm cache uses the
+  managed lifecycle with measured cleanup. It does not trust hooks or change
+  model, approval or sandbox defaults. See [Orca setup](ORCA_SETUP.md).
+
+## Compatibility and limits
+
+No project-wide model, effort, approval or sandbox default is added. Books and
+text caches stay in the authorized private machine library and do not ship in
+the public release. Project-owned overlays and product files remain protected.
+
+Owned cleanup removes descendant link entries without following their targets;
+root, ancestor and ownership-marker checks remain strict. Linked output still
+fails the separate export check. Required artifacts must be exported or retained
+through their original run lifecycle. Storage-operation pins are not managed-run
+read leases, and closed-run adoption/handoff is not a supported API; resolve
+known consumers of such artifacts before activating new cleanup code there.
+
+Volume admission covers operations using the new cooperative protocol, not
+arbitrary filesystem writes, old clients, other users or every storage pool.
+Backfill never discovers and adopts unknown projects silently. No timestamp or
+missing PID authorizes data deletion. Rollback preserves outstanding metadata
+obligations instead of falling back to uncoordinated admission.
+
+The seven-file PA Stop repair is a targeted local fix with its own backup and
+receipt. Its installation does not change the manifest version or establish a
+full v6.2.0 rollout. A subsequent exact-release preview/apply must preserve that
+repair and every project overlay.
+The later four-file Orca compatibility repair also has separate file-level
+backups and preserves the manifest and hook definitions.
+
+## Acceptance record
+
+Real Windows cross-project admission passed: two concurrent processes targeted
+the same measured physical volume, only one received the available reservation,
+and the other proceeded after verified publication released it. A real claim
+process was terminated after its external commit; a fresh process recovered the
+private pending claim without exposing its token. Fixtures used tiny payloads,
+not large space-consuming copies.
+
+Five controlled Russian writing cases passed a distinct native GPT-6 Luna High
+editor after two rounds of actionable findings. The author corrected cross-case
+facts, padding, repeated definitions and an ambiguous menu action. The final
+artifact fingerprint is
+`07af5de6ab01ff0d7439da683c71b9f6d9e47f6f92f301fb4a090d6e9c3ce818`.
+This is scoped author/editor acceptance, not a model benchmark or measured quota
+saving. Drafts, source excerpts and native private logs are excluded from the
+public payload.
+
+The final cache coordinator passed isolated real-process crash/contention
+checks and an injected filesystem-error check that confirmed the SQLite lock
+was released.
+
+Owned link cleanup passed real Windows junction cases for runs and caches,
+including a child-created tree. External target manifests stayed unchanged;
+linked nested ownership markers remained protected. Windows denied file-symlink
+creation locally, so Linux CI must establish the remaining link variants.
+
+A fresh native CLI session executed SessionStart, UserPromptSubmit and Stop with
+persisted trust and no one-off hook-trust bypass. Its handler fingerprint was
+recorded locally; final installed-consumer activation remains a separate check.
+
+Local source acceptance retained the first 219/223 aggregate result and fixed
+its four failures through focused checks: inherited fixture ownership, concurrent
+first-use schema visibility, release counts and pinned setup documentation.
+The current global-schema delta also covers real v1 migration with and without
+the state column. Current native hook and real-volume integration are checked
+separately after that delta. Exact-commit Linux/Windows preflight, exact-tag CI
+and downloaded archive verification remain mandatory before calling the release
+live. Historical v6.1.2 acceptance is not evidence for this version.
+
+The first remote preflight exposed a test's dependency on a locally provisioned
+private library. Hook assembly now has synthetic fixtures, the missing-library
+case exercises the real blocking path, and the exact-byte application/editor
+diagnostic remains covered independently. Native validation prints the failing
+leaf's output. Test-owned cache roots isolate these checks from other chats.
+
+The restored-host safety regression compared 56 command cases with the exact
+07ebd4b baseline, including one explicitly asserted Docker protection delta.
+Line/case/priority semantics, sensitive Windows paths, audit and inherited test
+mode checks passed. Three sequential benign samples, each with two Bash starts,
+measured 596–775 ms before and 95–184 ms after on this Windows machine; these
+samples do not establish a general benchmark. A current restored Orca call
+allowed the benign command and rejected the harmless negative canary before
+execution after the protocol repair.
+
+A new ordinary Orca PA chat also completed the benign call and rejected the
+harmless negative call. Its native transcript and lifecycle events
+were checked together without a one-off trust override. Separate CLI probes
+that stopped before tool events remain failed attempts, not activation proof.

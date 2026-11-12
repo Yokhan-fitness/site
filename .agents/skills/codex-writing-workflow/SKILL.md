@@ -1,0 +1,113 @@
+---
+name: codex-writing-workflow
+description: "Write or edit literary, marketing, informational and communication text using the shared writing and source-grounding rules."
+---
+
+# Codex Writing Workflow
+
+Read `.claude/library/technical/writing.md` first. It is the shared SOT.
+
+## Process
+
+1. Select one primary mode by meaning: literary, marketing/advertising,
+   informational, or communication.
+2. Define the reader, production purpose, after-state, product/business link,
+   target language, channel, active SOTs, voice contract, and acceptance evidence.
+   For product claims, bind the copy to a concrete user situation, the promised
+   after-state, supplied product facts and the exact surface/environment. Do not
+   describe an action as a completed outcome unless the user receives that result.
+   Keep facts scoped to each artifact: a fact supplied for one case is not
+   automatically valid for another. Do not invent minimum word counts; use the
+   requested length and remove repetition that serves only an internal quota.
+3. Load only relevant project context. If facts are missing or SOTs conflict in a
+   way that changes meaning, stop and ask with 2-3 options.
+   For substantive nonfiction, including chat explanations, read
+   `.claude/library/technical/writing-source-grounding.md`, retrieve a fresh
+   mapped task-specific primary-source packet (`writing-library plan` / `read`)
+   and apply its principles before
+   drafting/review. Record source hashes, locators, read receipts and concrete
+   application; profiles and memory are not substitutes. Missing/stale sources
+   block source-grounded drafting. Classify mixed work per artifact; real fiction
+   and lore are exempt, game business/technical books and project plans are not.
+   Native hooks may supply fresh literal passages for this logical request;
+   read them and refine insufficient context. Inspect the local literal contents
+   and copied examples with `writing-library contents` / `examples` to find
+   relevant sections outside the finite topic map. Source-grounded planned
+   reading allows up to 96,000 characters; copied candidates and navigation
+   still require actual source reading and contextual judgment. For substantive final prose,
+   record application to the exact response bytes with `scripts/codex-turn.js
+   apply`; file deliverables use `--target file` and are rechecked after edits.
+   A prior packet, generic notes, or a completed retrieval command does not
+   establish application to this output. See `docs/NATIVE_WORKFLOW_GATES.md`.
+4. Analyze references into concrete writing properties; do not copy their
+   structure or imitate a named author mechanically.
+5. For substantial staged writing, plan the final function/section inventory;
+   handle a short answer or bounded edit directly within its existing purpose.
+   For a clear, nontrivial `create` or material `edit`, give a GPT-6 Luna High
+   `implementer` an exact request-scoped draft artifact as its writable scope,
+   with the reader scenario, purpose, supplied facts/sources, actual output
+   surface, approved voice examples and acceptance criteria.
+   Have the child write the actual prose into that artifact and return its path
+   and hash. Read and integrate that artifact; if editorial findings require
+   prose changes, send the specific findings back to the author to revise the
+   same artifact, then review the changed bytes again. Deliver the exact accepted
+   artifact when it fits the requested output; do not recopy or rewrite unchanged
+   prose in the parent. Tiny typo fixes, narrow status messages, read-only tasks,
+   quoted/reported commands and explicit no-agent requests stay on their existing
+   direct or parent-owned route. The author and required `writing_editor` remain
+   separate children.
+6. When staged delivery is useful, produce a truthful functional 1% whole,
+   then sharpen it in place. Planning,
+   TODOs, evidence slots, and fragments are preparation, not product evidence.
+7. Apply the selected mode profile from
+   `.claude/library/technical/writing-mode-profiles.md`.
+   Select explicit profile IDs from
+   `.claude/library/technical/writing-reference-registry.json` and apply the role
+   composition in `.claude/library/technical/writing-editorial-board.md`.
+   Treat `languageProfiles`, `processProfiles`, `domainProfiles`, and
+   `technicalProfiles` as separate authority groups. For Russian output, load
+   `.claude/library/technical/russian-writing-profile.md`, plus the routed
+   `russian-business-correspondence.md` and
+   `russian-explanation-and-persuasion.md` child profiles. Never let an English
+   domain standard determine Russian voice, syntax, idiom, or line editing.
+8. Apply the review policy in `writing.md`: source-grounded authored nonfiction
+   and material rewrites require the distinct read-only `writing_editor` (GPT-6 Luna
+   High), including short ads/letters. Use `codex-turn editorial-assignment`,
+   wait for the native JSON result, fix findings, and use `review-accept` with
+   the actual child ID. Changed bytes require new review. Brief technical
+   explanations/status and literal typo edits can self-check; explicit user
+   no-agent requests win and are never labelled independent review.
+   Otherwise use an independent reviewer when
+   requested, required by acceptance, or justified by material risk/uncertainty.
+   Public placement or a size label alone does not require a child agent.
+   Independence requires a separate read-only reviewer and genuine child trace;
+   otherwise label the pass `self-check`, not `independent review`.
+9. Apply the shared **Public Copy Gate** in `writing.md`: review the assembled
+   public surface for defensive copy, production notes, editing residue and
+   accidental duplicates; keep truthful user-relevant limits and real actions.
+   Development status belongs in the owner handoff, not unsolicited site copy.
+10. Replace obsolete passages and stale drafts, verify the channel, and report the
+   declared readiness level honestly.
+
+## Gates
+
+- Never invent facts, proof, citations, testimonials, statistics, capabilities,
+  deadlines, personal experience, or canon.
+- Never add deliberate errors or arbitrary quirks to appear human.
+- Never claim or optimize for AI-detector evasion.
+- Never apply a marketing formula to literary, informational, or service text.
+- Never call an outline or stub a progressive product slice.
+- Never let the writer's self-review stand in for independent acceptance evidence.
+- Never present an organization, regulator, vendor guide, or documentation
+  framework as an authorial model for the target language.
+- Never claim an external service ran, invent its score, or paraphrase a provider
+  response unless the route reports configured access and the current artifact
+  has a successful recorded response. `glavred-api:not-configured` means the
+  agent may use public methodology manually but must report that no API check ran.
+
+Read `docs/WRITING_WORKFLOW.md` when changing this workflow. It records the LitAI
+adaptation and ownership decisions without becoming a second behavioral SOT.
+
+When truth depends on code, schemas, interfaces, versions, commands, or a runtime
+environment, load `$codex-technical-writing`. Technical writing is an overlay on
+informational or communication mode, not a fifth semantic mode.

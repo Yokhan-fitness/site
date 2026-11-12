@@ -1,0 +1,765 @@
+#!/usr/bin/env node
+const assert = require("assert");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+
+const { formatSummary, getRoute: getProductionRoute } = require("./codex-route-task.js");
+const { runRouteCli } = require("./lib/codex-route-cli.js");
+const { evaluateDiscoveryReroute, getDecisionBinding } =
+  require("./lib/codex-discovery-reroute.js");
+const { AGENT_POLICY, getAgentProfiles, getResourceRecommendation } = require("./codex-agent-policy.js");
+const { runRouteCasesA } = require("./codex-routing-cases-a.js");
+const { runRouteCasesB } = require("./codex-routing-cases-b.js");
+const { makeArchitectureDecision, makeDecision } = require("./test-change-strategy.js");
+
+const BASE_ROUTE_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), "codex-route-base-"));
+
+function getRoute(task, options = {}) {
+  return getProductionRoute(task, { cwd: BASE_ROUTE_ROOT, ...options });
+}
+
+function assertIncludes(values, expected, message) {
+  assert(
+    values.includes(expected),
+    `${message}: expected ${expected}, got ${values.join(", ")}`,
+  );
+}
+
+function testRoute(task, expectations) {
+  const route = getRoute(task, expectations.options || {});
+  if (expectations.exactModes) {
+    assert.deepStrictEqual(
+      new Set(route.modes),
+      new Set(expectations.exactModes),
+      `${task} exact modes`,
+    );
+  }
+  if (expectations.exactSubagents) {
+    assert.deepStrictEqual(
+      route.subagents,
+      expectations.exactSubagents,
+      `${task} exact subagents`,
+    );
+  }
+  for (const mode of expectations.modes || []) {
+    assertIncludes(route.modes, mode, `${task} modes`);
+  }
+  for (const mode of expectations.notModes || []) {
+    assert(
+      !route.modes.includes(mode),
+      `${task} modes: expected no ${mode}, got ${route.modes.join(", ")}`,
+    );
+  }
+  for (const skill of expectations.skills || []) {
+    assertIncludes(route.skills, skill, `${task} skills`);
+  }
+  for (const skill of expectations.notSkills || []) {
+    assert(
+      !route.skills.includes(skill),
+      `${task} skills: expected no ${skill}, got ${route.skills.join(", ")}`,
+    );
+  }
+  for (const rule of expectations.sharedRules || []) {
+    assertIncludes(route.sharedRules, rule, `${task} shared rules`);
+  }
+  for (const subagent of expectations.subagents || []) {
+    assertIncludes(route.subagents, subagent, `${task} subagents`);
+  }
+  for (const subagent of expectations.notSubagents || []) {
+    assert(
+      !route.subagents.includes(subagent),
+      `${task} subagents: expected no ${subagent}, got ${route.subagents.join(", ")}`,
+    );
+  }
+  for (const gate of expectations.qualityGates || []) {
+    assertIncludes(route.qualityGates || [], gate, `${task} quality gates`);
+  }
+  if (expectations.risk) {
+    assert.strictEqual(route.risk, expectations.risk, `${task} risk`);
+  }
+  if (expectations.pipeline) {
+    assert.strictEqual(route.pipeline, expectations.pipeline, `${task} pipeline`);
+  }
+  if (expectations.workflowDepth) {
+    assert.strictEqual(route.workflowDepth, expectations.workflowDepth, `${task} workflow depth`);
+  }
+  if (expectations.orchestrator) {
+    assert.strictEqual(
+      route.orchestrator.owner,
+      expectations.orchestrator,
+      `${task} orchestrator`,
+    );
+  }
+  if (typeof expectations.needsFreshDocs === "boolean") {
+    assert.strictEqual(
+      route.needsFreshDocs,
+      expectations.needsFreshDocs,
+      `${task} fresh docs`,
+    );
+  }
+  if (typeof expectations.planRequired === "boolean") {
+    assert.strictEqual(
+      route.planContract.required,
+      expectations.planRequired,
+      `${task} plan required`,
+    );
+  }
+  if (expectations.fanoutStatus) {
+    assert.strictEqual(
+      route.fanout.status,
+      expectations.fanoutStatus,
+      `${task} fanout status`,
+    );
+  }
+  if (typeof expectations.changeStrategyRequired === "boolean") {
+    assert.strictEqual(
+      route.changeStrategy.required,
+      expectations.changeStrategyRequired,
+      `${task} change strategy activation`,
+    );
+  }
+  if (expectations.changeStrategyRecordMode) {
+    assert.strictEqual(
+      route.changeStrategy.recordMode,
+      expectations.changeStrategyRecordMode,
+      `${task} change strategy record mode`,
+    );
+  }
+  if (typeof expectations.blockEdits === "boolean") {
+    assert.strictEqual(route.blockEdits, expectations.blockEdits, `${task} block edits`);
+  }
+  if (expectations.discoveryKind) {
+    assert.strictEqual(route.discovery.kind, expectations.discoveryKind, `${task} discovery kind`);
+  }
+  for (const mode of expectations.semanticMatches || []) {
+    assertIncludes(route.semanticMatches || [], mode, `${task} semantic matches`);
+  }
+  for (const mode of expectations.exactMatches || []) {
+    assertIncludes(route.exactMatches || [], mode, `${task} exact matches`);
+  }
+}
+
+function withTempProject(setup, callback) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "codex-route-"));
+  try {
+    setup(root);
+    callback(root);
+  } finally {
+    fs.rmSync(root, { force: true, recursive: true });
+  }
+}
+
+function main() {
+  const direct = getRoute("Fix typo in README");
+  assert.strictEqual(direct.workflowDepth, "direct");
+  assert.deepStrictEqual(direct.skills, []);
+  assert.deepStrictEqual(direct.sharedRules, []);
+  assert.strictEqual(direct.fanout.status, "skip");
+  assert.strictEqual(direct.resourceDecision.recommendedModel, "gpt-6.1-sol");
+  const readyWorker = { role: "implementer", scope: ["src/a.js"], acceptance: ["tests pass"],
+    hostDispatchCapabilities: ["explicit-model-contract"] };
+  const fastWorker = { needSpeed: true, role: "implementer", risk: "LOW",
+    assignment: { scope: ["src/a.js"], acceptance: ["tests pass"], uncertainty: "low", operation: "write" },
+    requiredCapabilities: ["write"], observedHost: { available: true, authorized: true, transport: "Orca/OpenCode",
+      observedAt: new Date().toISOString(), selectedModel: "opencode-go/deepseek-v4.1-flash", toolCapabilities: ["write"] } };
+  const fastWorkerContract = { ...readyWorker, fastWorker };
+  const fastReadyRoute = getRoute("Implement the approved isolated module", { workerContract: fastWorkerContract });
+  assert.strictEqual(fastReadyRoute.resourceDecision.recommendedModel, "gpt-6-luna");
+  assert.strictEqual(fastReadyRoute.resourceDecision.externalExecution.state, "external-fast-ready");
+  assert.strictEqual(fastReadyRoute.resourceDecision.externalExecution.effectiveModel, null);
+  assert.strictEqual(fastReadyRoute.resourceDecision.dispatch.callContract.model, "gpt-6-luna",
+    "external execution selection must remain separate from the native Luna dispatch contract");
+  assert.match(fastReadyRoute.delegationDecision.nextAction, /Preferred external execution is available/u);
+  assert.match(fastReadyRoute.delegationDecision.nextAction, /effective provider\/model remain unverified/u);
+  const fastOptOut = getRoute("Implement the approved isolated module without subagents", { workerContract: fastWorkerContract });
+  assert.strictEqual(fastOptOut.resourceDecision.dispatch.ready, false);
+  assert.strictEqual(fastOptOut.resourceDecision.externalExecution.state, "native-luna-fallback");
+  assert.strictEqual(fastOptOut.resourceDecision.externalExecution.selectedModel, null,
+    "an explicit opt-out must not expose a fast-ready external model");
+  assert.doesNotMatch(fastOptOut.delegationDecision.nextAction, /Preferred external execution/u);
+  const fastUnresolved = getRoute("Implement a module with unresolved architecture", { workerContract: fastWorkerContract });
+  assert.strictEqual(fastUnresolved.resourceDecision.dispatch.ready, false);
+  assert.strictEqual(fastUnresolved.resourceDecision.externalExecution.state, "native-luna-fallback");
+  assert.match(fastUnresolved.resourceDecision.externalExecution.fallbackReason, /architecture-decision-required/u);
+  const fastHighRisk = getRoute("Implement approved security-sensitive authentication module", { workerContract: fastWorkerContract });
+  assert.strictEqual(fastHighRisk.resourceDecision.externalExecution.state, "native-luna-fallback",
+    "high-risk routes do not expose the external fast worker");
+  const readOnlyFast = getRoute("Review the implementation across modules", { workerContract: { assignments: {
+    scout: { scope: ["src/"], acceptance: ["return evidence-backed findings"], fastWorker: {
+      ...fastWorker, role: "scout", assignment: { scope: ["src/"], acceptance: ["return evidence-backed findings"], uncertainty: "low", operation: "read" },
+      requiredCapabilities: ["read"], observedHost: { ...fastWorker.observedHost, toolCapabilities: ["read"] },
+    } },
+  }, hostDispatchCapabilities: ["explicit-model-contract"] } });
+  assert.strictEqual(readOnlyFast.delegationDecision.state, "ready");
+  assert.strictEqual(readOnlyFast.workerContracts.find((worker) => worker.role === "scout").externalExecution.state, "external-fast-ready",
+    "bounded read-only work can use an authorized compatible fast executor");
+  const canonicalAssignment = getResourceRecommendation({ role: "implementer", scope: ["src/owned.js"],
+    acceptance: ["the focused implementation check passes"], hostDispatchCapabilities: ["explicit-model-contract"],
+    fastWorker: { ...fastWorker, role: "scout",
+      assignment: { scope: ["../outside.js"], acceptance: ["different acceptance"], uncertainty: "low", operation: "read" },
+      requiredCapabilities: ["read"], observedHost: { ...fastWorker.observedHost, toolCapabilities: ["read", "write"] } } });
+  assert.strictEqual(canonicalAssignment.externalExecution.state, "external-fast-ready");
+  assert.deepStrictEqual(canonicalAssignment.externalExecution.assignment.scope, ["src/owned.js"]);
+  assert.deepStrictEqual(canonicalAssignment.externalExecution.assignment.acceptance, ["the focused implementation check passes"]);
+  assert.strictEqual(canonicalAssignment.externalExecution.assignment.operation, "write",
+    "nested fast-worker metadata cannot replace the assigned role's required operation");
+  const shadowedReview = getRoute("Review the implementation across modules", { availableSlots: 1, workerContract: {
+    role: "reviewer", scope: ["src/"], acceptance: ["review the assigned implementation"],
+    fastWorker: { ...fastWorker, role: "scout",
+      assignment: { scope: ["src/"], acceptance: ["review the assigned implementation"], uncertainty: "low", operation: "read" },
+      requiredCapabilities: ["read"], observedHost: { ...fastWorker.observedHost, toolCapabilities: ["read"] } },
+  } });
+  assert.strictEqual(shadowedReview.resourceDecision.externalExecution.state, "native-luna-fallback",
+    "nested scout metadata cannot downgrade an assigned reviewer into an external-eligible role");
+  assert.match(shadowedReview.resourceDecision.externalExecution.reason, /judgment/u);
+  assert.doesNotMatch(shadowedReview.delegationDecision.nextAction, /Preferred external execution/u);
+  for (const [task, options, reason] of [
+    ["Implement approved isolated module without subagents", { availableSlots: 0 }, "explicit-user-opt-out"],
+    ["Implement approved isolated module", { availableSlots: 0 }, "host-has-no-child-slots"],
+    ["Fix typo in README", {}, "xs-direct-task"],
+    ["Review security and tests across modules without swarm", {}, "explicit-user-opt-out"],
+    ["Проверь несколько модулей без swarm", {}, "explicit-user-opt-out"],
+    ["Review security and tests across modules. Do not spawn child agents", {}, "explicit-user-opt-out"],
+    ["Review security and tests across modules", { availableSlots: "0" }, "invalid-host-child-slots"],
+  ]) {
+    const blocked = getRoute(task, { ...options, workerContract: readyWorker });
+    assert.strictEqual(blocked.fanout.status, "skip", task);
+    assert.strictEqual(blocked.fanout.reason, reason, task);
+    assert.strictEqual(blocked.resourceDecision.dispatch.ready, false, task);
+    assert.strictEqual(blocked.resourceDecision.dispatch.callContract, null, task);
+    assert(blocked.workerContracts.every((worker) => !worker.dispatch.ready));
+  }
+  for (const task of ["Проведи независимый аудит безопасности и тестов в нескольких модулях",
+    "Проверь несколько модулей через swarm", "Review security and tests across modules",
+    "Review correctness in subagent trace child identity completion isolation and task router opt-out slot XS dispatch gates. Two independent bounded read-only review lanes."]) {
+    const parallel = getRoute(task);
+    assert.strictEqual(parallel.fanout.status, "recommended", task);
+    assert(parallel.skills.includes("codex-subagent-orchestration"), task);
+    assert(parallel.subagents.length <= 3);
+  }
+  const sensitive = getRoute("Fix typo in auth permissions");
+  assert.strictEqual(sensitive.workflowDepth, "routed");
+  assert.strictEqual(sensitive.risk, "HIGH");
+  for (const task of ["What is this error and fix it", "Why is the app crashing for all users?", "Fix typo and rebuild the entire app", "Fix typo in commit hook"]) {
+    const routed = getRoute(task);
+    assert.strictEqual(routed.workflowDepth, "routed", task);
+    assert(routed.sharedRules.length > 0, task);
+  }
+  for (const task of ["Разреши неоднозначную архитектуру", "Разбери конфликтующие требования", "Разбери системный тупик"]) {
+    assert.strictEqual(getRoute(task).resourceDecision.recommendedModel, "gpt-6.1-sol", task);
+  }
+  const assigned = getRoute("Comprehensive template audit across modules", {
+    workerContract: { evidenceRefs: ["parent-report"], assignments: {
+      scout: { scope: ["src/module.js"], acceptance: ["report findings"], evidenceRefs: ["ADR42"] },
+    } },
+  });
+  assert.deepStrictEqual(assigned.workerContracts.find((worker) => worker.role === "scout").evidenceRefs, ["parent-report", "ADR42"]);
+  const bounded = getRoute("Implement isolated module according to approved contract", {
+    workerContract: { role: "implementer", scope: ["src/module.js"], acceptance: ["unit contract passes"] },
+  });
+  assert.strictEqual(bounded.resourceDecision.recommendedModel, "gpt-6-luna");
+  assert.strictEqual(bounded.resourceDecision.dispatch.customRole, null);
+  assert.strictEqual(bounded.resourceDecision.dispatch.strategy, "explicit-model-contract");
+  assert.strictEqual(bounded.resourceDecision.dispatch.ready, false);
+  assert.strictEqual(bounded.resourceDecision.runtimeStatus, "recommendation-only");
+  assert.deepStrictEqual(bounded.delegationDecision, {
+    required: true,
+    state: "prepare-contract",
+    reason: "worker-scope-acceptance-or-host-capability-missing",
+    nextAction: "Derive exact scope and acceptance from the task and repository, add evidence references and supported host dispatch capabilities, then reroute. Do not guess the worker scope.",
+    candidateRoles: ["implementer"],
+  });
+  const russianReleasePreparation = getRoute("Слушай, ну давай, вноси изменения, только чтобы реально улучшилось. Вот. И как бы поднимай версию релиза, если всё нормально будет работать.");
+  assert.strictEqual(russianReleasePreparation.delegationDecision.required, true);
+  assert.strictEqual(russianReleasePreparation.delegationDecision.state, "prepare-contract",
+    "the authored Russian execution and conditional release request needs a derived bounded contract");
+  assert(russianReleasePreparation.delegationDecision.candidateRoles.includes("implementer"));
+  assert.match(russianReleasePreparation.delegationDecision.nextAction, /derive exact scope and acceptance.*do not guess/iu,
+    "routing must preserve the parent contract and release gates");
+  const quotedAction = getRoute("Проверь формулировку «вноси изменения и поднимай версию релиза».");
+  assert(!quotedAction.delegationDecision.candidateRoles.includes("implementer"),
+    "quoted actions must not authorize an implementation worker");
+  // A single implementation worker is useful even without a parallel lane.
+  const sequential = getRoute("Implement the approved isolated module", {
+    availableSlots: 1, workerContract: readyWorker,
+  });
+  assert.deepStrictEqual(sequential.subagents, ["implementer"]);
+  assert.strictEqual(sequential.fanout.reason, "bounded-implementation-delegation");
+  assert.strictEqual(sequential.resourceDecision.dispatch.ready, true);
+  assert.strictEqual(sequential.workerContracts[0].dispatch.ready, true);
+  assert.strictEqual(sequential.workerContracts[0].dispatch.callContract.model, "gpt-6-luna");
+  assert.strictEqual(sequential.workerContracts[0].dispatch.callContract.fork_turns, "none");
+  assert.strictEqual(sequential.delegationDecision.state, "ready");
+  assert(sequential.delegationDecision.required);
+  const native = getRoute("Implement the approved isolated module", {
+    workerContract: { ...readyWorker, hostDispatchCapabilities: ["native-custom-role"] },
+  });
+  assert.strictEqual(native.delegationDecision.state, "ready");
+  assert.strictEqual(native.workerContracts[0].dispatch.callContract.agent_type, "implementer");
+  for (const task of [
+    "Ну, перегенери уже, сделай классно.",
+    "Теперь тебе нужно сделать выделение.",
+    "Освободилось, сделай пожалуйста.",
+    "Окей, делай дальше экраны с трекингом, а функциональный бэкенд уже делай сейчас.",
+    "Переделывай, генери сначала.",
+    "А давай попробуем сделать фаску, давай сделаем так.",
+    "Ну давай сделаем это и выделим блок.",
+    "Нужно просто ещё один предмет вставить.",
+    "Можно его побольше растянуть.",
+    "Давай-ка ты кодиком сделаешь так.",
+    "Можем попробовать сгенерировать вариант.",
+    "Так может ты сделаешь мне?",
+    "Тебе надо как в играх брови и волосы на лице заменять.",
+    "Ну вот сделай всё, что мы обсудили, пожалуйста.",
+    "Давай подключим календарь и убедись, что синхронизация работает.",
+  ]) {
+    const execution = getRoute(task, { workerContract: readyWorker });
+    assert(execution.subagents.includes("implementer"), task);
+    assert.strictEqual(execution.resourceDecision.dispatch.ready, true, task);
+  }
+  const lunaResearchContract = {
+    assignments: { scout: { scope: [".session-cache/"], acceptance: ["return evidence-backed findings"] } },
+    hostDispatchCapabilities: ["native-custom-role"],
+  };
+  for (const task of [
+    "Выясни, почему Luna редко используется в шести чатах.",
+    "Не работает вход, выясни почему.",
+    "Продумай варианты дизайна и посмотри на референсы.",
+    "Можешь выяснить, в чём дело? Header не работает правильно.",
+    "Glyph нормально не работает.",
+    "Спланируй конкретные технические действия.",
+    "Ну, спланируй конкретные действия, а ещё техничку нужно подправлять.",
+    "Нужно проверять связность систем.",
+    "Что можешь выделять оранжевым в аккаунте?",
+    "В варианте B металл появляется внутри, а мне хотелось бы фаску. Так можно сделать, совместив плоский вариант с прежней фаской?",
+    "Я хочу, чтобы во всех вариантах были такие канавки; нужно понять, где сейчас их задают.",
+  ]) {
+    const research = getRoute(task, { workerContract: lunaResearchContract });
+    assert(!research.subagents.includes("implementer"), task);
+    assert(research.delegationDecision.candidateRoles.some((role) =>
+      ["scout", "tester", "pr_explorer", "docs_researcher", "summarizer"].includes(role)), task);
+    assert(["ready", "prepare-contract"].includes(research.delegationDecision.state), task);
+  }
+  for (const task of [
+    "Как подключить компонент?",
+    "Что такое подключение?",
+    "Ты переделал хуже, почему?",
+    "Можно ли подключить библиотеку?",
+    "Не подключай библиотеку, только посмотри конфиг.",
+    "Не генерируй ничего, выясни ошибку.",
+    "Не делай правок: только выясни причину сбоя.",
+  ]) {
+    const protectedRoute = getRoute(task, { workerContract: readyWorker });
+    assert(!protectedRoute.subagents.includes("implementer"), task);
+    assert.strictEqual(protectedRoute.resourceDecision.dispatch.ready, false, task);
+  }
+  for (const task of [
+    "Проверь формулировку «сделай новую страницу кабинета пользователя с доступными действиями».",
+    "Проверь пример кода: `сделай новую страницу кабинета пользователя`.",
+    "Проверь формулировку: сделай новую страницу кабинета пользователя.",
+    "Проверь формулировку: сделай новую страницу кабинета и добавь доступные действия.",
+    "Проверь формулировку: выбери вариант и сделай новую страницу кабинета пользователя.",
+  ]) {
+    const mentionedAction = getRoute(task, { workerContract: readyWorker });
+    assert(!mentionedAction.subagents.includes("implementer"), task);
+    assert.strictEqual(mentionedAction.resourceDecision.dispatch.ready, false, task);
+  }
+  for (const task of ["Implement approved homepage component design", "Implement the approved feature"]) {
+    const planned = getRoute(task, { workerContract: readyWorker });
+    assert(planned.subagents.includes("implementer"), task);
+    assert.strictEqual(planned.resourceDecision.recommendedModel, "gpt-6-luna", task);
+    assert.strictEqual(planned.resourceDecision.dispatch.ready, true, task);
+    const unbounded = getRoute(task);
+    assert(unbounded.subagents.includes("implementer"), task);
+    assert.strictEqual(unbounded.resourceDecision.dispatch.ready, false, task);
+  }
+  for (const task of ["Read-only review of the implementation", "Inspect the homepage; do not modify files",
+    "Audit the proposed fix for homepage implementation",
+    "Проверь предложенное исправление компонента главной страницы",
+    "How do I implement this component?", "Explain how to fix the homepage component",
+    "Review implementation plan for update", "Explain the build and deploy pipeline",
+    "Explain how to inspect and implement the approved component",
+    "Review the build and deploy pipeline",
+    "Audit the build and fix process",
+    "Inspect update and release workflow"]) {
+    const readOnly = getRoute(task, { workerContract: readyWorker });
+    assert(!readOnly.subagents.includes("implementer"), task);
+    assert.strictEqual(readOnly.resourceDecision.dispatch.ready, false, task);
+    assert.strictEqual(readOnly.resourceDecision.dispatch.callContract, null, task);
+    assert(!readOnly.delegationDecision.candidateRoles.includes("implementer"), task);
+  }
+  const readOnlyResearch = getRoute("Review the implementation across modules", {
+    workerContract: { assignments: { scout: { scope: ["src/"], acceptance: ["return evidence-backed findings"] } },
+      hostDispatchCapabilities: ["explicit-model-contract"] },
+  });
+  assert.strictEqual(readOnlyResearch.delegationDecision.state, "ready");
+  assert(readOnlyResearch.delegationDecision.candidateRoles.includes("scout"));
+  const narrowInspection = getRoute("Inspect src/component.tsx; read-only review");
+  assert.strictEqual(narrowInspection.delegationDecision.state, "skip");
+  assert.strictEqual(narrowInspection.delegationDecision.reason, "narrow-read-only-inspection");
+  const highRiskInspection = getRoute("Review src/auth.ts for security flaws; read-only");
+  assert.notStrictEqual(highRiskInspection.delegationDecision.reason, "narrow-read-only-inspection");
+  const optedOut = getRoute("Implement the approved settings module without subagents", { workerContract: readyWorker });
+  assert.strictEqual(optedOut.delegationDecision.state, "skip");
+  assert.strictEqual(optedOut.delegationDecision.reason, "explicit-user-opt-out");
+  const tinyDecision = getRoute("Fix typo in README");
+  assert.strictEqual(tinyDecision.delegationDecision.state, "skip");
+  const architectureGate = getRoute("Implement a module with unresolved architecture", { workerContract: readyWorker });
+  assert.strictEqual(architectureGate.delegationDecision.state, "parent-owned");
+  assert.strictEqual(architectureGate.delegationDecision.reason, "architecture-decision-required");
+  assert.throws(() => getRoute("Implement the approved module", {
+    workerContract: { role: "implementer", scope: ["../outside"], acceptance: ["tests pass"],
+      hostDispatchCapabilities: ["explicit-model-contract"] },
+  }), /canonical relative paths/);
+  for (const task of ["Review the component and implement the approved fix", "Проверь компонент и исправь ошибку",
+    "Add the approved search component", "Добавь согласованный компонент поиска",
+    "Refactor the approved isolated module", "Отрефакторь согласованный модуль"]) {
+    assert.strictEqual(getRoute(task, { workerContract: readyWorker }).resourceDecision.dispatch.ready, true, task);
+  }
+  const constrainedRisk = getRoute("Implement approved security-sensitive authentication module", {
+    availableSlots: 1, workerContract: readyWorker,
+  });
+  assert.strictEqual(constrainedRisk.fanout.status, "required");
+  assert.deepStrictEqual(constrainedRisk.subagents, ["security_reviewer"]);
+  assert.strictEqual(constrainedRisk.resourceDecision.dispatch.ready, false);
+  const unresolved = getRoute("Implement a module with unresolved architecture", {
+    availableSlots: 1, workerContract: readyWorker,
+  });
+  assert(!unresolved.subagents.includes("implementer"));
+  assert.strictEqual(unresolved.resourceDecision.dispatch.ready, false);
+  const maxContract = getRoute("Implement the approved isolated module", {
+    workerContract: { role: "implementer", scope: ["src/module.js"], acceptance: ["unit tests"],
+      requestedEffort: "max", reason: "hard bounded module", budget: { maxTokens: 5000, maxAttempts: 2 },
+      hostCapabilities: { "gpt-6-luna": ["high", "max"] }, hostDispatchCapabilities: ["explicit-model-contract"] },
+  });
+  assert.strictEqual(maxContract.resourceDecision.recommendedEffort, "max");
+  assert.strictEqual(maxContract.resourceDecision.dispatch.customRole, null);
+  assert.strictEqual(maxContract.resourceDecision.dispatch.ready, true);
+  const ambiguous = getRoute("Resolve ambiguous architecture with conflicting requirements");
+  assert.strictEqual(ambiguous.resourceDecision.recommendedModel, "gpt-6.1-sol");
+  assert.strictEqual(ambiguous.resourceDecision.recommendedEffort, "high");
+  assert(ambiguous.subagents.includes("architecture_consultant"));
+  assert.strictEqual(AGENT_POLICY.parent.modelSource, "user-or-ide");
+  assert.strictEqual(AGENT_POLICY.parent.baselineEffort, "high");
+  assert.deepStrictEqual(
+    new Set(getAgentProfiles().map(({ model }) => model)),
+    new Set(["gpt-6.1-sol", "gpt-6-luna"]),
+  );
+  const symbolRoute = getRoute("rename the authentication symbol");
+  assert.deepStrictEqual(symbolRoute.codeIntelligence.tools, ["codebase-memory", "serena", "ripgrep"]);
+  assert(formatSummary(symbolRoute).includes("CODE_INTELLIGENCE: symbol-refactor | codebase-memory -> serena -> ripgrep"));
+  assert(formatSummary(getRoute("Implement the approved component")).includes("EXECUTION_NEXT_ACTION:"));
+  assert(formatSummary(getRoute("Implement the approved component", { workerContract: readyWorker })).includes("DISPATCH: implementer:ready=true"));
+  const securityRoute = getRoute("security release audit for leaked secrets");
+  assert.deepStrictEqual(securityRoute.codeIntelligence.tools, ["codebase-memory", "semgrep", "gitleaks", "ripgrep"]);
+
+  const productPlan = getRoute("Спланируй развитие сайта кофейни от объявления до заказов.");
+  assert(productPlan.modes.includes("progressive-planning"));
+  assert.match(productPlan.planContract.goalArtifact, /accepted product plan/);
+  assert.strictEqual(productPlan.writingIntent.isWriting, true);
+  assert(productPlan.writingPolicy);
+  assert(productPlan.skills.includes("codex-writing-workflow"));
+  assert(productPlan.qualityGates.includes("fresh-primary-source-packet-required"));
+  assert(productPlan.qualityGates.includes("source-principle-application-required"));
+  const templateMaintenance = getRoute("Update the agent template routing instructions");
+  assert.match(templateMaintenance.planContract.goalArtifact, /do not create one mechanically/);
+
+  const russianWriting = getRoute("Напиши на русском руководство по интеграции API");
+  assert.deepStrictEqual(russianWriting.writingPolicy.languageProfiles, ["russian-infostyle-core", "ilyakhov-russian-voice-decisions"]);
+  assert(russianWriting.writingPolicy.domainProfiles.includes("russian-explanation-and-persuasion"));
+  assert(russianWriting.writingPolicy.domainProfiles.includes("reader-task-architecture"));
+  assert(russianWriting.writingPolicy.technicalProfiles.includes("technical-developer-conventions"));
+  assert.deepStrictEqual(russianWriting.writingPolicy.externalTools, [{ id: "glavred-api", access: "not-configured", execution: "not-run", paid: true }]);
+  assert(russianWriting.writingPolicy.gates.includes("external-tool-unavailable"));
+
+  const writingAuthorContract = {
+    role: "implementer",
+    scope: [".session-cache/writing/draft.txt"],
+    acceptance: ["Write the requested prose into the scoped draft artifact and report its path and hash."],
+    hostDispatchCapabilities: ["explicit-model-contract"],
+  };
+  for (const task of [
+    "Напиши пост о новых возможностях личного кабинета по приложенным фактам.",
+    "Отредактируй текст лендинга по книге и верни готовый текст.",
+  ]) {
+    const authorRoute = getRoute(task, { workerContract: writingAuthorContract });
+    assert.strictEqual(authorRoute.writingIntent.isWriting, true, task);
+    assert(authorRoute.subagents.includes("implementer"), task);
+    assert(authorRoute.subagents.includes("writing_editor"), task);
+    assert.strictEqual(authorRoute.delegationDecision.state, "ready", task);
+    assert(authorRoute.delegationDecision.candidateRoles.includes("implementer"), task);
+    assert.match(authorRoute.delegationDecision.nextAction, /draft artifact.*distinct writing_editor/iu, task);
+  }
+  const uncontractedWriting = getRoute("Отредактируй текст лендинга по книге и верни готовый текст.");
+  assert.strictEqual(uncontractedWriting.delegationDecision.state, "prepare-contract");
+  assert(uncontractedWriting.delegationDecision.candidateRoles.includes("implementer"));
+  assert.match(uncontractedWriting.delegationDecision.nextAction, /request-scoped draft artifact/iu);
+
+  const diagnosedWriting = getRoute("тексты плохо пишет, выясни причину");
+  assert.strictEqual(diagnosedWriting.writingIntent.isWriting, false);
+  assert(!diagnosedWriting.subagents.includes("implementer"));
+  assert(!diagnosedWriting.subagents.includes("writing_editor"));
+  assert(diagnosedWriting.subagents.includes("scout"));
+
+  const readOnlyWriting = getRoute("Отредактируй текст лендинга в режиме только чтения.");
+  assert(!readOnlyWriting.subagents.includes("implementer"));
+  for (const task of [
+    "Напиши пост о новых возможностях личного кабинета по приложенным фактам без субагентов.",
+    "Проверь формулировку «Напиши пост о новых возможностях личного кабинета».",
+  ]) {
+    const guarded = getRoute(task, { workerContract: writingAuthorContract });
+    assert(!guarded.subagents.includes("implementer"), task);
+  }
+  for (const task of ["Исправь опечатку", "Напиши краткий статус о проверке."]) {
+    const narrow = getRoute(task, { workerContract: writingAuthorContract });
+    assert.strictEqual(narrow.workflowDepth, "direct", task);
+    assert(!narrow.subagents.includes("implementer"), task);
+  }
+  const codeWriting = getRoute("Напиши TypeScript-скрипт для проверки файла.");
+  assert.strictEqual(codeWriting.writingIntent.isWriting, false);
+  assert(codeWriting.subagents.includes("implementer"));
+
+  const russianLetter = getRoute("Напиши на русском деловое письмо клиенту");
+  assert(russianLetter.writingPolicy.languageProfiles.includes("russian-business-correspondence-language"));
+  assert(russianLetter.writingPolicy.processProfiles.includes("russian-business-correspondence-process"));
+  assert(russianLetter.writingPolicy.domainProfiles.includes("russian-business-correspondence"));
+
+  for (const task of ["Проверь в Главреде", "Дай оценку Главреда", "Отредактируй по Главреду", "Проверь этот текст в Главреде"]) {
+    const glavredRoute = getRoute(task);
+    assert(glavredRoute.modes.includes("writing-informational"), `${task}: ${glavredRoute.modes.join(", ")}`);
+    assert(!glavredRoute.modes.includes("writing-literary"), `${task}: unexpected literary route`);
+    assert.deepStrictEqual(glavredRoute.writingPolicy.externalTools, [{ id: "glavred-api", access: "not-configured", execution: "not-run", paid: true }]);
+  }
+
+  const mixedWriting = getRoute("Напиши руководство на русском и английском по API");
+  assert.strictEqual(mixedWriting.writingPolicy.targetLanguage, "mixed");
+  assert.deepStrictEqual(mixedWriting.writingPolicy.languageProfiles, []);
+  assert(mixedWriting.writingPolicy.gates.includes("per-section-language-resolution"));
+
+  testRoute("план итераций по прогрессивному джипегу, где каждый срез решает цель продукта", {
+    modes: ["progressive-planning"],
+    notModes: ["design-system"],
+    skills: ["codex-progressive-jpeg-planner", "codex-product-goal", "codex-decompose"],
+    qualityGates: ["product-purpose", "end-to-end-user-victory", "anti-falsification"],
+    planRequired: true,
+  });
+
+  testRoute("Check subagent token usage and report whether the configured models work", {
+    notModes: ["design-system"],
+    notSubagents: ["product_reviewer"],
+    fanoutStatus: "conditional",
+  });
+
+  runRouteCasesA(testRoute);
+  runRouteCasesB(testRoute);
+
+  const discoveryFixture = path.join(
+    __dirname,
+    "..",
+    "tests",
+    "fixtures",
+    "change-strategy",
+    "discovery-architecture-mismatch.json",
+  );
+  const discoveryOutput = runRouteCli(
+    ["fix the display bug", "--discovery-file", discoveryFixture],
+    { formatSummary, getRoute },
+  );
+  const discoveryRoute = JSON.parse(discoveryOutput);
+  assert.strictEqual(discoveryRoute.blockEdits, true);
+  const blockedWorker = getRoute("fix the display bug", {
+    discovery: JSON.parse(fs.readFileSync(discoveryFixture, "utf8")), workerContract: readyWorker,
+  });
+  assert.strictEqual(blockedWorker.resourceDecision.dispatch.ready, false);
+  assert.strictEqual(blockedWorker.resourceDecision.dispatch.policyReason, "change-strategy-blocks-writes");
+  assert(!blockedWorker.subagents.includes("implementer"));
+  assert(discoveryRoute.modes.includes("bugfix"));
+  assert(discoveryRoute.skills.includes("codex-change-strategy"));
+
+  const resolvedRoute = getRoute("fix the display bug", {
+    discovery: JSON.parse(fs.readFileSync(discoveryFixture, "utf8")),
+    changeStrategyDecision: makeArchitectureDecision(),
+  });
+  assert.strictEqual(resolvedRoute.blockEdits, false);
+  assert.strictEqual(
+    resolvedRoute.changeStrategy.lifecycle,
+    "resolved-resume-base-pipeline",
+  );
+  assert(resolvedRoute.modes.includes("bugfix"));
+  assert.strictEqual(resolvedRoute.pipeline, discoveryRoute.pipeline);
+  assert.strictEqual(
+    new Set(resolvedRoute.skills).size,
+    resolvedRoute.skills.length,
+  );
+  const decisionRoot = fs.mkdtempSync(path.join(os.tmpdir(), "route-decision-"));
+  try {
+    const decisionFile = path.join(decisionRoot, "decision.json");
+    fs.writeFileSync(decisionFile, JSON.stringify(makeArchitectureDecision()));
+    const resolvedOutput = runRouteCli(
+      [
+        "fix the display bug",
+        "--discovery-file", discoveryFixture,
+        "--decision-file", decisionFile,
+      ],
+      { formatSummary, getRoute },
+    );
+    assert.strictEqual(JSON.parse(resolvedOutput).blockEdits, false);
+  } finally {
+    fs.rmSync(decisionRoot, { recursive: true, force: true });
+  }
+  const unrelatedDecision = getRoute("fix the display bug", {
+    discovery: JSON.parse(fs.readFileSync(discoveryFixture, "utf8")),
+    changeStrategyDecision: makeDecision(),
+  });
+  assert.strictEqual(unrelatedDecision.blockEdits, true);
+  assert.strictEqual(unrelatedDecision.decisionBinding.isBound, false);
+
+  const bindingCases = [
+    ["repeated-failure", "repeated-failure", { acceptance_id: "fixture-acceptance" }],
+    ["architecture-mismatch", "architecture-mismatch"],
+    ["ownership-conflict", "ownership-conflict"],
+    ["sot-conflict", "sot-conflict"],
+    ["duplicate-state", "duplicate-state"],
+    ["duplicate-implementation", "duplicate-implementation"],
+    ["obsolete-final-path", "obsolete-final-path"],
+    ["compatibility-only-layer", "compatibility-shim"],
+    ["protected-boundary-unknown", "manual-review"],
+    ["stale-path-test", "stale-path-test"],
+    ["sunk-cost", "sunk-cost"],
+    ["planned-breaking-change", "planned-breaking-change"],
+    ["manual-review", "manual-review"],
+  ];
+  for (const [discoveryKind, triggerKind, extra = {}] of bindingCases) {
+    const discovery = evaluateDiscoveryReroute({
+      phase: "reading",
+      kind: discoveryKind,
+      architecture_fit: discoveryKind === "protected-boundary-unknown"
+        ? "unknown" : "mismatch",
+      summary: `Reading found a qualifying ${discoveryKind} condition.`,
+      evidence_ref: `fixture:${discoveryKind}`,
+      owner: "Affected subsystem owner",
+      sot: "Accepted architecture contract",
+      protected_boundaries: ["public result contract"],
+      ...extra,
+    });
+    const binding = getDecisionBinding(discovery, {
+      trigger: {
+        kind: triggerKind,
+        evidence_ref: `fixture:${discoveryKind}`,
+        ...extra,
+      },
+    }, true);
+    assert.strictEqual(binding.isBound, true, discoveryKind);
+  }
+
+  const repeatedDiscovery = evaluateDiscoveryReroute({
+    phase: "implementation",
+    kind: "repeated-failure",
+    architecture_fit: "mismatch",
+    summary: "Two interventions failed against the same acceptance criterion.",
+    evidence_ref: "fixture:repeated-failure",
+    acceptance_id: "fixture-acceptance",
+    owner: "Affected subsystem owner",
+    sot: "Accepted architecture contract",
+    protected_boundaries: ["public result contract"],
+  });
+  const wrongEvidenceDecision = makeDecision();
+  wrongEvidenceDecision.trigger.acceptance_id = "fixture-acceptance";
+  const wrongEvidenceBinding = getDecisionBinding(
+    repeatedDiscovery, wrongEvidenceDecision, true);
+  assert.strictEqual(wrongEvidenceBinding.isBound, false);
+  assert(wrongEvidenceBinding.issues.some((issue) => issue.includes("evidence_ref")));
+
+  const pendingDecision = makeArchitectureDecision();
+  pendingDecision.approval = { status: "pending" };
+  const pendingRoute = getRoute("fix the display bug", {
+    discovery: JSON.parse(fs.readFileSync(discoveryFixture, "utf8")),
+    changeStrategyDecision: pendingDecision,
+  });
+  assert.strictEqual(pendingRoute.blockEdits, true);
+
+  const malformedRoot = fs.mkdtempSync(path.join(os.tmpdir(), "route-malformed-"));
+  try {
+    const malformedFile = path.join(malformedRoot, "malformed.json");
+    fs.writeFileSync(malformedFile, "{not-json\n");
+    assert.throws(() => runRouteCli(
+      ["fix the display bug", "--discovery-file", malformedFile, "--write-state"],
+      { formatSummary, getRoute },
+    ));
+    assert.throws(() => runRouteCli(
+      ["fix the display bug", "--decision-file", path.join(malformedRoot, "missing.json")],
+      { formatSummary, getRoute },
+    ));
+    assert.throws(
+      () => runRouteCli(["fix the display bug", "--discovery-file"], { formatSummary, getRoute }),
+      /requires a file path/,
+    );
+    assert.throws(
+      () => runRouteCli(["fix the display bug", "--decision-file"], { formatSummary, getRoute }),
+      /requires a file path/,
+    );
+    assert.throws(
+      () => runRouteCli(["fix the display bug", "--unknown"], { formatSummary, getRoute }),
+      /Unknown option/,
+    );
+  } finally {
+    fs.rmSync(malformedRoot, { recursive: true, force: true });
+  }
+
+  const incompleteDiscovery = getRoute("fix the display bug", {
+    discovery: { kind: "architecture-mismatch" },
+  });
+  assert.strictEqual(incompleteDiscovery.blockEdits, true);
+  assert(incompleteDiscovery.discovery.issues.length >= 5);
+
+  const architecturePhrase = getRoute(
+    "Architecture mismatch discovered while reading before the first patch.",
+    { changeStrategyDecision: makeArchitectureDecision() },
+  );
+  assert.strictEqual(architecturePhrase.changeStrategy.required, true);
+  assert.strictEqual(architecturePhrase.blockEdits, true);
+  assert.strictEqual(architecturePhrase.decisionBinding.isBound, false);
+  const fallbackPhrase = getRoute(
+    "The second failed repair hit the same acceptance criterion.",
+    { changeStrategyDecision: makeDecision() },
+  );
+  assert.strictEqual(fallbackPhrase.changeStrategy.required, true);
+  assert.strictEqual(fallbackPhrase.blockEdits, true);
+  assert.strictEqual(fallbackPhrase.decisionBinding.isBound, false);
+
+  withTempProject(
+    (root) => fs.writeFileSync(path.join(root, "DESIGN.md"), "# Product design\n"),
+    (root) => {
+      const route = getRoute("fix the display bug", { cwd: root });
+      assert(!route.artifacts.some(({ name }) => name === "kiro"));
+    },
+  );
+
+  withTempProject(
+    (root) => {
+      fs.mkdirSync(path.join(root, ".agent-os"), { recursive: true });
+      fs.mkdirSync(path.join(root, "tasks"), { recursive: true });
+      fs.writeFileSync(path.join(root, "tasks", "current.md"), "fixture\n");
+    },
+    (root) => {
+      testRoute("implement feature from AgentOS plan", {
+        modes: ["feature"],
+        skills: ["codex-feature-workflow"],
+        orchestrator: "agentos",
+        options: { cwd: root },
+      });
+      const assigned = getRoute("implement feature from AgentOS plan", { cwd: root });
+      assert.strictEqual(assigned.planContract.writeTo, null);
+      assert.strictEqual(assigned.planContract.owner, "agentos");
+    },
+  );
+
+  console.log("Codex routing smoke passed");
+}
+
+try {
+  main();
+} finally {
+  fs.rmSync(BASE_ROUTE_ROOT, { recursive: true, force: true });
+}
