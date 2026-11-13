@@ -8,6 +8,7 @@
 
   const groups = Array.from(nav.querySelectorAll(".nav__group"));
   const mobileToggle = nav.querySelector(".nav__mobile-toggle");
+  const desktopQuery = window.matchMedia("(min-width: 64rem)");
   const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
   let closeMotionTimerId;
   let closeTimerId;
@@ -19,7 +20,9 @@
   const hasOpenGroup = () => groups.some((group) => group.classList.contains("is-open"));
 
   const syncMenuState = () => {
-    document.body.classList.toggle("is-nav-menu-open", hasOpenGroup());
+    const isOpen = hasOpenGroup();
+    document.body.classList.toggle("is-nav-menu-open", isOpen);
+    nav.classList.toggle("is-nav-menu-open", isOpen);
   };
 
   const getDurationMilliseconds = (value, fallback) => {
@@ -86,12 +89,21 @@
 
   const setMobileState = (isOpen) => {
     document.body.classList.toggle("is-nav-mobile-open", isOpen);
+    nav.classList.toggle("is-nav-mobile-open", isOpen);
 
     if (mobileToggle) {
       mobileToggle.setAttribute("aria-expanded", String(isOpen));
       mobileToggle.setAttribute("aria-label", isOpen ? "Закрыть основное меню" : "Открыть основное меню");
       const label = mobileToggle.querySelector(".nav__mobile-label");
       if (label) label.textContent = isOpen ? "Закрыть" : "Меню";
+    }
+  };
+
+  const syncHeaderLayout = () => {
+    const isDesktop = desktopQuery.matches;
+    nav.dataset.buffitHeaderLayout = isDesktop ? "desktop" : "compact";
+    if (isDesktop && document.body.classList.contains("is-nav-mobile-open")) {
+      setMobileState(false);
     }
   };
 
@@ -213,7 +225,7 @@
     });
 
     group.addEventListener("pointerenter", () => {
-      if (hoverQuery.matches) {
+      if (desktopQuery.matches && hoverQuery.matches) {
         if (!group.classList.contains("is-open")) openedByPointer = group;
         openGroup(group);
       }
@@ -221,13 +233,13 @@
   });
 
   nav.addEventListener("pointerenter", () => {
-    if (hoverQuery.matches) {
+    if (desktopQuery.matches && hoverQuery.matches) {
       clearCloseTimer();
     }
   });
 
   nav.addEventListener("pointerleave", () => {
-    if (hoverQuery.matches) {
+    if (desktopQuery.matches && hoverQuery.matches) {
       clearCloseTimer();
       closeTimerId = window.setTimeout(
         closeGroups,
@@ -258,6 +270,11 @@
   }
 
   groups.forEach(setControlId);
+  syncHeaderLayout();
+  desktopQuery.addEventListener("change", () => {
+    closeGroups();
+    syncHeaderLayout();
+  });
 
   document.addEventListener("click", closeFromOutside);
   document.addEventListener("keydown", closeFromEscape);
