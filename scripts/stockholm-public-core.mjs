@@ -19,6 +19,8 @@ export const PUBLIC_EXTERNAL_HOSTS = new Set([
   'www.cdc.gov',
   'www.ncbi.nlm.nih.gov',
   'www.who.int',
+  'guide.yokhan.xyz',
+  'kitchen.yokhan.xyz',
 ]);
 const AUTHORED_HOMEPAGE_EXTERNAL_HOSTS = new Set([...PUBLIC_EXTERNAL_HOSTS, 'kitchen.yokhan.xyz']);
 export const PUBLIC_SCRIPTS = new Set(['js/nav-menu.js', 'js/nav-state.js', 'js/public-profile.js', 'js/buffit-landing-home.js', 'js/public-account.js', 'js/coaching-source.js']);
@@ -281,6 +283,7 @@ function cleanRoute(route) {
   const pathname = route.split(/[?#]/, 1)[0];
   const suffix = route.slice(pathname.length);
   if (pathname === '/index.html') return `/${suffix}`;
+  if (pathname === '/coach/index.html') return `/coach/${suffix}`;
   if (pathname === '/guide.html') return `/guide-overview${suffix}`;
   if (pathname === '/app.html') return `/app${suffix}`;
   if (pathname === '/calls-access.html') return `/calls-access${suffix}`;
@@ -314,12 +317,34 @@ function rewriteTextDomains(html) {
     .replace(/(?:smartcart|dayflow|callservice)\.yokhanfitness\.ru/gi, 'сервис BUFF IT');
 }
 
-function makeGeneratedPage(repo, main, title, description) {
-  let html = fs.readFileSync(path.join(repo, 'app.html'), 'utf8');
-  html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
-  html = html.replace(/<meta\s+name="description"[^>]*>/i, `<meta name="description" content="${description}">`);
-  html = html.replace(/<main\b[^>]*>[\s\S]*?<\/main>/i, main);
-  return html;
+function makeGeneratedPage(_repo, main, title, description) {
+  return `<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <meta name="description" content="${description}">
+  <link rel="preload" href="fonts/Unbounded-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/GolosText-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/programs.css">
+  <link rel="stylesheet" href="css/sales.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/ecosystem.css">
+  <link rel="stylesheet" href="css/page-components.css">
+  <link rel="stylesheet" href="css/cta.css">
+  <link rel="stylesheet" href="css/hero-shell-system.css">
+  <link rel="stylesheet" href="css/public-entry.css">
+  <link rel="stylesheet" href="/css/buffit-home-system.css">
+</head>
+<body class="entry-page">
+${main}
+</body>
+</html>
+`;
 }
 
 function generatedPages(repo) {

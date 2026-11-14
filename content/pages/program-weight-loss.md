@@ -81,7 +81,7 @@ route: /program-weight-loss.html
 <LandingCta
   sectionId="program-cta"
   eyebrow="Диагностика и старт"
-  title="Уточнить программу «Похудеть навсегда»"
+  title="Уточнить программу «Снижение веса»"
   description="Короткие вопросы в Telegram-боте помогут зафиксировать цель, график и ограничения перед началом занятий."
   actionLabel="Пройти диагностику"
   actionHref="https://t.me/YokhanGym_bot?start=buffit_weight_loss"

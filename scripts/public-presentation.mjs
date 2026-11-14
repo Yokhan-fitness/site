@@ -29,6 +29,7 @@ export function preparePublicPresentation(html, owner, repo) {
   }
   html = html.replace(/<html\b[^>]*>/i, tag => tag.replace(/\s+data-buffit-(?:design-style|mode)="[^"]*"/g, '').replace('>', ' data-buffit-design-style="logik" data-buffit-mode="light">'));
   html = html.replace(/<link\b[^>]*rel="(?:shortcut )?icon"[^>]*>/gi, '');
+  html = html.replace(/<script\b[^>]*src="[^"]*js\/public-profile\.js[^"]*"[^>]*><\/script>\s*/gi, '');
   // This external script is CSP-compatible and runs before styles load.
   html = html.replace(/<head>/i, '<head>\n<script src="/js/public-profile.js"></script>\n<link rel="icon" type="image/svg+xml" href="/assets/buffit-favicon.svg?v=20261017">');
   html = html.replace('</head>', '<link rel="stylesheet" href="/css/public-profile.css">\n</head>');
