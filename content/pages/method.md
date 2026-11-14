@@ -8,14 +8,24 @@ route: /method.html
 <LandingPageHero
   sectionId="method-hero"
   category="Подход BUFF IT"
-  titleLines={["Как мы составляем","и меняем ваш план"]}
   description="Учитываем цель, подготовку и вашу неделю. Согласуем тренировки, питание и поддержку, затем корректируем план по занятиям и самочувствию."
   actionLabel="Какой формат выбрать"
   actionHref="/start.html"
   imageSrc="/landing-media/route-map-poster.avif"
   imageAlt="Схема составления и корректировки тренировочного плана BUFF IT"
-  supportLines={["Начинаем с задачи и доступных условий. · Объясняем, зачем предлагаем каждое изменение.","Корректируем план по тому, что получается."]}
-/>
+>
+
+```yaml titleLines
+- Как мы составляем
+- и меняем ваш план
+```
+
+```yaml supportLines
+- Начинаем с задачи и доступных условий. · Объясняем, зачем предлагаем каждое изменение.
+- Корректируем план по тому, что получается.
+```
+
+</LandingPageHero>
 
 <LandingCardSection
   sectionId="method-week"
@@ -23,8 +33,21 @@ route: /method.html
   title="Сначала — ваша обычная неделя"
   description="Уточняем опыт, ограничения, доступное оборудование, привычное питание и время на занятия."
   presentation="grid-3"
-  items={[{"title":"Задача","description":"Что хотите изменить и по каким признакам поймёте, что продвигаетесь.","variant":"detail"},{"title":"Условия","description":"Где сможете заниматься, сколько времени выделить и что обычно мешает.","variant":"detail"},{"title":"Ограничения","description":"Самочувствие и рекомендации врача, которые нужно учитывать при выборе нагрузки.","variant":"detail"}]}
-/>
+>
+
+```yaml items
+- title: Задача
+  description: Что хотите изменить и по каким признакам поймёте, что продвигаетесь.
+  variant: detail
+- title: Условия
+  description: Где сможете заниматься, сколько времени выделить и что обычно мешает.
+  variant: detail
+- title: Ограничения
+  description: Самочувствие и рекомендации врача, которые нужно учитывать при выборе нагрузки.
+  variant: detail
+```
+
+</LandingCardSection>
 
 <LandingMediaFeature
   sectionId="method-plan"
@@ -43,8 +66,21 @@ route: /method.html
   title="Если неделя изменилась, меняем план"
   description="Поездки, пропуски и усталость — повод пересмотреть нагрузку и организацию питания. Важно понимать, что сохранить, что заменить и с чего продолжить."
   presentation="grid-3"
-  items={[{"title":"Нет привычного инвентаря","description":"Подбираем замену упражнению под доступные условия.","variant":"support"},{"title":"Меньше времени","description":"Выбираем сокращённое занятие и более быстрый вариант ужина.","variant":"support"},{"title":"Возник вопрос о здоровье","description":"Разбираемся с ограничениями и необходимостью консультации врача.","variant":"support"}]}
-/>
+>
+
+```yaml items
+- title: Нет привычного инвентаря
+  description: Подбираем замену упражнению под доступные условия.
+  variant: support
+- title: Меньше времени
+  description: Выбираем сокращённое занятие и более быстрый вариант ужина.
+  variant: support
+- title: Возник вопрос о здоровье
+  description: Разбираемся с ограничениями и необходимостью консультации врача.
+  variant: support
+```
+
+</LandingCardSection>
 
 <LandingCta
   sectionId="method-cta"
@@ -60,5 +96,45 @@ route: /method.html
 <LandingHomeFooter
   description="Тренировки, вкусное и здоровое питание, консультации — в одной системе с Игорем Назаровым."
   legal="Тренировочная система не заменяет медицинскую помощь."
-  groups={[{"id":"training","label":"Тренировки","links":[{"id":"programs","label":"Программы","actionRef":"programs"},{"id":"coaching","label":"Занятия с тренером","actionRef":"coaching"},{"id":"safety","label":"Безопасность","actionRef":"safety"}]},{"id":"app","label":"APP","links":[{"id":"guest-trial","label":"Попробовать без регистрации","actionRef":"guestTrial"},{"id":"login","label":"Войти","actionRef":"login"}]},{"id":"services","label":"Сервисы и портфолио","links":[{"id":"calls","label":"Видеозвонки CALLS","actionRef":"calls"},{"id":"portfolio","label":"Портфолио","actionRef":"portfolio"},{"id":"projects","label":"Все проекты BUFF IT","actionRef":"projects"},{"id":"contact","label":"Связаться с Игорем","actionRef":"contact"}]}]}
-/>
+>
+
+```yaml groups
+- id: training
+  label: Тренировки
+  links:
+    - id: programs
+      label: Программы
+      actionRef: programs
+    - id: coaching
+      label: Занятия с тренером
+      actionRef: coaching
+    - id: safety
+      label: Безопасность
+      actionRef: safety
+- id: app
+  label: APP
+  links:
+    - id: guest-trial
+      label: Попробовать без регистрации
+      actionRef: guestTrial
+    - id: login
+      label: Войти
+      actionRef: login
+- id: services
+  label: Сервисы и портфолио
+  links:
+    - id: calls
+      label: Видеозвонки CALLS
+      actionRef: calls
+    - id: portfolio
+      label: Портфолио
+      actionRef: portfolio
+    - id: projects
+      label: Все проекты BUFF IT
+      actionRef: projects
+    - id: contact
+      label: Связаться с Игорем
+      actionRef: contact
+```
+
+</LandingHomeFooter>

@@ -1,0 +1,12 @@
+{
+  "name": "yokhan-fitness-landing",
+  "private": true,
+  "description": "BUFF IT / Yokhan Fitness public landing site built from readable Markdown + YAML PageBlocks.",
+  "scripts": {
+    "build:pages": "node ../design-system/scripts/sync-landing-pages-static.mjs --site .",
+    "build:pages:only": "node ../design-system/scripts/sync-landing-pages-static.mjs --site . --only",
+    "watch:pages": "node ../design-system/scripts/watch-public-site.mjs --site .",
+    "build:release": "node scripts/build-stockholm-public.mjs",
+    "test:release": "node scripts/test-stockholm-public.mjs"
+  }
+}

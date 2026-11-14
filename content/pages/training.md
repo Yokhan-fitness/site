@@ -8,14 +8,24 @@ route: /training.html
 <LandingPageHero
   sectionId="training-hero"
   category="Программы тренировок"
-  titleLines={["Тренировки для силы,","подвижности и спины"]}
   description="Выберите программу под свою задачу. Получите план занятий, объяснения упражнений и замены под доступный инвентарь."
   actionLabel="Выбрать программу"
   actionHref="/programs.html"
   imageSrc="/landing-media/header-video-training.webp"
   imageAlt="Силовые и восстановительные тренировки BUFF IT"
-  supportLines={["Последовательная нагрузка вместо случайных занятий.","Техника, подходы и повторения для каждого упражнения. · Самостоятельно или с поддержкой тренера."]}
-/>
+>
+
+```yaml titleLines
+- Тренировки для силы,
+- подвижности и спины
+```
+
+```yaml supportLines
+- Последовательная нагрузка вместо случайных занятий.
+- Техника, подходы и повторения для каждого упражнения. · Самостоятельно или с поддержкой тренера.
+```
+
+</LandingPageHero>
 
 <LandingCardSection
   sectionId="training-clarity"
@@ -23,8 +33,21 @@ route: /training.html
   title="Понятно, что делать на занятии"
   description="Упражнения выстроены в последовательность. Вы понимаете, как их выполнять, какую нагрузку выбрать и когда переходить к более сложному варианту."
   presentation="grid-3"
-  items={[{"title":"Объяснение упражнений","description":"Техника и назначение движения помогают разобраться в занятии, а не собирать его из роликов.","variant":"benefit"},{"title":"Развитие нагрузки","description":"Программа связывает занятия между собой: осваиваете движение, затем увеличиваете доступную нагрузку.","variant":"benefit"},{"title":"Замены под условия","description":"Если нет нужного инвентаря или упражнение не подходит, подбираем доступный вариант.","variant":"benefit"}]}
-/>
+>
+
+```yaml items
+- title: Объяснение упражнений
+  description: Техника и назначение движения помогают разобраться в занятии, а не собирать его из роликов.
+  variant: benefit
+- title: Развитие нагрузки
+  description: "Программа связывает занятия между собой: осваиваете движение, затем увеличиваете доступную нагрузку."
+  variant: benefit
+- title: Замены под условия
+  description: Если нет нужного инвентаря или упражнение не подходит, подбираем доступный вариант.
+  variant: benefit
+```
+
+</LandingCardSection>
 
 <LandingMediaFeature
   sectionId="training-goals"
@@ -62,8 +85,30 @@ route: /training.html
   title="Выберите, какая поддержка нужна"
   description="Готовая программа, индивидуальная программа после разбора или регулярные занятия с тренером отличаются объёмом помощи."
   presentation="grid-3"
-  items={[{"eyebrow":"Самостоятельно","title":"Готовая программа","description":"Выберите задачу в каталоге и посмотрите содержание занятий.","variant":"format","actionLabel":"Программы","actionHref":"/programs.html"},{"eyebrow":"Разовый разбор","title":"Индивидуальная программа","description":"Разберём цель и условия, составим план и один раз проверим первую неделю.","variant":"format","actionLabel":"Индивидуальный разбор","actionHref":"/self-training.html"},{"eyebrow":"Регулярно","title":"Занятия с тренером","description":"Тренер смотрит технику, корректирует нагрузку и помогает между встречами.","variant":"format","actionLabel":"Занятия с тренером","actionHref":"/coaching.html"}]}
-/>
+>
+
+```yaml items
+- eyebrow: Самостоятельно
+  title: Готовая программа
+  description: Выберите задачу в каталоге и посмотрите содержание занятий.
+  variant: format
+  actionLabel: Программы
+  actionHref: /programs.html
+- eyebrow: Разовый разбор
+  title: Индивидуальная программа
+  description: Разберём цель и условия, составим план и один раз проверим первую неделю.
+  variant: format
+  actionLabel: Индивидуальный разбор
+  actionHref: /self-training.html
+- eyebrow: Регулярно
+  title: Занятия с тренером
+  description: Тренер смотрит технику, корректирует нагрузку и помогает между встречами.
+  variant: format
+  actionLabel: Занятия с тренером
+  actionHref: /coaching.html
+```
+
+</LandingCardSection>
 
 <LandingCta
   sectionId="training-cta"
@@ -79,5 +124,45 @@ route: /training.html
 <LandingHomeFooter
   description="Тренировки, вкусное и здоровое питание, консультации — в одной системе с Игорем Назаровым."
   legal="Тренировочная система не заменяет медицинскую помощь."
-  groups={[{"id":"training","label":"Тренировки","links":[{"id":"programs","label":"Программы","actionRef":"programs"},{"id":"coaching","label":"Занятия с тренером","actionRef":"coaching"},{"id":"safety","label":"Безопасность","actionRef":"safety"}]},{"id":"app","label":"APP","links":[{"id":"guest-trial","label":"Попробовать без регистрации","actionRef":"guestTrial"},{"id":"login","label":"Войти","actionRef":"login"}]},{"id":"services","label":"Сервисы и портфолио","links":[{"id":"calls","label":"Видеозвонки CALLS","actionRef":"calls"},{"id":"portfolio","label":"Портфолио","actionRef":"portfolio"},{"id":"projects","label":"Все проекты BUFF IT","actionRef":"projects"},{"id":"contact","label":"Связаться с Игорем","actionRef":"contact"}]}]}
-/>
+>
+
+```yaml groups
+- id: training
+  label: Тренировки
+  links:
+    - id: programs
+      label: Программы
+      actionRef: programs
+    - id: coaching
+      label: Занятия с тренером
+      actionRef: coaching
+    - id: safety
+      label: Безопасность
+      actionRef: safety
+- id: app
+  label: APP
+  links:
+    - id: guest-trial
+      label: Попробовать без регистрации
+      actionRef: guestTrial
+    - id: login
+      label: Войти
+      actionRef: login
+- id: services
+  label: Сервисы и портфолио
+  links:
+    - id: calls
+      label: Видеозвонки CALLS
+      actionRef: calls
+    - id: portfolio
+      label: Портфолио
+      actionRef: portfolio
+    - id: projects
+      label: Все проекты BUFF IT
+      actionRef: projects
+    - id: contact
+      label: Связаться с Игорем
+      actionRef: contact
+```
+
+</LandingHomeFooter>

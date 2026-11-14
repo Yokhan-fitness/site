@@ -362,6 +362,14 @@ function generatedPages(repo) {
   ]);
 }
 
+const ALIAS_EXCLUDED_PAGES = new Set([
+  'index.html',
+  'account.html',
+  'account-unavailable.html',
+  'service-unavailable.html',
+  'projects.html',
+]);
+
 function routeAliases(sourcePages) {
   const routes = new Map();
   const base = ['method', 'ecosystem', 'start', 'programs', 'training', 'personal', 'app', 'calls-access', 'nutrition', 'health'];
@@ -369,7 +377,11 @@ function routeAliases(sourcePages) {
   routes.set('guide-overview/', sourcePages.has('guide.html') ? 'guide.html' : 'service-unavailable.html');
   routes.set('routes/', sourcePages.has('routes.html') ? 'routes.html' : 'service-unavailable.html');
   for (const page of sourcePages) {
-    if (/^program-[a-z0-9-]+\.html$/i.test(page)) routes.set(`${page.slice(0, -5)}/`, page);
+    if (ALIAS_EXCLUDED_PAGES.has(page)) continue;
+    if (/^[a-z0-9-]+\.html$/i.test(page)) {
+      const alias = `${page.slice(0, -5)}/`;
+      if (!routes.has(alias)) routes.set(alias, page);
+    }
   }
   return routes;
 }
