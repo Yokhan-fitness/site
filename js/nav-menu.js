@@ -19,6 +19,22 @@
 
   const getTrigger = (group) => group.querySelector(".nav__trigger");
 
+  const syncScrollHeader = () => {
+    const startValue = getComputedStyle(nav).getPropertyValue("--buffit-public-header-scroll-start").trim();
+    const parsedStart = Number.parseFloat(startValue);
+    let thresholdPx = 16;
+    if (Number.isFinite(parsedStart) && parsedStart > 0) {
+      if (startValue.endsWith("rem")) {
+        const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        thresholdPx = parsedStart * rootFontSize;
+      } else {
+        thresholdPx = parsedStart;
+      }
+    }
+    const isScrolled = window.scrollY > thresholdPx;
+    nav.setAttribute("data-buffit-header-scrolled", isScrolled ? "true" : "false");
+  };
+
   const hasOpenGroup = () => groups.some((group) => group.classList.contains("is-open"));
 
   const syncMenuState = () => {
@@ -232,6 +248,9 @@
     closeGroups();
   });
 
+  syncScrollHeader();
+  window.addEventListener("scroll", syncScrollHeader, { passive: true });
+  window.addEventListener("resize", syncScrollHeader, { passive: true });
   document.addEventListener("click", closeFromOutside);
   document.addEventListener("keydown", closeFromEscape);
 })();

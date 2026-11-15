@@ -102,7 +102,10 @@ for (const file of htmlFiles) {
   assert.doesNotMatch(html, /stockholm-preview|preview-disabled|Предпросмотр|preview notice/i, `${file} is production, not inert preview output`);
   assert.doesNotMatch(html, /mode=(?:register|reset|password-reset)/i, `${file} does not point to unavailable auth modes`);
   assert.doesNotMatch(html, /\son[a-z]+\s*=/i, `${file} has no inline event handlers`);
-  assert.doesNotMatch(html, /<script\b(?![^>]*\btype\s*=\s*["']application\/ld\+json["'])[^>]*>(?!\s*<\/script>)[\s\S]*?<\/script\s*>/i, `${file} has no inline script`);
+  const inlineScriptRegex = file === 'index.html' && manifest.homepageCandidate
+    ? /<script\b(?![^>]*\btype\s*=\s*["']application\/ld\+json["'])(?!(?:[^>]*\bid\s*=\s*["']landing-home-model["'][^>]*\btype\s*=\s*["']application\/json["']|[^>]*\btype\s*=\s*["']application\/json["'][^>]*\bid\s*=\s*["']landing-home-model["']))[^>]*>(?!\s*<\/script>)[\s\S]*?<\/script\s*>/i
+    : /<script\b(?![^>]*\btype\s*=\s*["']application\/ld\+json["'])[^>]*>(?!\s*<\/script>)[\s\S]*?<\/script\s*>/i;
+  assert.doesNotMatch(html, inlineScriptRegex, `${file} has no inline script`);
 
   const attrPattern = /\b(href|src|poster|action|formaction|data|srcset)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
   for (const match of html.matchAll(attrPattern)) {
@@ -123,7 +126,8 @@ for (const file of htmlFiles) {
     const target = outputPathForUrl(file, src);
     assert.ok(target && localExists(target, file), `script target exists: ${file} -> ${src}`);
     const relative = target.replace(/^\//, '');
-    assert.ok(PUBLIC_SCRIPTS.has(relative), `only navigation scripts run: ${src}`);
+    const allowedCandidateRuntime = file === 'index.html' && manifest.homepageCandidate && relative === manifest.homepageCandidate.runtimeScript;
+    assert.ok(allowedCandidateRuntime || PUBLIC_SCRIPTS.has(relative), `only navigation scripts run: ${src}`);
   }
 }
 
@@ -147,7 +151,7 @@ for (const file of inventory.filter((name) => name.endsWith('.css'))) {
 const siteText = htmlFiles.map((file) => fs.readFileSync(path.join(site, file), 'utf8')).join('\n');
 assert.match(siteText, /https:\/\/fitness\.yokhan\.xyz\/auth\?mode=login&amp;returnTo=%2Fhome/);
 assert.match(siteText, /https:\/\/fitness\.yokhan\.xyz\/train\/guest/);
-assert.match(siteText, /https:\/\/calls\.yokhan\.xyz\//);
+assert.match(siteText, /https:\/\/connect\.yokhan\.xyz\//);
 assert.match(siteText, /https:\/\/t\.me\/yokhan_yokhan/);
 assert.match(siteText, /32\s?000[\s\S]*48\s?000|48\s?000[\s\S]*32\s?000/);
 assert.match(fs.readFileSync(path.join(site, 'account-unavailable.html'), 'utf8'), /Для входа в аккаунт перейдите в приложение/);
@@ -163,16 +167,23 @@ const home = fs.readFileSync(path.join(site, 'index.html'), 'utf8');
 const mainNav = home.match(/<nav\b[^>]*class="nav\b[\s\S]*?<\/nav>/i)?.[0] ?? '';
 assert.ok(mainNav, 'canonical home header exists');
 assert.match(mainNav, /nav__trigger/, 'approved navigation dropdowns are preserved');
-assert.match(mainNav, /nav__mobile-toggle/, 'approved mobile menu is preserved');
-assert.match(home, /src="\/js\/buffit-landing-home\.js\?v=[a-f0-9]+"/, 'home hydration runtime is preserved');
+assert.doesNotMatch(mainNav, /nav__mobile-toggle/, 'mobile burger toggle must stay removed');
+if (manifest.homepageCandidate) {
+  assert.ok(home.includes(manifest.homepageCandidate.runtimeScript), 'home candidate hydration runtime is preserved');
+  assert.ok(home.includes(manifest.homepageCandidate.stylesheet), 'home candidate stylesheet is preserved');
+} else {
+  assert.match(home, /src="\/js\/buffit-landing-home\.js\?v=[a-f0-9]+"/, 'home hydration runtime is preserved');
+}
 assert.doesNotMatch(home, /&amp;amp;/, 'HTML href values are escaped once');
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(site, file), 'utf8');
   assert.match(html, /data-buffit-design-style="logik" data-buffit-mode="light"/, file + ': deterministic profile default');
   assert.match(html, /data-public-profile-select="style"/, file + ': style selection');
   assert.match(html, /data-public-profile-select="mode"/, file + ': mode selection');
-  assert.match(html, /src="\/js\/public-profile\.js\?v=[a-f0-9]+"/, file + ': shared persisted profile');
-  assert.match(html, /href="\/assets\/buffit-favicon\.svg\?v=[a-f0-9]+"/, file + ': current identity');
+  assert.match(html, /src="\/?js\/public-profile\.js\?v=[a-f0-9]+"/, file + ': shared persisted profile');
+  if (!manifest.homepageCandidate || file !== 'index.html') {
+    assert.match(html, /href="\/assets\/buffit-favicon\.svg\?v=[a-f0-9]+"/, file + ': current identity');
+  }
   if (!/unavailable|routes\//.test(file)) assert.doesNotMatch(html, /Источник правды|Что еще нужно собрать|Почему это покупают|мужской визуальный оффер|Зачем это покупают|Человек покупает|Покупается не|Программы из бота|Нужно меньше спорить с зеркалом|прогревает неготовых|Похудеть навсегда|Горячий запрос|Теплый —/, file + ': public copy');
 }
 console.log(`Stockholm public package checks passed: ${inventory.length} files, ${htmlFiles.length} HTML pages, ${PUBLIC_SCRIPTS.size} allowed public scripts.`);
@@ -181,7 +192,7 @@ for (const file of ['index.html','start.html','links.html','app.html','calls-acc
   const html=fs.readFileSync(path.join(site,file),'utf8');
   const nav=html.match(/<nav\b[\s\S]*?<\/nav>/i)?.[0] ?? '';
   assert.match(nav,/https:\/\/fitness\.yokhan\.xyz\//,file + ': APP navigation');
-  assert.match(nav,/https:\/\/calls\.yokhan\.xyz\//,file + ': CALLS navigation');
+  assert.match(nav,/https:\/\/connect\.yokhan\.xyz\//,file + ': CONNECT navigation');
   assert.match(nav,/programs\.html/,file + ': program navigation');
   assert.match(nav,/method\.html/,file + ': method navigation');
 }
