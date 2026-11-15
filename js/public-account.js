@@ -99,8 +99,8 @@
     document.querySelectorAll('a[href]').forEach(anchor => {
       if (!isHeaderReady(anchor)) return;
       if (!isAppLink(anchor)) return;
-      const isSiteLogin = anchor.hasAttribute('data-buffit-account-entry') && currentStatus.status !== 'authenticated';
-      setAttribute(anchor, 'target', isSiteLogin ? null : '_blank');
+      const isAccountEntry = anchor.hasAttribute('data-buffit-account-entry');
+      setAttribute(anchor, 'target', isAccountEntry ? null : '_blank');
       const relations = new Set((anchor.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
       relations.add('noopener');
       relations.add('noreferrer');
