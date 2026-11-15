@@ -71,7 +71,7 @@ route: /training.html
   description="В общей системе тренировки связаны с вкусным и здоровым питанием и консультациями. Можно разобраться, что мешает заниматься регулярно и какие изменения подходят вашей неделе."
   align="copy-right"
   aspect="feature"
-  imageSrc="/landing-media/nutrition-everyday-food-20261018-r2.png"
+  imageSrc="/landing-media/nutrition-everyday-food-20261018-r2.webp"
   imageAlt="Связь тренировок, питания и консультаций в системе BUFF IT"
   actionLabel="Как работает общий план"
   actionHref="/ecosystem.html"

@@ -56,7 +56,7 @@ route: /method.html
   description="Подбираем упражнения и последовательность нагрузки. В питании учитываем вкусы, готовку и покупки. Вопросы разбираем на консультациях, чтобы было понятно, какое решение принять."
   align="copy-left"
   aspect="wide"
-  imageSrc="/landing-media/format-coach-20261017-r19.png"
+  imageSrc="/landing-media/format-coach-20261017-r19.webp"
   imageAlt="Согласованный план тренировок, питания и консультаций"
 />
 

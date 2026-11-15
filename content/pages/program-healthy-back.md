@@ -12,7 +12,7 @@ route: /program-healthy-back.html
   description="Подвижность и силовая работа для спины, плеч и корпуса с учётом ваших ограничений."
   actionLabel="Начать программу в APP"
   actionHref="https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fprogram-detail%3Fprogram%3Dhealthy-back"
-  imageSrc="/landing-media/program-healthy-back-cutout-20261113.png"
+  imageSrc="/landing-media/program-healthy-back-cutout-20261113.webp"
   imageAlt="Укрепление спины и подвижность грудного отдела при сидячей работе BUFF IT"
 >
 

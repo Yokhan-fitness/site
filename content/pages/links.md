@@ -45,7 +45,7 @@ route: /links.html
   description: Создайте комнату или войдите по ссылке приглашения. Занятия с тренером нужно согласовать отдельно.
   variant: route
   actionLabel: Открыть CALLS
-  actionHref: https://calls.yokhan.xyz/
+  actionHref: https://connect.yokhan.xyz/
 - eyebrow: С тренером
   title: Личное сопровождение
   description: 12 недель тренировок с Игорем Назаровым. Два занятия и домашнее задание или три занятия в неделю.
@@ -80,7 +80,7 @@ route: /links.html
   title="Перейти к видеозвонкам или Telegram-боту"
   description="Все активные точки входа собраны в одном месте."
   actionLabel="Открыть CALLS"
-  actionHref="https://calls.yokhan.xyz/"
+  actionHref="https://connect.yokhan.xyz/"
   secondaryActionLabel="Открыть бота"
   secondaryActionHref="https://t.me/YokhanGym_bot?start=buffit_links"
 />

@@ -42,7 +42,7 @@ function browser() {
   }
   const entry = new Element(`${APP}/auth?mode=login&returnTo=%2Fhome`, 'Войти', true);
   const trial = new Element(`${APP}/train/guest`, 'Попробовать');
-  const external = new Element('https://calls.yokhan.xyz/', 'CALLS');
+  const external = new Element('https://connect.yokhan.xyz/', 'CONNECT');
   const disguised = new Element('https://fitness.yokhan.xyz.evil.test/home', 'Other');
   const relative = new Element('/programs.html', 'Программы');
   const anchors = [entry, trial, external, disguised, relative];

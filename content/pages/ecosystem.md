@@ -11,7 +11,7 @@ route: /ecosystem.html
   description="Чтобы поддерживать здоровье и энергию, не нужно собирать все решения по частям. BUFF IT связывает занятия, вкусное и здоровое питание и консультации с вашей целью."
   actionLabel="Посмотреть пример"
   actionHref="#changed-evening"
-  imageSrc="/landing-media/one-plan-storyboard-20261016-r14.png"
+  imageSrc="/landing-media/one-plan-storyboard-20261016-r14.webp"
   imageAlt="Общий маршрут тренировок, питания и консультаций BUFF IT"
 >
 

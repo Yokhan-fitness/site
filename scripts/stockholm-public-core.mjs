@@ -300,7 +300,7 @@ function rewriteRetiredUrl(raw) {
     if (mode === 'register' || mode === 'reset' || mode === 'password-reset') return '/account-unavailable.html';
     return 'https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome';
   }
-  if (host === 'callservice.yokhanfitness.ru' || host === 'calls.yokhanfitness.ru') return 'https://calls.yokhan.xyz/';
+  if (host === 'callservice.yokhanfitness.ru' || host === 'calls.yokhanfitness.ru') return 'https://connect.yokhan.xyz/';
   if (host === 'smartcart.yokhanfitness.ru' || host === 'dayflow.yokhanfitness.ru') return '/service-unavailable.html';
   if (host === 'guide.yokhanfitness.ru') return '/guide.html';
   if (host === 'yokhanfitness.ru' || host === 'www.yokhanfitness.ru') {
@@ -325,7 +325,7 @@ function makeGeneratedPage(_repo, main, title, description) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
   <meta name="description" content="${description}">
-  <link rel="preload" href="fonts/Unbounded-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Manrope-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/GolosText-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
@@ -683,7 +683,7 @@ export function buildPublicSite({ repo, output, releaseId = 'landing-public-2026
         allowedExternalLinkHosts: [...PUBLIC_EXTERNAL_HOSTS],
         appLogin: 'https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome',
         guestTrial: 'https://fitness.yokhan.xyz/train/guest',
-        calls: 'https://calls.yokhan.xyz/',
+        calls: 'https://connect.yokhan.xyz/',
         registrationAndReset: 'account-unavailable.html',
         unavailableDayFlowSmartCart: 'service-unavailable.html',
         gates: 'existing APP request/status entry; static package does not change VPN or key issuance',

@@ -56,7 +56,7 @@ route: /nutrition.html
   description="Например, вместо домашнего ужина вы решили пойти в ресторан. Можно разобрать меню на консультации, выбрать блюдо и учесть ужин в общем плане питания."
   align="copy-left"
   aspect="wide"
-  imageSrc="/landing-media/nutrition-everyday-food-20261018-r2.png"
+  imageSrc="/landing-media/nutrition-everyday-food-20261018-r2.webp"
   imageAlt="Обычные блюда, которые легко вписываются в общий план питания"
   actionLabel="Посмотреть пример на главной"
   actionHref="/index.html#system"

@@ -23,7 +23,7 @@
     {
       "id": "calls",
       "label": "CONNECT",
-      "href": "https://calls.yokhan.xyz/",
+      "href": "https://connect.yokhan.xyz/",
       "surfaces": ["public", "app"],
       "status": "live"
     },
@@ -37,7 +37,7 @@
     {
       "id": "guide",
       "label": "Guide",
-      "href": "https://yokhan.xyz/guide.html",
+      "href": "https://yokhan.xyz/guide/",
       "surfaces": ["public"],
       "status": "live"
     },
@@ -93,7 +93,7 @@
     {
       "id": "kitchen",
       "label": "Холодильник",
-      "href": "https://fitness.yokhan.xyz/kitchen",
+      "href": "https://kitchen.yokhan.xyz/",
       "surfaces": ["public", "app"],
       "status": "live"
     },
@@ -149,7 +149,8 @@
     "allowedOrigins": [
       "https://yokhan.xyz",
       "https://fitness.yokhan.xyz",
-      "https://calls.yokhan.xyz",
+      "https://connect.yokhan.xyz",
+      "https://kitchen.yokhan.xyz",
       "https://auth.yokhan.xyz",
       "https://portfolio.yokhan.xyz"
     ]

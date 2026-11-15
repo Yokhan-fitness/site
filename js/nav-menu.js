@@ -7,8 +7,10 @@
   }
 
   const groups = Array.from(nav.querySelectorAll(".nav__group"));
-  const mobileToggle = nav.querySelector(".nav__mobile-toggle");
   const desktopQuery = window.matchMedia("(min-width: 64rem)");
+  nav.removeAttribute("data-buffit-header-layout");
+  document.body.classList.remove("is-nav-mobile-open");
+  nav.classList.remove("is-nav-mobile-open");
   const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
   let closeMotionTimerId;
   let closeTimerId;
@@ -87,31 +89,6 @@
     }, getMotionDuration("--motion-nav-switch"));
   };
 
-  const setMobileState = (isOpen) => {
-    document.body.classList.toggle("is-nav-mobile-open", isOpen);
-    nav.classList.toggle("is-nav-mobile-open", isOpen);
-
-    if (mobileToggle) {
-      mobileToggle.setAttribute("aria-expanded", String(isOpen));
-      mobileToggle.setAttribute("aria-label", isOpen ? "Закрыть основное меню" : "Открыть основное меню");
-      const label = mobileToggle.querySelector(".nav__mobile-label");
-      if (label) label.textContent = isOpen ? "Закрыть" : "Меню";
-    }
-  };
-
-  const syncHeaderLayout = () => {
-    const isDesktop = desktopQuery.matches;
-    nav.dataset.buffitHeaderLayout = isDesktop ? "desktop" : "compact";
-    if (isDesktop && document.body.classList.contains("is-nav-mobile-open")) {
-      setMobileState(false);
-    }
-  };
-
-  const focusFirstMobileControl = () => {
-    const firstTrigger = groups.map(getTrigger).find(Boolean);
-    firstTrigger?.focus({ preventScroll: true });
-  };
-
   const setControlId = (group, index) => {
     const trigger = getTrigger(group);
     const dropdown = group.querySelector(".nav__dropdown");
@@ -135,8 +112,7 @@
 
   const closeGroups = () => {
     openedByPointer = null;
-    const shouldHoldClosingContext =
-      hasOpenGroup() && !document.body.classList.contains("is-nav-mobile-open");
+    const shouldHoldClosingContext = hasOpenGroup();
 
     setSwitchState(false);
     groups.forEach(closeGroup);
@@ -181,7 +157,6 @@
     }
 
     closeGroups();
-    setMobileState(false);
   };
 
   const closeFromEscape = (event) => {
@@ -189,16 +164,12 @@
       return;
     }
 
-    const wasMobileOpen = document.body.classList.contains("is-nav-mobile-open");
     const openGroupItem = groups.find((group) => group.classList.contains("is-open"));
     const trigger = openGroupItem ? getTrigger(openGroupItem) : null;
 
     closeGroups();
-    setMobileState(false);
 
-    if (wasMobileOpen && mobileToggle) {
-      mobileToggle.focus({ preventScroll: true });
-    } else if (trigger) {
+    if (trigger) {
       trigger.focus();
     }
   };
@@ -256,24 +227,9 @@
     }
   });
 
-  if (mobileToggle) {
-    mobileToggle.addEventListener("click", () => {
-      const shouldOpen = !document.body.classList.contains("is-nav-mobile-open");
-      setMobileState(shouldOpen);
-
-      if (shouldOpen) {
-        window.requestAnimationFrame(focusFirstMobileControl);
-      } else {
-        closeGroups();
-      }
-    });
-  }
-
   groups.forEach(setControlId);
-  syncHeaderLayout();
   desktopQuery.addEventListener("change", () => {
     closeGroups();
-    syncHeaderLayout();
   });
 
   document.addEventListener("click", closeFromOutside);

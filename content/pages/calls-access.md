@@ -22,7 +22,7 @@ route: /calls-access.html
 
 ```yaml supportLines
 - Онлайн-формат и время созвона согласуются с Игорем
-- Отдельный сервис видеозвонков CALLS на calls.yokhan.xyz
+- Отдельный сервис видеозвонков CONNECT на connect.yokhan.xyz
 ```
 
 </LandingPageHero>
@@ -45,7 +45,7 @@ route: /calls-access.html
   description: Если время разговора уже согласовано, создайте комнату или войдите по приглашению.
   variant: route
   actionLabel: Открыть
-  actionHref: https://calls.yokhan.xyz/
+  actionHref: https://connect.yokhan.xyz/
 - eyebrow: Самостоятельно
   title: Посмотреть программы
   description: Сравните программы по цели и месту занятий, прежде чем выбирать сопровождение.
@@ -64,7 +64,7 @@ route: /calls-access.html
   actionLabel="Форматы и цены"
   actionHref="/coaching.html"
   secondaryActionLabel="Открыть CALLS"
-  secondaryActionHref="https://calls.yokhan.xyz/"
+  secondaryActionHref="https://connect.yokhan.xyz/"
 />
 
 <LandingHomeFooter

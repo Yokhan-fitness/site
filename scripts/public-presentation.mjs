@@ -22,7 +22,7 @@ export function preparePublicPresentation(html, owner, repo) {
     // canonical header bundle owns these selectors throughout the public site.
     html = html.replace(/<link\b[^>]*href="[^\"]*css\/(?:header-system|nav-dropdown-system|account-system|interaction-system)\.css[^\"]*"[^>]*>/gi, '');
     // Header CSS is exported with the accepted Home, not reimplemented here.
-    if (!html.includes('href="/css/buffit-home-system.css"'))
+    if (!html.includes('buffit-home-system.css') && !html.includes('buffit-page-blocks.css'))
       html = html.replace('</head>', '<link rel="stylesheet" href="/css/buffit-home-system.css">\n</head>');
     html = html.replace(/<script\b[^>]*src="[^\"]*js\/nav-menu\.js"[^>]*><\/script>/gi, '');
     html = html.replace('</body>', '<script defer src="/js/nav-menu.js"></script>\n</body>');

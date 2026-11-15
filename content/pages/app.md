@@ -51,7 +51,7 @@ route: /app.html
   description: Создайте комнату и отправьте приглашение собеседнику или войдите по готовой ссылке.
   variant: route
   actionLabel: Открыть
-  actionHref: https://calls.yokhan.xyz/
+  actionHref: https://connect.yokhan.xyz/
 ```
 
 </LandingCardSection>

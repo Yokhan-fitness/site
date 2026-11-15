@@ -212,7 +212,7 @@ route: /programs.html
   title: С поддержкой тренера
   description: Занимайтесь лично или по видеосвязи. Тренер поможет с техникой, нагрузкой и изменениями программы.
   media:
-    src: /landing-media/format-coach-20261017-r19.png
+    src: /landing-media/format-coach-20261017-r19.webp
     alt: Тренер помогает женщине с техникой упражнения
     width: 1536
     height: 1024
