@@ -18,7 +18,7 @@ route: /program-athlete-body.html
 
 ```yaml titleLines
 - "Тело атлета:"
-- сила и форма верхней части тела
+- сила и форма верха
 ```
 
 ```yaml supportLines
@@ -240,7 +240,7 @@ route: /program-athlete-body.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -261,7 +261,7 @@ route: /program-athlete-body.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

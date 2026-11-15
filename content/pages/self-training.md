@@ -16,8 +16,8 @@ route: /self-training.html
 >
 
 ```yaml titleLines
-- Индивидуальный план
-- для самостоятельных занятий
+- План для занятий
+- в своём темпе
 ```
 
 ```yaml supportLines
@@ -127,7 +127,7 @@ route: /self-training.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -148,7 +148,7 @@ route: /self-training.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

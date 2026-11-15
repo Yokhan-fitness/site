@@ -5,7 +5,7 @@ import { test } from 'node:test';
 
 const source = fs.readFileSync(new URL('../js/public-account.js', import.meta.url), 'utf8');
 const APP = 'https://fitness.yokhan.xyz';
-const SITE_LOGIN = `${APP}/auth?mode=login&returnTo=%2Fhome`;
+const SITE_LOGIN = `${APP}/auth?mode=login&returnTo=https%3A%2F%2Fyokhan.xyz%2F`;
 
 function browser() {
   let now = 100000;

@@ -56,7 +56,12 @@ export function validateRegistry(registry) {
   if (!publicHeader.account || publicHeader.account.entryId !== "app") throw new Error("ecosystem.apps.json: header.public.account.entryId must be app");
   parseHttpsUrl(publicHeader.account.loginHref, "header.public.account.loginHref");
   parseHttpsUrl(publicHeader.account.accountHref, "header.public.account.accountHref");
-  if (!publicHeader.account.loginHref.includes("returnTo=%2Fhome")) throw new Error("ecosystem.apps.json: public login must return to %2Fhome");
+  if (
+    !publicHeader.account.loginHref.includes("returnTo=https%3A%2F%2Fyokhan.xyz%2F") &&
+    !publicHeader.account.loginHref.includes("returnTo=%2Fhome")
+  ) {
+    throw new Error("ecosystem.apps.json: public login must include allowed returnTo");
+  }
 
   if (!Array.isArray(publicHeader.groups) || publicHeader.groups.length === 0) throw new Error("ecosystem.apps.json: header.public.groups is required");
   for (const group of publicHeader.groups) {

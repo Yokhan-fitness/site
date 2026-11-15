@@ -7,8 +7,8 @@ route: /training.html
 
 <LandingPageHero
   sectionId="training-hero"
-  category="Программы тренировок"
-  description="Выберите программу под свою задачу. Получите план занятий, объяснения упражнений и замены под доступный инвентарь."
+  category="Как идут тренировки"
+  description="Вы не гадаете у тренажёров и не ищете ролики в ленте: план на сегодня, техника и замены под любой инвентарь уже внутри."
   actionLabel="Выбрать программу"
   actionHref="/programs.html"
   imageSrc="/landing-media/header-video-training.webp"
@@ -21,8 +21,8 @@ route: /training.html
 ```
 
 ```yaml supportLines
-- Последовательная нагрузка вместо случайных занятий.
-- Техника, подходы и повторения для каждого упражнения. · Самостоятельно или с поддержкой тренера.
+- Спокойная прогрессия на 12 недель вместо случайных подвигов до отказа.
+- Занимайтесь дома с резинкой, на площадке у дома или в зале — самостоятельно или с тренером.
 ```
 
 </LandingPageHero>
@@ -122,7 +122,7 @@ route: /training.html
 />
 
 <LandingHomeFooter
-  description="Тренировки, вкусное и здоровое питание, консультации — в одной системе с Игорем Назаровым."
+  description="Понятные тренировки в приложении, привычная еда и живая поддержка Игоря Назарова — без культа страданий."
   legal="Тренировочная система не заменяет медицинскую помощь."
 >
 
@@ -131,7 +131,7 @@ route: /training.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -152,7 +152,7 @@ route: /training.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

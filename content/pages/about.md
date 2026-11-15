@@ -7,10 +7,10 @@ route: /about.html
 
 <LandingPageHero
   sectionId="about-hero"
-  category="Доверие / человек на связи"
-  description="Игорь Назаров — тренер BUFF IT. Подбираю упражнения и нагрузку под цель, опыт и график; по ходу занятий объясняю изменения и помогаю разобраться с трудностями."
-  actionLabel="Как устроен метод"
-  actionHref="/method.html"
+  category="Тренер и автор BUFF IT"
+  description="Игорь Назаров — тренер и разработчик BUFF IT. Делаю систему для взрослых людей с работой, домом и играми, чтобы тренировки давали силы, а не выматывали."
+  actionLabel="Форматы с тренером"
+  actionHref="/coaching.html"
   imageSrc="/landing-media/igor-author-portrait-20261005-r15.webp"
   imageAlt="Портрет Игоря Назарова, персонального тренера BUFF IT"
 >
@@ -21,31 +21,31 @@ route: /about.html
 ```
 
 ```yaml supportLines
-- Личный чат в Telegram. · Прямые правки без фитнес-театра.
-- Если нужен врач, тренировки не заменяют консультацию.
+- "Живая работа без фитнес-театра и криков «терпи через боль»: нагрузка под ваши силы и график."
+- Личный чат в Telegram, разбор техники по видео и честная граница там, где нужен врач.
 ```
 
 </LandingPageHero>
 
 <LandingCardSection
   sectionId="contact-principles"
-  eyebrow="Принципы контакта"
-  title="Клиенту должно быть спокойно начинать, задавать вопросы и ошибаться"
+  eyebrow="Подход"
+  title="Тренировки должны возвращать энергию, а не отнимать её"
   presentation="grid-3"
 >
 
 ```yaml items
-- eyebrow: уважение
-  title: Без стыда за исходную точку
-  description: Вес, слабость, боль, пауза в тренировках и хаотичная неделя — это данные для плана, а не повод давить.
+- eyebrow: без снобизма
+  title: Можно начинать с любой точки
+  description: Усталость после 8 часов за монитором, пауза на полгода и любовь к вкусной еде — это обычная жизнь, а не повод читать вам лекции.
   variant: support
-- eyebrow: ясность
-  title: Объясняю, зачем меняется план
-  description: Если меняем упражнение, объем, ходьбу или питание, клиент понимает причину, а не просто получает новый список.
+- eyebrow: прозрачно
+  title: Вы понимаете смысл каждого шага
+  description: Объясняю простым языком, зачем меняем упражнение, снижаем объём или оставляем сладкое к кофе, чтобы ритм не сломался.
   variant: support
-- eyebrow: границы
-  title: Тренировки не заменяют медицину
-  description: При красных флагах маршрут идет через консультацию врача, а не через “потерпи и потренируйся”.
+- eyebrow: безопасно
+  title: На первом месте здоровье, а не рекорд
+  description: Опираюсь на доказательные протоколы, а при острой боли и красных флагах сразу направляю к врачу вместо экспериментов.
   variant: support
 ```
 
@@ -53,30 +53,30 @@ route: /about.html
 
 <LandingCardSection
   sectionId="about-formats"
-  eyebrow="Выбрать формат"
-  title="Сначала цель и условия, затем подходящий план занятий"
+  eyebrow="Куда дальше"
+  title="Выберите удобный вариант старта"
   presentation="grid-3"
 >
 
 ```yaml items
-- eyebrow: Цель
-  title: Посмотреть программы
-  description: Форма, вес, спина, ягодицы, подтягивания, гибкость и другие 12-недельные маршруты.
+- eyebrow: Программы
+  title: Заниматься самостоятельно
+  description: 11 готовых 12-недельных маршрутов в BUFF IT APP — от мягкого старта и здоровой спины до выхода силой.
   variant: route
-  actionLabel: Программы
+  actionLabel: Выбрать тренировку
   actionHref: /programs.html
-- eyebrow: Метод
-  title: Понять систему
-  description: Подбираем силовые занятия, ходьбу и нагрузку по цели и расписанию. Вопросы питания можно обсудить отдельно.
+- eyebrow: Сопровождение
+  title: Работать со мной лично
+  description: Онлайн-тренировки в BUFF IT CONNECT 2–3 раза в неделю и корректировки плана под вашу рабочую неделю.
   variant: route
-  actionLabel: О методе
-  actionHref: /method.html
-- eyebrow: Старт
-  title: Обсудить задачу
-  description: Напишите о цели, опыте и графике занятий.
+  actionLabel: Узнать условия
+  actionHref: /coaching.html
+- eyebrow: Диалог
+  title: Задать вопрос напрямую
+  description: Напишите пару строк о работе, графике и задаче — помогу понять, с чего спокойнее всего начать.
   variant: route
-  actionLabel: С чего начать
-  actionHref: /start.html
+  actionLabel: Написать в Telegram
+  actionHref: https://t.me/yokhan_yokhan
 ```
 
 </LandingCardSection>
@@ -84,16 +84,16 @@ route: /about.html
 <LandingCta
   sectionId="about-cta"
   eyebrow="Контакт"
-  title="Обсудить цель и условия занятий напрямую"
-  description="Напишите в Telegram или посмотрите подробную страницу о квалификации и опыте."
+  title="Поговорим о вашей задаче без обязательств"
+  description="Можно написать в Telegram или открыть подробную страницу с образованием, сертификатами и кейсами клиентов."
   actionLabel="Написать в Telegram"
   actionHref="https://t.me/yokhan_yokhan"
-  secondaryActionLabel="Страница тренера"
+  secondaryActionLabel="Анкета и опыт"
   secondaryActionHref="/coach/"
 />
 
 <LandingHomeFooter
-  description="Тренировки, вкусное и здоровое питание, консультации — в одной системе с Игорем Назаровым."
+  description="Понятные тренировки в приложении, привычная еда и живая поддержка Игоря Назарова — без культа страданий."
   legal="Тренировочная система не заменяет медицинскую помощь."
 >
 
@@ -102,7 +102,7 @@ route: /about.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -123,7 +123,7 @@ route: /about.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

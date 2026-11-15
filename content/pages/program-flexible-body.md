@@ -17,8 +17,8 @@ route: /program-flexible-body.html
 >
 
 ```yaml titleLines
-- Гибкость и подвижность
-- для повседневных движений
+- Гибкость и лёгкость
+- на каждый день
 ```
 
 ```yaml supportLines
@@ -240,7 +240,7 @@ route: /program-flexible-body.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -261,7 +261,7 @@ route: /program-flexible-body.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

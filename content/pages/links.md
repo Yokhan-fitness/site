@@ -1,14 +1,14 @@
 ---
 id: buffit.links
 title: APP, CONNECT и проекты — BUFF IT
-description: Откройте пробную тренировку, видеокомнату CALLS, готовые программы или страницу занятий с тренером.
+description: Откройте пробную тренировку, видеокомнату CONNECT, готовые программы или страницу занятий с тренером.
 route: /links.html
 ---
 
 <LandingPageHero
   sectionId="links-hero"
   category="Карта входов"
-  description="Тренировки — в APP. Видеозвонки — в CALLS. Программы и занятия с тренером — на этом сайте. Другие проекты собраны в портфолио Yokhan."
+  description="Тренировки — в APP. Видеозвонки — в CONNECT. Программы и занятия с тренером — на этом сайте. Другие проекты собраны в портфолио Yokhan."
   actionLabel="Открыть APP"
   actionHref="https://fitness.yokhan.xyz/"
   imageSrc="/landing-media/app-desktop.avif"
@@ -21,7 +21,7 @@ route: /links.html
 ```
 
 ```yaml supportLines
-- Тренировки в APP · Видеозвонки в CALLS
+- Тренировки в APP · Видеозвонки в CONNECT
 - Программы и сопровождение на yokhan.xyz
 ```
 
@@ -40,11 +40,11 @@ route: /links.html
   variant: route
   actionLabel: Открыть APP
   actionHref: https://fitness.yokhan.xyz/
-- eyebrow: CALLS
+- eyebrow: CONNECT
   title: Видеозвонки
   description: Создайте комнату или войдите по ссылке приглашения. Занятия с тренером нужно согласовать отдельно.
   variant: route
-  actionLabel: Открыть CALLS
+  actionLabel: Открыть CONNECT
   actionHref: https://connect.yokhan.xyz/
 - eyebrow: С тренером
   title: Личное сопровождение
@@ -79,7 +79,7 @@ route: /links.html
   eyebrow="Навигация"
   title="Перейти к видеозвонкам или Telegram-боту"
   description="Все активные точки входа собраны в одном месте."
-  actionLabel="Открыть CALLS"
+  actionLabel="Открыть CONNECT"
   actionHref="https://connect.yokhan.xyz/"
   secondaryActionLabel="Открыть бота"
   secondaryActionHref="https://t.me/YokhanGym_bot?start=buffit_links"
@@ -95,7 +95,7 @@ route: /links.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -116,7 +116,7 @@ route: /links.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

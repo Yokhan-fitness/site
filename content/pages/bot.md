@@ -17,7 +17,7 @@ route: /bot.html
 
 ```yaml titleLines
 - Ответьте на вопросы
-- и выберите следующий шаг
+- и начните с нужного
 ```
 
 ```yaml supportLines
@@ -125,7 +125,7 @@ route: /bot.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -146,7 +146,7 @@ route: /bot.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

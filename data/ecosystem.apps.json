@@ -117,7 +117,7 @@
       "brandHref": "https://yokhan.xyz/",
       "account": {
         "entryId": "app",
-        "loginHref": "https://fitness.yokhan.xyz/auth?mode=login&returnTo=%2Fhome",
+        "loginHref": "https://fitness.yokhan.xyz/auth?mode=login&returnTo=https%3A%2F%2Fyokhan.xyz%2F",
         "accountHref": "https://fitness.yokhan.xyz/profile"
       },
       "groups": [

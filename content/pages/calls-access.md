@@ -12,7 +12,7 @@ route: /calls-access.html
   actionLabel="Написать Игорю в Telegram"
   actionHref="https://t.me/yokhan_yokhan"
   imageSrc="/landing-media/calls-desktop.avif"
-  imageAlt="Онлайн-консультации и тренировки по видеосвязи BUFF IT CALLS"
+  imageAlt="Онлайн-консультации и тренировки по видеосвязи BUFF IT CONNECT"
 >
 
 ```yaml titleLines
@@ -60,10 +60,10 @@ route: /calls-access.html
   sectionId="calls-cta"
   eyebrow="Видеосвязь"
   title="Сравните форматы ведения или откройте видеокомнату"
-  description="Если время уже согласовано — входите в CALLS; иначе выберите формат сопровождения."
+  description="Если время уже согласовано — входите в CONNECT; иначе выберите формат сопровождения."
   actionLabel="Форматы и цены"
   actionHref="/coaching.html"
-  secondaryActionLabel="Открыть CALLS"
+  secondaryActionLabel="Открыть CONNECT"
   secondaryActionHref="https://connect.yokhan.xyz/"
 />
 
@@ -77,7 +77,7 @@ route: /calls-access.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -98,7 +98,7 @@ route: /calls-access.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

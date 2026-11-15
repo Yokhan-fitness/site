@@ -53,7 +53,7 @@ HTML_CHECKS = (
         ),
     ),
     PageCheck("account.html", ("GATES", "https://yokhanfitness.ru/dayflow/")),
-    PageCheck("account.html", ("BUFF IT ID", "Один вход", "SmartCart", "CALLS")),
+    PageCheck("account.html", ("BUFF IT ID", "Один вход", "SmartCart", "CONNECT")),
     PageCheck("programs.html", ("\u0427\u0442\u043e \u043c\u043e\u0436\u043d\u043e \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u0434\u043e \u0441\u0442\u0430\u0440\u0442\u0430",)),
     PageCheck("coaching.html", ("Фитнес-тренер онлайн — Игорь Назаров", "32 000", "48 000", "buffit_coaching", "b01-06d-trainer-calibration-ceramic", "Профессиональная переподготовка, 333 часа")),
     PageCheck(

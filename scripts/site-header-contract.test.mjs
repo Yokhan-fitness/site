@@ -20,7 +20,7 @@ test("ecosystem registry has the required app identities and current hosts", () 
     assert(ids.has(id), `missing app ${id}`);
   }
   assert.equal(registry.header.public.account.entryId, "app");
-  assert.match(registry.header.public.account.loginHref, /returnTo=%2Fhome/);
+  assert.match(registry.header.public.account.loginHref, /returnTo=(?:https%3A%2F%2Fyokhan\.xyz%2F|%2Fhome)/);
   assert.doesNotMatch(JSON.stringify(registry), /yokhanfitness\.ru/i);
 });
 

@@ -18,7 +18,7 @@ route: /program-maintain-shape.html
 
 ```yaml titleLines
 - Поддерживать форму
-- при меняющемся графике
+- при плотном графике
 ```
 
 ```yaml supportLines
@@ -240,7 +240,7 @@ route: /program-maintain-shape.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -261,7 +261,7 @@ route: /program-maintain-shape.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

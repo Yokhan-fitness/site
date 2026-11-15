@@ -16,8 +16,8 @@ route: /health.html
 >
 
 ```yaml titleLines
-- Разберёмся, с чего начать
-- с учётом здоровья
+- Тренировки с учётом
+- вашего здоровья
 ```
 
 ```yaml supportLines
@@ -83,7 +83,7 @@ route: /health.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -104,7 +104,7 @@ route: /health.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

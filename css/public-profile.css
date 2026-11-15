@@ -1,4 +1,9 @@
 /* Public profile controls inherit the canonical DS, including both modes. */
+html { -webkit-tap-highlight-color: transparent; }
+.nav__brand .buffit-wordmark {
+  font-family: var(--buffit-type-brand-family, "Unbounded", sans-serif);
+  font-weight: var(--buffit-weight-strong, 700);
+}
 html[data-buffit-design-style] body {
   background: var(--buffit-design-page);
   color: var(--buffit-design-ink);

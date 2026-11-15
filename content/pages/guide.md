@@ -16,8 +16,8 @@ route: /guide.html
 >
 
 ```yaml titleLines
-- Как начать тренироваться
-- с нуля или после перерыва
+- Как начать занятия
+- после долгой паузы
 ```
 
 ```yaml supportLines
@@ -161,7 +161,7 @@ route: /guide.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -182,7 +182,7 @@ route: /guide.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

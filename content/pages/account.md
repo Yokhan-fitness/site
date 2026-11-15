@@ -1,7 +1,7 @@
 ---
 id: buffit.account
 title: BUFF IT ID — единый вход в сервисы
-description: BUFF IT ID: единый вход для SmartCart, CALLS и следующих сервисов BUFF IT.
+description: BUFF IT ID: единый вход для SmartCart, CONNECT и следующих сервисов BUFF IT.
 route: /account.html
 ---
 
@@ -14,7 +14,7 @@ route: /account.html
   actionHref="https://fitness.yokhan.xyz/home"
   imageSrc="/landing-media/app-desktop.avif"
   imageAlt="Единый вход BUFF IT ID для сервисов экосистемы"
-  supportLines={["Вход один раз через BUFF IT ID. · SmartCart и CALLS уже используют общий сеанс.","Fitness APP, Day Flow и SmartCart открываются напрямую с тем же BUFF IT ID."]}
+  supportLines={["Вход один раз через BUFF IT ID. · SmartCart и CONNECT уже используют общий сеанс.","Fitness APP, Day Flow и SmartCart открываются напрямую с тем же BUFF IT ID."]}
 />
 
 <LandingCardSection
@@ -31,7 +31,7 @@ route: /account.html
   eyebrow="User flow"
   title="Как человек должен входить"
   presentation="grid-3"
-  items={[{"eyebrow":"01","title":"Войти на сайте","description":"Кнопка в шапке ведёт на BUFF IT ID. Пароль вводится только на auth.yokhan.xyz.","variant":"detail"},{"eyebrow":"02","title":"Открыть сервис","description":"SmartCart или CALLS видят уже активный вход и используют тот же аккаунт.","variant":"detail"},{"eyebrow":"03","title":"Возвращаться в общий маршрут","description":"Guide и Telegram помогают разобраться, а APP возвращает к плану, тренировкам и следующему полезному действию.","variant":"detail"}]}
+  items={[{"eyebrow":"01","title":"Войти на сайте","description":"Кнопка в шапке ведёт на BUFF IT ID. Пароль вводится только на auth.yokhan.xyz.","variant":"detail"},{"eyebrow":"02","title":"Открыть сервис","description":"SmartCart или CONNECT видят уже активный вход и используют тот же аккаунт.","variant":"detail"},{"eyebrow":"03","title":"Возвращаться в общий маршрут","description":"Guide и Telegram помогают разобраться, а APP возвращает к плану, тренировкам и следующему полезному действию.","variant":"detail"}]}
 />
 
 <LandingCta
@@ -48,5 +48,5 @@ route: /account.html
 <LandingHomeFooter
   description="Тренировки, вкусное и здоровое питание, консультации — в одной системе с Игорем Назаровым."
   legal="Тренировочная система не заменяет медицинскую помощь."
-  groups={[{"id":"training","label":"Тренировки","links":[{"id":"programs","label":"Программы","actionRef":"programs"},{"id":"coaching","label":"Занятия с тренером","actionRef":"coaching"},{"id":"safety","label":"Безопасность","actionRef":"safety"}]},{"id":"app","label":"APP","links":[{"id":"guest-trial","label":"Попробовать без регистрации","actionRef":"guestTrial"},{"id":"login","label":"Войти","actionRef":"login"}]},{"id":"services","label":"Сервисы и портфолио","links":[{"id":"calls","label":"Видеозвонки CALLS","actionRef":"calls"},{"id":"portfolio","label":"Портфолио","actionRef":"portfolio"},{"id":"projects","label":"Все проекты BUFF IT","actionRef":"projects"},{"id":"contact","label":"Связаться с Игорем","actionRef":"contact"}]}]}
+  groups={[{"id":"training","label":"Тренировки","links":[{"id":"programs","label":"Тренировки","actionRef":"programs"},{"id":"coaching","label":"Занятия с тренером","actionRef":"coaching"},{"id":"safety","label":"Безопасность","actionRef":"safety"}]},{"id":"app","label":"APP","links":[{"id":"guest-trial","label":"Попробовать без регистрации","actionRef":"guestTrial"},{"id":"login","label":"Войти","actionRef":"login"}]},{"id":"services","label":"Сервисы и портфолио","links":[{"id":"calls","label":"Видеозвонки CONNECT","actionRef":"calls"},{"id":"portfolio","label":"Портфолио","actionRef":"portfolio"},{"id":"projects","label":"Все проекты BUFF IT","actionRef":"projects"},{"id":"contact","label":"Связаться с Игорем","actionRef":"contact"}]}]}
 />

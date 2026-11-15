@@ -18,7 +18,7 @@ route: /program-weight-loss.html
 
 ```yaml titleLines
 - Снижение веса
-- с тренировками и питанием
+- без жёстких диет
 ```
 
 ```yaml supportLines
@@ -240,7 +240,7 @@ route: /program-weight-loss.html
   label: Тренировки
   links:
     - id: programs
-      label: Программы
+      label: Тренировки
       actionRef: programs
     - id: coaching
       label: Занятия с тренером
@@ -261,7 +261,7 @@ route: /program-weight-loss.html
   label: Сервисы и портфолио
   links:
     - id: calls
-      label: Видеозвонки CALLS
+      label: Видеозвонки CONNECT
       actionRef: calls
     - id: portfolio
       label: Портфолио

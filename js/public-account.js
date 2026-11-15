@@ -1,7 +1,18 @@
 (() => {
   'use strict';
   const APP_ORIGIN = 'https://fitness.yokhan.xyz';
-  const SITE_LOGIN_HREF = `${APP_ORIGIN}/auth?mode=login&returnTo=%2Fhome`;
+  const DEFAULT_SITE_URL = 'https://yokhan.xyz/';
+  const ALLOWED_PUBLIC_ORIGINS = new Set(['https://yokhan.xyz', 'https://www.yokhan.xyz']);
+
+  function resolveSiteLoginHref() {
+    try {
+      const currentUrl = typeof window !== 'undefined' && window.location && window.location.href ? new URL(window.location.href) : null;
+      const target = currentUrl && ALLOWED_PUBLIC_ORIGINS.has(currentUrl.origin) ? currentUrl.href : DEFAULT_SITE_URL;
+      return `${APP_ORIGIN}/auth?mode=login&returnTo=${encodeURIComponent(target)}`;
+    } catch {
+      return `${APP_ORIGIN}/auth?mode=login&returnTo=${encodeURIComponent(DEFAULT_SITE_URL)}`;
+    }
+  }
   const REQUEST_TYPE = 'buffit:account-status:request';
   const RESPONSE_TYPE = 'buffit:account-status:response';
   const MIN_CHECK_INTERVAL = 15000;
@@ -28,11 +39,21 @@
     catch { return false; }
   }
 
+  function hasClientHydrationRuntime() {
+    if (typeof document === 'undefined') return false;
+    if (typeof document.querySelector === 'function') {
+      return Boolean(document.querySelector('#landing-home-model, script[src*="buffit-landing-home"]'));
+    }
+    return true;
+  }
+
   function isHeaderReady(anchor) {
     const root = anchor.closest('[data-landing-home-root], [data-landing-services-root]');
     if (!root) return true;
     const nav = anchor.closest('.nav') || root.querySelector('.nav');
-    return nav?.getAttribute('data-buffit-header-ready') === 'true';
+    if (!nav) return true;
+    if (!hasClientHydrationRuntime()) return true;
+    return nav.getAttribute('data-buffit-header-ready') === 'true';
   }
 
   function setAttribute(element, name, value) {
@@ -68,7 +89,7 @@
       const label = authenticated ? (name || 'Профиль') : pending ? 'Аккаунт' : original.label;
       const labelNode = anchor.querySelector?.('.nav__action-label') || anchor;
       if (labelNode.textContent !== label) labelNode.textContent = label;
-      setAttribute(anchor, 'href', authenticated ? `${APP_ORIGIN}/profile` : SITE_LOGIN_HREF);
+      setAttribute(anchor, 'href', authenticated ? `${APP_ORIGIN}/profile` : resolveSiteLoginHref());
       setAttribute(anchor, 'title', authenticated && name ? `Аккаунт: ${name}` : pending ? 'Аккаунт' : original.title);
       setAttribute(anchor, 'aria-label', authenticated ? (name ? `Аккаунт: ${name}` : 'Аккаунт') : pending ? 'Аккаунт' : original.ariaLabel);
       setAttribute(anchor, 'data-buffit-account-status', currentStatus.status);
