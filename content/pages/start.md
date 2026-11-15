@@ -57,7 +57,7 @@ route: /start.html
   description: Начните с посильного графика, доступной нагрузки и оценки первой недели.
   variant: route
   actionLabel: Как начать после перерыва
-  actionHref: /guide.html
+  actionHref: https://yokhan.xyz/guide/
 ```
 
 </LandingCardSection>

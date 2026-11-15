@@ -97,7 +97,7 @@ route: /coach/
   description: Разминка, выбор упражнений и объяснение логики нагрузки для самостоятельного входа без суеты.
   variant: route
   actionLabel: Открыть гайд
-  actionHref: https://guide.yokhan.xyz/WarmingUp/about-guide/?utm_source=yokhanfitness&utm_medium=coach&utm_campaign=coach_profile
+  actionHref: https://yokhan.xyz/guide/
 - eyebrow: Telegram
   title: Канал о теле после сидячей работы
   description: Короткие разборы и заметки Игоря про осанку, энергию, нагрузку и быт человека за экраном.

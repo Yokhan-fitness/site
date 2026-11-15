@@ -9,8 +9,8 @@ route: /nutrition.html
   sectionId="nutrition-hero"
   category="Еда без жёстких диет"
   description="Сначала налаживаем ритм движения, а питание подкручиваем постепенно — из блюд, которые вам действительно нравятся и не отнимают весь вечер у плиты."
-  actionLabel="Обсудить питание"
-  actionHref="https://t.me/yokhan_yokhan"
+  actionLabel="Открыть сервис «Еда»"
+  actionHref="https://kitchen.yokhan.xyz/food/"
   imageSrc="/landing-media/food-desktop.avif"
   imageAlt="Подбор блюд, расчёт калорийности и список покупок BUFF IT FOOD"
 >
@@ -67,10 +67,10 @@ route: /nutrition.html
   eyebrow="Следующий шаг"
   title="Свяжем еду с вашими тренировками и графиком"
   description="Расскажите, что вы любите есть и сколько времени готовы тратить на кухню — подберём решение без диетной тоски."
-  actionLabel="Обсудить свой рацион"
-  actionHref="https://t.me/yokhan_yokhan"
-  secondaryActionLabel="Все сервисы BUFF IT"
-  secondaryActionHref="/ecosystem.html"
+  actionLabel="Открыть сервис «Еда»"
+  actionHref="https://kitchen.yokhan.xyz/food/"
+  secondaryActionLabel="Обсудить свой рацион"
+  secondaryActionHref="https://t.me/yokhan_yokhan"
 />
 
 <LandingHomeFooter

@@ -57,7 +57,7 @@ route: /links.html
   description: Короткие рекомендации помогут выбрать график и оценить первую неделю занятий.
   variant: route
   actionLabel: Открыть рекомендации
-  actionHref: /guide.html
+  actionHref: https://yokhan.xyz/guide/
 - eyebrow: GATES
   title: Доступ к VPN
   description: Перейдите в APP, чтобы проверить доступ или отправить заявку. Заявка требует одобрения.

@@ -81,7 +81,7 @@ route: /bot.html
   description: Если решение не созрело, человек получает гайд и канал. Польза сейчас, возвращение к маршруту позже, без давления.
   variant: route
   actionLabel: Открыть
-  actionHref: https://yokhan.xyz/guide.html
+  actionHref: https://yokhan.xyz/guide/
 - eyebrow: Индивидуальная программа
   title: Сам и дешевле
   description: "Обсудите доступность и условия индивидуальной программы: она отличается от готового плана в приложении и регулярного ведения."

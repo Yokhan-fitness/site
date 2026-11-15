@@ -65,7 +65,7 @@ route: /ecosystem.html
   description: Короткие практические ответы без медицинского птичьего языка — как втянуться, что делать со спиной и где не перегореть.
   variant: detail
   actionLabel: Читать гайд
-  actionHref: /guide.html
+  actionHref: https://yokhan.xyz/guide/
 - eyebrow: Поддержка
   title: Telegram-бот и чат
   description: Помогает выбрать первую программу за пару минут или сразу переключиться на разговор с Игорем.
