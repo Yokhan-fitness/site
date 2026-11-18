@@ -10,8 +10,8 @@ const INDEX_PATH = 'index.html';
 const PIN_KEYS = ['source', 'parser', 'compiler', 'schema', 'registry', 'renderer', 'tokens', 'fonts', 'media'];
 const PAGE_SIGNATURE = [
   'site-header', 'public-hero', 'landing-home-changes', 'landing-home-training',
-  'landing-home-adaptive', 'landing-section-formats', 'landing-section-cases',
-  'landing-decision-card', 'landing-decision-card', 'landing-cta', 'landing-footer',
+  'landing-home-adaptive', 'landing-section-author', 'landing-section-cases',
+  'landing-section-formats', 'landing-section-faq', 'landing-cta', 'landing-footer',
 ];
 const MANIFEST_KEYS = ['schemaVersion', 'source', 'pageSignature', 'pageModelDigest', 'pins', 'mediaProvenance', 'outputs', 'media', 'sources', 'files'];
 const SOURCE_KEYS = ['component', 'designStyle', 'materialMode', 'materialStyle', 'storyId', 'viewport', 'contentPath', 'contentSha256', 'contentDigest'];

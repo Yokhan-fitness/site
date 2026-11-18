@@ -16,8 +16,8 @@ const canonical = value => Array.isArray(value) ? `[${value.map(canonical).join(
     : JSON.stringify(value);
 const signature = [
   'site-header', 'public-hero', 'landing-home-changes', 'landing-home-training',
-  'landing-home-adaptive', 'landing-section-formats', 'landing-section-cases',
-  'landing-decision-card', 'landing-decision-card', 'landing-cta', 'landing-footer',
+  'landing-home-adaptive', 'landing-section-author', 'landing-section-cases',
+  'landing-section-formats', 'landing-section-faq', 'landing-cta', 'landing-footer',
 ];
 const sourceSha256 = '1'.repeat(64);
 const basePins = {
